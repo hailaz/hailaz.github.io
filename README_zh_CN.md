@@ -1,6 +1,6 @@
 # 博客地址
 
-<http://blog.rainyalley.com/>
+<http://blog.xiao3.top/>
 
 # 必改内容
 

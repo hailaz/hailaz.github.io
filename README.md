@@ -2,7 +2,7 @@
 
 # Blog Address
 
-<http://blog.rainyalley.com/>
+<http://blog.xiao3.top/>
 
 
 # Must Modify
