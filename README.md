@@ -1,37 +1,34 @@
-## Welcome to GitHub Pages
+##[点我查看中文说明](https://github.com/dubuyuye/blog/blob/gh-pages/README_zh_CN.md)
 
-You can use the [editor on GitHub](https://github.com/hailaz/hailaz.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+# Blog Address
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+<http://blog.rainyalley.com/>
 
-### Markdown
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+# Must Modify
 
-```markdown
-Syntax highlighted code block
+## 1.swiftype
 
-# Header 1
-## Header 2
-### Header 3
+This service provides the on-site search function.
 
-- Bulleted
-- List
+Service address： <https://swiftype.com/>.
 
-1. Numbered
-2. List
+After the setup is complete， you need to modify the `swiftype_searchId` in `_config.yml`.
 
-**Bold** and _Italic_ and `Code` text
+In your swiftype engine, go to `Setup and integration` -> `Install Search`, you could find the `swiftype_searchId`.
 
-[Link](url) and ![Image](src)
+```html
+<script type="text/javascript">
+...
+...
+  _st('install','swiftype_searchId','2.0.0');
+</script>
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+## 2.disqus
 
-### Jekyll Themes
+This service provides the comment function.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/hailaz/hailaz.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+Service address： <https://disqus.com/>.
 
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+After the setup is complete， you need to modify the `disqus_shortname` in `_config.yml`.
