@@ -1,7 +1,7 @@
 
 # Blog Address
 
-<http://blog.xiao3.top/>
+<https://blog.hailaz.cn/>
 
 
 # Must Modify

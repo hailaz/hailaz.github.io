@@ -1,6 +1,6 @@
 # 博客地址
 
-<http://blog.xiao3.top/>
+<https://blog.hailaz.cn/>
 
 # 必改内容
 
