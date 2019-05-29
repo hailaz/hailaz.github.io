@@ -2,7 +2,7 @@ fork ：https://github.com/WakelessDragon/blog
 
 # Blog Address
 
-<https://blog.hailaz.cn/>
+<https://hailaz.github.io/>
 
 
 # Must Modify

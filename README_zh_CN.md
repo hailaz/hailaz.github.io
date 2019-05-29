@@ -1,6 +1,6 @@
 # 博客地址
 
-<https://blog.hailaz.cn/>
+<https://hailaz.github.io/>
 
 # 必改内容
 
