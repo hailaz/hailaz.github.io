@@ -15,6 +15,6 @@ WebSocket 使得客户端和服务器之间的数据交换变得更加简单，�
 
 HTML5 定义的 WebSocket 协议，能更好的节省服务器资源和带宽，并且能够更实时地进行通讯。
 
-![ws](../static/img/ws.png)
+![ws](/static/img/ws.png)
 
 [以上摘自菜鸟教程](https://www.runoob.com/html/html5-websocket.html)
