@@ -17,4 +17,38 @@ HTML5 定义的 WebSocket 协议，能更好的节省服务器资源和带宽，
 
 ![ws](/static/img/ws.png)
 
+Websocket 使用 ws 或 wss 的统一资源标志符，类似于 HTTPS，其中 wss 表示在 TLS 之上的 Websocket。如：
+```
+ws://example.com/wsapi
+wss://secure.example.com/
+```
+Websocket 使用和 HTTP 相同的 TCP 端口，可以绕过大多数防火墙的限制。默认情况下，Websocket 协议使用 80 端口；运行在 TLS 之上时，默认使用 443 端口。
+
+一个典型的Websocket握手请求如下：
+
+客户端请求
+```
+GET / HTTP/1.1
+Upgrade: websocket
+Connection: Upgrade
+Host: example.com
+Origin: http://example.com
+Sec-WebSocket-Key: sN9cRrP/n9NdMgdcy2VJFQ==
+Sec-WebSocket-Version: 13
+```
+服务器回应
+```
+HTTP/1.1 101 Switching Protocols
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Accept: fFBooB7FAkLlXgRSz0BT3v4hq5s=
+Sec-WebSocket-Location: ws://example.com/
+```
+- Connection 必须设置 Upgrade，表示客户端希望连接升级。
+- Upgrade 字段必须设置 Websocket，表示希望升级到 Websocket 协议。
+- Sec-WebSocket-Key 是随机的字符串，服务器端会用这些数据来构造出一个 SHA-1 的信息摘要。把 “Sec-WebSocket-Key” 加上一个特殊字符串 “258EAFA5-E914-47DA-95CA-C5AB0DC85B11”，然后计算 SHA-1 摘要，之后进行 BASE-64 编码，将结果做为 “Sec-WebSocket-Accept” 头的值，返回给客户端。如此操作，可以尽量避免普通 HTTP 请求被误认为 Websocket 协议。
+- Sec-WebSocket-Version 表示支持的 Websocket 版本。RFC6455 要求使用的版本是 13，之前草案的版本均应当弃用。
+- Origin 字段是可选的，通常用来表示在浏览器中发起此 Websocket 连接所在的页面，类似于 Referer。但是，与 Referer 不同的是，Origin 只包含了协议和主机名称。
+- 其他一些定义在 HTTP 协议中的字段，如 Cookie 等，也可以在 Websocket 中使用。
+
 [以上摘自菜鸟教程](https://www.runoob.com/html/html5-websocket.html)
