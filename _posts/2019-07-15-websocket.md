@@ -1,7 +1,7 @@
 ---
 layout: post
 title: WebSocket
-tags: WebSocket
+tags: WebSocket HTML5
 categories: 协议
 ---
 
