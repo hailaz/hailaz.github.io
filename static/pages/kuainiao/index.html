@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>迅雷快鸟</title>
+	</head>
+
+	<body>
+		<center>
+			<span id="gdname"></span>
+			<br />
+			<span id="account"></span>
+			<br />
+			<span id="bandwidth"></span>
+			<br />
+			<span id="keepalive"></span>
+			<br />
+			<span id="jishi"></span>
+		</center>
+	</body>
+	<script src="/static/js/jquery.min.js"></script>
+	<script type="text/javascript">
+		var jishi = 0;
+		var jishiT = 0;
+		var interface_ip = '';
+		var interface_port = '';
+		var ipport = '';
+		var account = '';
+		var userid = '53755321';
+		var peerid = '&peerid=d98dc1c4-6c5b-42c9-9e12-72e44e3267b6';
+		var sessionid = '&sessionid=AC97FBE30BE472995ADF297490CB0B8BBA6D890AE676D658183743BD81EBF14D7ECDDCA547CFBE6887FE359D661216FC80B45BB02B481431D6C392F50146A8F5';
+		var version = '&client_type=guanwang-huodongweb-1.0&client_version=huodongweb-1.0';
+		getIPPort();
+		//http://k.xunlei.com/tisu.html
+		//http://58.220.12.55:12480/v2/upgrade?user_type=1&dial_account=02003657324@163.gd&callback=jQuery112405311037834677816_1517739253242&sequence=16639254&peerid=d98dc1c4-6c5b-42c9-9e12-72e44e3267b6&sessionid=AC97FBE30BE472995ADF297490CB0B8BA6BF50D1AB66C73060F515897A3A5010657DDCE53C231E5E176E4C271F013D4F5BA8627E84500379A88E94B09F0A455D&userid=53755321&client_type=guanwang-huodongweb-1.0&client_version=huodongweb-1.0&_=1517739253245
+		//http://58.220.12.55:12480/v2/recover?dial_account=02003657324@163.gd&callback=jQuery112405311037834677816_1517739253242&sequence=16639254&peerid=d98dc1c4-6c5b-42c9-9e12-72e44e3267b6&sessionid=AC97FBE30BE472995ADF297490CB0B8BA6BF50D1AB66C73060F515897A3A5010657DDCE53C231E5E176E4C271F013D4F5BA8627E84500379A88E94B09F0A455D&userid=53755321&client_type=guanwang-huodongweb-1.0&client_version=huodongweb-1.0&_=1517739253246
+		//http://58.220.12.55:12480/v2/keepalive?dial_account=02003657324@163.gd&callback=jQuery112405311037834677816_1517739253242&sequence=16639254&peerid=d98dc1c4-6c5b-42c9-9e12-72e44e3267b6&sessionid=AC97FBE30BE472995ADF297490CB0B8BA6BF50D1AB66C73060F515897A3A5010657DDCE53C231E5E176E4C271F013D4F5BA8627E84500379A88E94B09F0A455D&userid=53755321&client_type=guanwang-huodongweb-1.0&client_version=huodongweb-1.0&_=1517739253250
+
+		function keepalive(ipport, account) {
+			if(jishiT != 0) {
+									clearInterval(jishiT);
+								}
+								jishi=60;
+							jishiT = setInterval(function() {
+								$("#jishi").text('等待' + jishi + 's后刷新提速状态。');
+								jishi--;
+							}, 1000)
+			var timestamp = new Date().getTime();
+			$.ajax({
+				type: "get",
+				url: "http://" + ipport + "/v2/keepalive?user_type=1&dial_account=" + account + peerid + "&userid=" + userid + version + sessionid,
+				dataType: "jsonp",
+				jsonpCallback: "cbgdgz_" + timestamp,
+				success: function(data) {
+					console.log(new Date())
+					console.log(data)
+					if(data.errno == 0) {
+						if(data.upgrade_type == 1) {
+							$("#keepalive").text('加速中');
+						} else {
+							$("#keepalive").text('未加速');
+							getIPPort();
+						}
+					} else {
+						getIPPort();
+					}
+				}
+
+			});
+		}
+
+		function recover(ipport, account) {
+			var timestamp = new Date().getTime();
+			$.ajax({
+				type: "get",
+				url: "http://" + ipport + "/v2/recover?user_type=1&dial_account=" + account + peerid + "&userid=" + userid + version + sessionid,
+				dataType: "jsonp",
+				jsonpCallback: "cbgdgz_" + timestamp,
+				success: function(data) {
+					console.log(data)
+					if(data.errno == 0) {
+						$("#bandwidth").text('下载' + data.bandwidth.downstream + 'M，上传' + data.bandwidth.upstream + 'M');
+					}
+					//keepalive(ipport, account);
+				}
+			});
+		}
+
+		function upgrade(ipport, account) {
+			var timestamp = new Date().getTime();
+			$.ajax({
+				type: "get",
+				url: "http://" + ipport + "/v2/upgrade?user_type=1&dial_account=" + account + peerid + "&userid=" + userid + version + sessionid,
+				dataType: "jsonp",
+				jsonpCallback: "cbgdgz_" + timestamp,
+				success: function(data) {
+					console.log(data)
+					if(data.errno == 0) {
+
+						$("#bandwidth").text('下载' + data.bandwidth.downstream + 'M，上传' + data.bandwidth.upstream + 'M');
+						keepalive(ipport, account);
+						setInterval(function() {
+							keepalive(ipport, account);
+						}, 60 * 1000);
+					}
+				}
+			});
+		}
+
+		function getAccount(ipport) {
+			var timestamp = new Date().getTime();
+			$.ajax({
+				type: "get",
+				url: "http://" + ipport + "/v2/bandwidth?" + "&userid=" + userid + peerid,
+				dataType: "jsonp",
+				jsonpCallback: "cbgdgz_" + timestamp,
+				success: function(data) {
+					console.log(data)
+					if(data.errno == 0) {
+						account = data.bind_dial_account;
+						$("#account").text(account);
+						upgrade(ipport, account);
+					}
+					switch(data.errno) {
+						case 724:
+							jishi = 300;
+							setTimeout(function() {
+								getIPPort();
+								if(jishiT != 0) {
+									clearInterval(jishiT);
+								}
+							}, jishi * 1000);
+							if(jishiT != 0) {
+								clearInterval(jishiT);
+								jishiT = 0;
+								jishi = 0;
+							}
+
+							jishiT = setInterval(function() {
+								$("#jishi").text('等待' + jishi + 's重试提速。');
+								jishi--;
+							}, 1000)
+							break;
+						default:
+							break;
+					}
+				}
+			});
+		}
+
+		function getIPPort() {
+			var timestamp = new Date().getTime();
+			$.ajax({
+				type: "get",
+				url: "http://api.portal.swjsq.vip.xunlei.com:81/v2/queryportal",
+				dataType: "jsonp",
+				jsonpCallback: "cbgdgz_" + timestamp,
+				success: function(data) {
+					console.log(data)
+					if(data.errno == 0) {
+						interface_ip = data.interface_ip;
+						interface_port = data.interface_port;
+						$("#gdname").text(data.province_name + data.sp_name + interface_ip + ':' + interface_port);
+						ipport = interface_ip + ':' + interface_port;
+						console.log(ipport)
+						getAccount(ipport)
+					}
+				}
+			});
+		}
+	</script>
+
+</html>
