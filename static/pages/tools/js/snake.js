@@ -120,13 +120,13 @@ var thisSnake = new Vue({
                         if (thisSnake.snakeMove != 37 && thisSnake.snakeMove != 39) {
                             thisSnake.snakeMove = keyCode;
                         }
-                        break;
+                        return false;
                     case 38:
                     case 40:
                         if (thisSnake.snakeMove != 38 && thisSnake.snakeMove != 40) {
                             thisSnake.snakeMove = keyCode;
                         }
-                        break;
+                        return false;
                     default:
                         console.log(keyCode)
                         break;
