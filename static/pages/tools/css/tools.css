@@ -1,0 +1,49 @@
+
+/*create-code*/
+.create-code ul {
+    padding: 0;
+    margin: 0;
+}
+
+.create-code li {
+    list-style: none;
+} 
+
+.create-code li input {
+    width: 400px;
+}
+
+.create-code textarea {
+    width: 500px;
+    height: 350px;
+}
+
+
+/*word*/
+
+.word input{
+    width: 600px;
+}
+
+
+/*snake*/
+
+.point {
+    color: white;
+    float: left;
+    border: 1px solid white;
+    list-style: none;
+    text-align: center;
+    background-color: white;
+}
+
+.pointSelect {
+    background: -webkit-linear-gradient(left top, black, white);
+    /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(bottom right, black, white);
+    /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(bottom right, black, white);
+    /* Firefox 3.6 - 15 */
+    background: linear-gradient(to bottom right, black, yellow);
+    /* 标准的语法 */
+}

@@ -10,7 +10,7 @@
 
 <body>
 	<button type="button" onclick="change()">test</button><br>
-	<textarea id="input" rows="20" cols="80">{
+	<textarea id="jsoninput" rows="20" cols="80">{
     "bankList" : [
       {
         "cardNoLast4" : "0129",
@@ -39,17 +39,17 @@
       }
     ]}
 	</textarea><br>
-	<textarea id="output" rows="20" cols="80"></textarea>
+	<textarea id="structoutput" rows="20" cols="80"></textarea>
 </body>
 <script type="text/javascript">
-	$("#input").keyup(function () { //输入事件
+	$("#jsoninput").keyup(function () { //输入事件
 		change();
 	});
 
 	function change() {
-		var str = $("#input").val();
+		var str = $("#jsoninput").val();
 		var obj = JSON.parse(str); //由JSON字符串转换为JSON对象
-		$("#output").val("");
+		$("#structoutput").val("");
 		toGoStruct(obj, "data");
 	}
 
@@ -74,7 +74,7 @@
 		}
 		strTemp += "}\n"
 		console.log(strTemp);
-		$("#output").val($("#output").val() + strTemp);
+		$("#structoutput").val($("#structoutput").val() + strTemp);
 	}
 
 	function firstUpCase(str) { //首字母大写
