@@ -1,8 +1,10 @@
+var ipt = undefined;
+
 window.onload = function () {
     
-    inputE = $("#ipt");
+    ipt = $("#ipt");
 
-    inputE.keyup(function () {//输入事件
+    ipt.keyup(function () {//输入事件
         change();
     });
     change();

@@ -17,7 +17,7 @@ $(function () {
         LoadInputList();
     });
 
-    inputE = $("#input");
+    inputE = $("#ccinput");
 
     inputE.keyup(function () {//输入事件
         rp();
@@ -47,7 +47,7 @@ function LoadInputList() {//加载输入列表
 
 
 function rp() {//替换
-    var op = $("#output");
+    var op = $("#ccoutput");
     op.val("");
     var ipval = inputE.val();
 
