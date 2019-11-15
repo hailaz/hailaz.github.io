@@ -145,11 +145,11 @@
 
         if (option != null) {
             if (option.True != undefined) {
-                option.True["@Name"] = "True";
+                option.True["@Name"] = "是";
                 optionList.push(getOption(option.True));
             }
             if (option.False != undefined) {
-                option.False["@Name"] = "False";
+                option.False["@Name"] = "否";
                 optionList.push(getOption(option.False));
             }
         }
@@ -264,6 +264,37 @@
             sys.Groups[Number(str[0])].Settings[Number(str[1])].Current = Number(str[2]);
             // console.log(sys.Groups[Number(str[0])].Settings[Number(str[1])].Current);
             // console.log(sys);
+            var opt = sys.Groups[Number(str[0])].Settings[Number(str[1])].Options[Number(str[2])]
+            console.log(sys.Groups[Number(str[0])].Settings[Number(str[1])].Name, opt.Name);
+            var out = "Windows Registry Editor Version 5.00\n\n";
+            out = out + ";" + sys.Groups[Number(str[0])].Settings[Number(str[1])].Name + ": " + opt.Name + "\n";
+
+            opt.RegList.forEach(reg => {
+                //console.log(reg.Operation);
+                switch (reg.Operation) {
+                    case "Write":
+                        out = out + "[" + reg.Key + "]" + "\n";
+                        out = out + '"' + reg.Value + '"=' + reg.Type + ':' + reg.Data + "\n";
+                        // console.log(reg.Key);
+                        // console.log(reg.Value);
+                        // console.log(reg.Type, reg.Data);
+                        break;
+                    case "Delete":
+                        out = out + "暂不支持";
+                        // out = out + "[-" + reg.Key + "]" + "\n";
+                        // out = out + '"' + reg.Value + '"=-' + "\n";
+                        // console.log(reg.Key);
+                        // console.log(reg.Value);
+                        break;
+
+                    default:
+                        break;
+                }
+
+            });
+            console.log(out);
+            $("#showSettingCode").val(out);
+
         })
     }
 </script>
@@ -386,6 +417,9 @@
 </script>
 
 <body>
+    <textarea name="" id="showSettingCode" cols="30" rows="10" style="width: 100%;">
+
+    </textarea>
     <!-- <select name="" id="">
         <option value="1">123</option>
     </select> -->
