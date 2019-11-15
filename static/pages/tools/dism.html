@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/jquery.xml2json.js"></script>
+    <script src="js/jquery.json2xml.js"></script>
+    <style>
+        div {
+            border: chocolate 1px solid;
+            margin: 5px;
+        }
+
+        div p {
+            text-align: center;
+        }
+    </style>
+</head>
+<!-- <script src="data/Data.xml"></script> -->
+<script>
+    $(function () {
+        var xmlReq = new XMLHttpRequest();
+        xmlReq.open("GET", "data/Data.xml");
+        xmlReq.send();
+        xmlReq.onreadystatechange = function () {
+            if (xmlReq.readyState == 4 && xmlReq.status == 200) {
+                xmlDoc = xmlReq.responseXML;
+                console.log(xmlDoc);
+                var jsonObj = $.xml2json(xmlDoc);
+                console.log(jsonObj);
+                Show(jsonObj);
+            }
+        }
+    });
+
+    function Show(jsonObj) {
+
+        var group = jsonObj.SystemOptimization.Group;
+        console.log("SystemOptimization.Group:");
+        console.log(group);
+        group.forEach(element => {
+            console.log(element);
+            console.log("#", element["@Name"]);
+            var divId = element["@Name"]
+            var p = $("<p>").text(divId)
+            var div = $("<div>").attr({ "id": divId });
+            if (Array.prototype == element.Item.__proto__) {//数组
+                element.Item.forEach(set => {
+                    var setName = set["@Name"];
+                    var setType = set["@Type"];
+                    // console.log("name:", setName, "type:", setType);
+                    switch (setType) {
+                        case "Combo":
+                            typeArray(div, set);
+                            break;
+                        case "CheckBox":
+                            typeBool(div, set);
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                });
+
+            } else {
+                var set = element.Item;
+                var setName = set["@Name"];
+                var setType = set["@Type"];
+                // console.log("name:", setName, "type:", setType);
+                switch (setType) {
+                    case "Combo":
+                        typeArray(div, set);
+                        break;
+                    case "CheckBox":
+                        typeBool(div, set);
+                        break;
+
+                    default:
+                        break;
+                }
+
+            }
+            $("#setting").append(p).append(div);
+
+        });
+    }
+
+    function typeArray(parent, set) {
+        //console.log(set);
+        var optionList = new Array();
+        if (set.Current != undefined) {
+            var Dropdown = set.Current.Dropdown
+            Dropdown.forEach(element => {
+                optionList.push({
+                    "name": element["@Name"],
+                    "value": 1
+                })
+            });
+        } else if (set.System != undefined) {
+            var Dropdown = set.System.Dropdown
+            Dropdown.forEach(element => {
+                optionList.push({
+                    "name": element["@Name"],
+                    "value": 1
+                })
+            });
+        }
+
+        AddSelect(parent, { "name": set["@Name"] }, optionList);
+    }
+
+    function typeBool(parent, set) {
+        //console.log(set);
+        var optionList = new Array();
+        optionList.push({
+            "name": "True",
+            "value": 1//set.Current.True.Activate.RegWrite["@Data"]
+        })
+        optionList.push({
+            "name": "False",
+            "value": 0//set.Current.False.Activate.RegWrite["@Data"]
+        })
+        AddSelect(parent, { "name": set["@Name"] }, optionList);
+    }
+
+    // selectObj{
+    //     name:"",
+    //     id:"",
+    // }
+    function AddSelect(parent, selectObj, optionList) {
+        var span = $("<span>");
+        span.text(selectObj.name);
+
+        var select = $("<select>");
+        span.append(select);
+        optionList.forEach(item => {
+            var option = $("<option>");
+            option.text(item.name);
+            option.val(item.value);
+            select.append(option);
+        });
+        parent.append(span).append("<br>");
+    }
+
+
+
+
+</script>
+
+<body>
+    <!-- <select name="" id="">
+        <option value="1">123</option>
+    </select> -->
+    <div id="setting">
+
+    </div>
+</body>
+
+</html>
