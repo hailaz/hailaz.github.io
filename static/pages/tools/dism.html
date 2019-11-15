@@ -21,7 +21,201 @@
     </style>
 </head>
 <!-- <script src="data/Data.xml"></script> -->
+
 <script>
+    var TypeMap = new Map();
+    TypeMap.set("REG_DWORD", "dword");
+    var Reg = {
+        Name: "",
+        Data: "",
+        Key: "",
+        Type: "",
+        Value: "",
+    }
+
+    var Option = {
+        Name: "",
+        Explorer: "",
+        RegList: new Array(),
+    }
+
+    var Setting = {
+        Name: "",
+        Type: "Custom",
+        Current: 0,
+        Options: new Array(),
+    }
+
+    var Group = {
+        Name: "",
+        Settings: new Array(),
+    }
+
+    var System = {
+        Name: "",
+        Groups: new Array(),
+    }
+
+    function getReg(r, is) {
+        if (is) {
+            var Reg = {
+                Operation: "Delete",
+                Key: r["@Key"],
+                Value: r["@Value"],
+            }
+            return Reg;
+        }
+        var Reg = {
+            Operation: "Write",
+            Data: r["@Data"],
+            Key: r["@Key"],
+            Type: TypeMap.get(r["@Type"]),
+            Value: r["@Value"],
+        }
+        return Reg;
+    }
+
+    function getRegArrayInActivate(Activate) {
+        var RegList = new Array();
+        if (Activate.RegDelete != undefined) {
+            var RD = Activate.RegDelete;
+            if (Array.prototype == RD.__proto__) {//数组
+                RD.forEach(r => {
+                    RegList.push(getReg(r, true));
+                });
+            } else {
+                RegList.push(getReg(RD, true));
+            }
+        }
+        if (Activate.RegWrite != undefined) {
+            var RW = Activate.RegWrite;
+            if (Array.prototype == RW.__proto__) {//数组
+                RW.forEach(r => {
+                    RegList.push(getReg(r, false));
+                });
+            } else {
+                RegList.push(getReg(RW, false));
+            }
+        }
+        return RegList
+    }
+
+    function getOption(element) {
+        var EN = element.Activate.ExplorerNotify;
+        // console.log(element["@Name"])
+        var Option = {
+            Name: element["@Name"],
+            Explorer: "",
+            RegList: new Array(),
+        }
+        if (EN != undefined) {
+            Option.Type = EN["@Type"]
+        }
+        Option.RegList = getRegArrayInActivate(element.Activate);
+        return Option;
+    }
+
+    function getOptionsArray(set) {
+        var optionList = new Array();
+        var Dropdown = null;
+
+        if (set.Current != undefined) {
+            Dropdown = set.Current.Dropdown
+        } else if (set.System != undefined) {
+            Dropdown = set.System.Dropdown
+        }
+        if (Dropdown != null) {
+            Dropdown.forEach(element => {
+                optionList.push(getOption(element));
+            });
+        }
+        return optionList
+    }
+
+    function getOptionsBool(set) {
+        //console.log(set);
+        var optionList = new Array();
+        var option = null;
+
+        if (set.Current != undefined) {
+            option = set.Current
+        } else if (set.System != undefined) {
+            option = set.System
+        }
+
+        if (option != null) {
+            if (option.True != undefined) {
+                option.True["@Name"] = "True";
+                optionList.push(getOption(option.True));
+            }
+            if (option.False != undefined) {
+                option.False["@Name"] = "False";
+                optionList.push(getOption(option.False));
+            }
+        }
+
+
+
+        return optionList
+    }
+
+    function getSetting(set) {
+        // console.log(set)
+        var Setting = {
+            Name: set["@Name"],
+            Current: 0,
+            //Type: "Custom",
+            Options: new Array(),
+        }
+        var setType = set["@Type"];
+        // console.log("name:", setName, "type:", setType);
+        switch (setType) {
+            case "Combo":
+                Setting.Options = getOptionsArray(set);
+                break;
+            case "CheckBox":
+                //console.log(set)
+                Setting.Options = getOptionsBool(set);
+                break;
+            default:
+                break;
+        }
+        if (Setting.Options.length > 0) {
+            Setting.Type = Setting.Options[1].Type;
+        }
+        return Setting;
+    }
+
+    function toSimpleJsonObj(respGroup) {
+        console.log(respGroup)
+        var System = {
+            Name: "",
+            Groups: new Array(),
+        }
+
+        respGroup.forEach(element => {
+            var Group = {
+                Name: element["@Name"],
+                Settings: new Array(),
+            }
+
+            if (Array.prototype == element.Item.__proto__) {//数组
+                element.Item.forEach(set => {
+                    Group.Settings.push(getSetting(set));
+                });
+            } else {// obj
+                var set = element.Item;
+                Group.Settings.push(getSetting(set));
+            }
+            System.Groups.push(Group);
+        });
+        return System;
+    }
+
+</script>
+
+<script>
+    var sys;
     $(function () {
         var xmlReq = new XMLHttpRequest();
         xmlReq.open("GET", "data/Data.xml");
@@ -32,10 +226,49 @@
                 console.log(xmlDoc);
                 var jsonObj = $.xml2json(xmlDoc);
                 console.log(jsonObj);
-                Show(jsonObj);
+                sys = toSimpleJsonObj(jsonObj.SystemOptimization.Group);
+                console.log(sys);
+                ShowSystem();
+                //Show(jsonObj);
             }
         }
     });
+</script>
+
+<script>
+    function ShowSystem() {
+        sys.Groups.forEach((g, gindex) => {
+            var divId = g.Name;
+            var p = $("<p>").text(divId)
+            var div = $("<div>").attr({ "id": divId });
+            g.Settings.forEach((set, sindex) => {
+                var span = $("<span>");
+                span.text(set.Name);
+                var select = $("<select>").addClass("selectOn");
+                span.append(select);
+                set.Options.forEach((item, index) => {
+                    var option = $("<option>").attr({ "ids": new Array(gindex, sindex, index) });
+                    option.text(item.Name);
+                    option.val(index);
+                    select.append(option);
+                });
+                div.append(span).append("<br>");
+            });
+            $("#setting").append(p).append(div);
+        });
+
+        $(".selectOn").change(function () {
+            var indexArray = $(this).find("option:selected").attr("ids");
+            var str = indexArray.split(',');
+            // console.log(sys.Groups[Number(str[0])].Settings[Number(str[1])].Current);
+            sys.Groups[Number(str[0])].Settings[Number(str[1])].Current = Number(str[2]);
+            // console.log(sys.Groups[Number(str[0])].Settings[Number(str[1])].Current);
+            // console.log(sys);
+        })
+    }
+</script>
+
+<script>// old废弃
 
     function Show(jsonObj) {
 
