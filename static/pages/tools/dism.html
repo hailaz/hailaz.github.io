@@ -10,7 +10,19 @@
     <script src="js/jquery.xml2json.js"></script>
     <!-- <script src="js/jquery.json2xml.js"></script> -->
     <style>
-        div {
+        #setting {
+            width: 850px;
+        }
+
+        #setting select {
+            width: 150px;
+            text-align: center;
+            text-align-last: center;
+            margin: 0 5px;
+        }
+
+        #setting,
+        #setting div {
             border: chocolate 1px solid;
             margin: 5px;
         }
@@ -23,6 +35,7 @@
 <!-- <script src="data/Data.xml"></script> -->
 
 <script>
+    var UnShowList = [""];
     var TypeMap = new Map();
     TypeMap.set("REG_DWORD", "dword");
     var Reg = {
@@ -189,7 +202,7 @@
     function toSimpleJsonObj(respGroup) {
         console.log(respGroup)
         var System = {
-            Name: "",
+            Name: "系统优化",
             Groups: new Array(),
         }
 
@@ -245,14 +258,13 @@
                 var span = $("<span>");
                 span.text(set.Name);
                 var select = $("<select>").addClass("selectOn");
-                span.append(select);
                 set.Options.forEach((item, index) => {
                     var option = $("<option>").attr({ "ids": new Array(gindex, sindex, index) });
                     option.text(item.Name);
                     option.val(index);
                     select.append(option);
                 });
-                div.append(span).append("<br>");
+                div.append(select).append(span).append("<br>");
             });
             $("#setting").append(p).append(div);
         });
@@ -266,39 +278,96 @@
             // console.log(sys);
             var opt = sys.Groups[Number(str[0])].Settings[Number(str[1])].Options[Number(str[2])]
             console.log(sys.Groups[Number(str[0])].Settings[Number(str[1])].Name, opt.Name);
-            var out = "Windows Registry Editor Version 5.00\n\n";
-            out = out + ";" + sys.Groups[Number(str[0])].Settings[Number(str[1])].Name + ": " + opt.Name + "\n";
+            // var out = "Windows Registry Editor Version 5.00\n\n";
+            // out = out + ";" + sys.Groups[Number(str[0])].Settings[Number(str[1])].Name + ": " + opt.Name + "\n";
 
-            opt.RegList.forEach(reg => {
-                //console.log(reg.Operation);
-                switch (reg.Operation) {
-                    case "Write":
-                        out = out + "[" + reg.Key + "]" + "\n";
-                        out = out + '"' + reg.Value + '"=' + reg.Type + ':' + reg.Data + "\n";
-                        // console.log(reg.Key);
-                        // console.log(reg.Value);
-                        // console.log(reg.Type, reg.Data);
-                        break;
-                    case "Delete":
-                        out = out + "暂不支持";
-                        // out = out + "[-" + reg.Key + "]" + "\n";
-                        // out = out + '"' + reg.Value + '"=-' + "\n";
-                        // console.log(reg.Key);
-                        // console.log(reg.Value);
-                        break;
+            // opt.RegList.forEach(reg => {
+            //     //console.log(reg.Operation);
+            //     switch (reg.Operation) {
+            //         case "Write":
+            //             out = out + "[" + reg.Key + "]" + "\n";
+            //             out = out + '"' + reg.Value + '"=' + reg.Type + ':' + reg.Data + "\n";
+            //             // console.log(reg.Key);
+            //             // console.log(reg.Value);
+            //             // console.log(reg.Type, reg.Data);
+            //             break;
+            //         case "Delete":
+            //             out = out + "暂不支持";
+            //             // out = out + "[-" + reg.Key + "]" + "\n";
+            //             // out = out + '"' + reg.Value + '"=-' + "\n";
+            //             // console.log(reg.Key);
+            //             // console.log(reg.Value);
+            //             break;
 
-                    default:
-                        break;
-                }
+            //         default:
+            //             break;
+            //     }
 
+            // });
+            // console.log(out);
+            // $("#outputReg").val(out);
+
+        });
+        OutputReg();
+
+    }
+
+
+    function OutputReg() {
+        var out = "Windows Registry Editor Version 5.00\n\n";
+        sys.Groups.forEach(g => {
+            out += ";=========="+g.Name + "\n"
+            g.Settings.forEach(s => {
+                opt = s.Options[s.Current]
+                out = out + ";" + s.Name + ": " + opt.Name + "\n";
+
+                opt.RegList.forEach(reg => {
+                    //console.log(reg.Operation);
+                    switch (reg.Operation) {
+                        case "Write":
+                            out = out + "[" + reg.Key + "]" + "\n";
+                            out = out + '"' + reg.Value + '"=' + reg.Type + ':' + reg.Data + "\n\n";
+                            // console.log(reg.Key);
+                            // console.log(reg.Value);
+                            // console.log(reg.Type, reg.Data);
+                            break;
+                        case "Delete":
+                            out = out + "暂不支持\n\n";
+                            // out = out + "[-" + reg.Key + "]" + "\n";
+                            // out = out + '"' + reg.Value + '"=-' + "\n";
+                            // console.log(reg.Key);
+                            // console.log(reg.Value);
+                            break;
+
+                        default:
+                            break;
+                    }
+
+
+                });
             });
-            console.log(out);
-            $("#showSettingCode").val(out);
-
-        })
+        });
+        console.log(out);
+        $("#outputReg").val(out);
+        $("#outputJson").val(JSON.stringify(sys,"","\t"));
     }
 </script>
 
+
+
+<body>
+    <textarea name="" id="outputReg" cols="30" rows="10" style="width: 100%;">
+第一次打开稍微等等
+    </textarea>
+    <textarea name="" id="outputJson" cols="30" rows="10" style="width: 100%;">
+    </textarea>
+    <!-- <select name="" id="">
+        <option value="1">123</option>
+    </select> -->
+    <div id="setting">
+
+    </div>
+</body>
 <script>// old废弃
 
     function Show(jsonObj) {
@@ -415,17 +484,5 @@
 
 
 </script>
-
-<body>
-    <textarea name="" id="showSettingCode" cols="30" rows="10" style="width: 100%;">
-        第一次打开稍微等等
-    </textarea>
-    <!-- <select name="" id="">
-        <option value="1">123</option>
-    </select> -->
-    <div id="setting">
-
-    </div>
-</body>
 
 </html>
