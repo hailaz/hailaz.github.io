@@ -1,7 +1,7 @@
 ---
 layout: page
 title: About
-permalink: /about/
+permalink: /blog/about/
 icon: octicon-heart
 published: false
 ---
