@@ -306,7 +306,7 @@
             // });
             // console.log(out);
             // $("#outputReg").val(out);
-
+            OutputReg();
         });
         OutputReg();
 
@@ -316,7 +316,7 @@
     function OutputReg() {
         var out = "Windows Registry Editor Version 5.00\n\n";
         sys.Groups.forEach(g => {
-            out += ";=========="+g.Name + "\n"
+            out += ";==========" + g.Name + "\n"
             g.Settings.forEach(s => {
                 opt = s.Options[s.Current]
                 out = out + ";" + s.Name + ": " + opt.Name + "\n";
@@ -349,7 +349,7 @@
         });
         console.log(out);
         $("#outputReg").val(out);
-        $("#outputJson").val(JSON.stringify(sys,"","\t"));
+        $("#outputJson").val(JSON.stringify(sys, "", "\t"));
     }
 </script>
 
