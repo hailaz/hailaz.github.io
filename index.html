@@ -1,68 +1,103 @@
----
-layout: default
----
-<link rel="stylesheet" type="text/css"
-  href="{{ '/static/css/article-list.css' | prepend: site.baseurl | prepend: site.url}}" />
-<div class="row index">
-  <div class="col-sm-10 col-sm-offset-1 col-lg-9 col-lg-offset-1_5">
-    <div>
-      <section class="category-slice" post-cate="All">
-        {% for post in paginator.posts %}
-        <article>
-          <header>
-            <a href="{{ site.baseurl | prepend: site.url  }}/archive/#{{ post.date | date: '%Y-%m-%d' }}"><span
-                class="octicon octicon-calendar"></span>&nbsp;<span>{{ post.date | date: "%Y-%m-%d" }}</span></a>
-          </header>
-          <div class="module">
-            <a class="title" href="{{ post.url | prepend: site.baseurl | prepend: site.url }}">
-              {{ post.title }}
-            </a>
-            <p>
-              {% if post.excerpt.size > 32 %}{{ post.excerpt }}{% else %}{{ post.content | strip_html | strip_newlines | truncate: 160 }}{% endif %}
-            </p>
-            <a class="readmore" href="{{ post.url | prepend: site.baseurl | prepend: site.url }}">Read More</a>
-            <footer>
-              {% for tag in post.tags %}
-              <a class="word-keep" href="{{ site.baseurl | prepend: site.url }}/tags/#{{ tag }}"><span
-                  class="octicon octicon-tag"></span>&nbsp;{{ tag }}</a>
-              {% endfor %}
-              <span class="word-keep pull-right">
-                <a href="{{ post.url | prepend: site.baseurl | prepend: site.url }}#post-comment"><span
-                    class="octicon octicon-comment"></span>&nbsp;Comment</a>
-                <a href="{{ post.url | prepend: site.baseurl | prepend: site.url }}#post-share"><span
-                    class="octicon octicon-file-symlink-file"></span>&nbsp;Share</a>
-              </span>
-            </footer>
-          </div>
-        </article>
-        {% endfor %}
-      </section>
+<!DOCTYPE html>
+<html>
 
-      <div class="pad-mid"></div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 
-      <nav class="text-center">
-        <ul class="pagination">
-          {% if paginator.total_pages > 1 %}
-          {% if paginator.previous_page %}
-          <li><a href="{{ paginator.previous_page_path | prepend: site.baseurl | prepend: site.url }}"
-              aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
-          {% endif %}
-          {% for page in (1..paginator.total_pages) %}
-          {% if page == paginator.page %}
-          <li class="active"><span>{{ page }}</span></li>
-          {% elsif page == 1 %}
-          <li><a href="{{ '/' | prepend: site.baseurl | prepend: site.url  }}">{{ page }}</a></li>
-          {% else %}
-          <li><a href="{{ page |  prepend: '/' | prepend: site.baseurl | prepend: site.url }}">{{ page }}</a></li>
-          {% endif %}
-          {% endfor %}
-          {% if !paginator.next_page %}
-          <li><a href="{{ paginator.next_page_path | prepend: site.baseurl | prepend: site.url }}"
-              aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
-          {% endif %}
-          {% endif %}
-        </ul>
-      </nav>
-    </div>
+  <title>hailaz</title>
+  <style>
+    body {
+      margin: 0;
+    }
+
+    .el-header,
+    .el-footer {
+      text-align: center;
+      line-height: 60px;
+    }
+
+    .el-footer {
+      padding: 0 20px;
+      bottom: 0;
+    }
+
+    .wraper {
+      height: 100vh;
+      overflow-x: hidden;
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <div id="hailazApp" class="wraper">
+    <template>
+      <el-backtop target=".wraper">
+      </el-backtop>
+    </template>
+    <el-container>
+      <el-header>
+        <el-menu class="el-menu-demo" mode="horizontal">
+          <el-menu-item index="1"><a href="/blog" target="_blank">博客</a></el-menu-item>
+          <el-menu-item index="2"><a href="/static/pages/index.html" target="_blank">工具</a></el-menu-item>
+        </el-menu>
+      </el-header>
+      <el-main>
+
+        <h1>hello world</h1>
+        <h1>hello world</h1>
+        <h1>hello world</h1>
+        <h1>hello world</h1>
+        <h1>hello world</h1>
+        <h1>hello world</h1>
+        <h1>hello world</h1>
+        <h1>hello world</h1>
+        <h1>hello world</h1>
+        <h1>hello world</h1>
+        <h1>hello world</h1>
+        <h1>hello world</h1>
+        <h1>hello world</h1>
+        <h1>hello world</h1>
+        <h1>hello world</h1>
+        <h1>hello world</h1>
+        <h1>hello world</h1>
+        <h1>hello world</h1>
+        <h1>hello world</h1>
+        <h1>hello world</h1>
+        <h1>hello world</h1>
+      </el-main>
+
+
+
+      <el-footer>
+        <el-divider>底线</el-divider>
+        <a href="http://hailaz.cn">hailaz.cn</a>
+      </el-footer>
+    </el-container>
+
   </div>
-</div>
+</body>
+<!-- import Vue before Element -->
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script>
+  var Main = {
+    data() {
+      return {
+      };
+    },
+    methods: {
+    },
+    mounted() {
+    },
+  }
+  var Ctor = Vue.extend(Main)
+  new Ctor().$mount('#hailazApp')
+</script>
+
+</html>

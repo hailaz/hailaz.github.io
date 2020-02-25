@@ -1,4 +1,4 @@
-permalink: /:year-:month-:day/:title/
+permalink: /blog/:year-:month-:day/:title/
 
 highlighter: rouge
 markdown: kramdown
@@ -7,9 +7,9 @@ kramdown:
   syntax_highlighter: rouge
 
 
-paginate: 10
-paginate_path: ":num"
-baseurl: ""
+paginate: 5
+paginate_path: "/blog/:num"
+baseurl: "/blog"
 
 
 
@@ -36,7 +36,7 @@ disqus_shortname: "hailaz"
 
 
 url: "https://hailaz.github.io"
-imgrepo: "https://hailaz.github.io/static/img"
+imgrepo: "https://hailaz.github.io/blog/static/img"
 
 
 #url: "http://127.0.0.1:4000"
