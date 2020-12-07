@@ -5,11 +5,11 @@ window.onload = function () {
     ipt = $("#ipt");
 
     ipt.keyup(function () {//输入事件
-        change();
+        wordChange();
     });
-    change();
+    wordChange();
 };
-function change() {
+function wordChange() {
     var ipt = document.getElementById("ipt");
     var opt1 = document.getElementById("opt1");
     var opt11 = document.getElementById("opt11");

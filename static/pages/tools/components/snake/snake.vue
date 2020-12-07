@@ -176,7 +176,7 @@ module.exports = {
             }
             return false;
           default:
-            console.log(keyCode);
+            console.log('keyCode:',keyCode);
             break;
         }
       };
