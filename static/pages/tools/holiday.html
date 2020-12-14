@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>假期数据转换</title>
+</head>
+
+<body>
+    <button type="button" onclick="holidaychange()">转换</button>
+    <br>
+    <span>数据输入</span>
+    <br>
+    <textarea id="holiday-input" rows="20" cols="120">["2021-01-01","1","休假","2","法定节假日","True"]
+["2021-01-02","1","休假","1","普通节假日","True"]
+["2021-01-03","1","休假","1","普通节假日","True"]
+["2021-02-07","2","工作","0","","True"]
+["2021-02-10","1","休假","1","普通节假日","True"]
+["2021-02-11","1","休假","1","普通节假日","True"]
+["2021-02-12","1","休假","2","法定节假日","True"]
+["2021-02-13","1","休假","2","法定节假日","True"]
+["2021-02-14","1","休假","2","法定节假日","True"]
+["2021-02-15","1","休假","1","普通节假日","True"]
+["2021-02-16","1","休假","1","普通节假日","True"]
+["2021-02-17","1","休假","1","普通节假日","True"]
+["2021-02-18","1","休假","1","普通节假日","True"]
+["2021-02-20","2","工作","0","","True"]
+["2021-04-03","1","休假","1","普通节假日","True"]
+["2021-04-04","1","休假","2","法定节假日","True"]
+["2021-04-05","1","休假","1","普通节假日","True"]
+["2021-04-25","2","工作","0","","True"]
+["2021-05-01","1","休假","2","法定节假日","True"]
+["2021-05-02","1","休假","1","普通节假日","True"]
+["2021-05-03","1","休假","1","普通节假日","True"]
+["2021-05-04","1","休假","1","普通节假日","True"]
+["2021-05-05","1","休假","1","普通节假日","True"]
+["2021-05-08","2","工作","0","","True"]
+["2021-06-12","1","休假","1","普通节假日","True"]
+["2021-06-13","1","休假","1","普通节假日","True"]
+["2021-06-14","1","休假","2","法定节假日","True"]
+["2021-09-18","2","工作","0","","True"]
+["2021-09-19","1","休假","1","普通节假日","True"]
+["2021-09-20","1","休假","1","普通节假日","True"]
+["2021-09-21","1","休假","2","法定节假日","True"]
+["2021-09-26","2","工作","0","","True"]
+["2021-10-09","2","工作","0","","True"]</textarea>
+    <br>
+    <span>假期（部分日期需要手动调整描述）</span>
+    <br>
+    <textarea id="holiday-holiday" rows="20" cols="120"></textarea>
+    <br>
+    <span>调休上班（部分日期需要手动调整描述，特别是农历节日，如端午、中秋）</span>
+    <br>
+    <textarea id="holiday-onwork" rows="20" cols="120"></textarea>
+</body>
+<script>
+    function holidaychange() {
+        var baseData = document.getElementById("holiday-input").value;
+        console.log(baseData)
+        var holidayList = new Array();
+
+        var onWorkWeekendList = new Array();
+
+        var reg = /"(\d{4})-(\d{2})-(\d{2})","(\d{1})","(.*?)","(\d{1,})","(.*?)","(.*?)"/g;
+        var debug = false;
+        while (tempReg = reg.exec(baseData)) {
+            var tempYear = tempReg[1];
+            var tempMonth = tempReg[2];
+            var tempDay = tempReg[3];
+            var tempDate = tempYear + "-" + tempMonth + "-" + tempDay;
+            var tempType = tempReg[4];
+            var tempHolidayType = tempReg[6];
+            var tempHolidayDesc = tempReg[7];
+            // 数据库没有自增id,自己创造一个
+            var dataId = parseInt(tempYear + tempMonth + tempDay);
+            if (debug) {
+                console.log(tempReg);
+                console.log("日期：" + tempDate, "日历类型（1-休假，2-上班）：" + tempType, "假期类型（1-普通节假日，2-法定节假日，99-周末）：" + tempHolidayType);
+            }
+            switch (tempMonth) {
+                case "01":
+                    tempHolidayDesc = "元旦";
+                    break;
+
+                // 春节根据实际情况调整
+                case "02":
+                case "03":
+                    tempHolidayDesc = "春节";
+                    break;
+
+                case "04":
+                    tempHolidayDesc = "清明节";
+                    break;
+                case "05":
+                    tempHolidayDesc = "劳动节";
+                    break;
+
+                // 端午节根据实际情况调整
+                case "06":
+                    tempHolidayDesc = "端午节";
+                    break;
+
+                // 中秋节根据实际情况调整
+                case "09":
+                    tempHolidayDesc = "中秋节";
+                    break;
+                case "10":
+                    tempHolidayDesc = "国庆节";
+                    break;
+                default:
+                    break;
+            }
+            if (tempHolidayType != "99") {// 排除周末
+                switch (tempType) {
+                    case "1":// 休假
+                        // console.log("----休假日期：" + tempDate);
+                        holidayList.push({ "date": tempDate, "id": dataId++, "onwork": 0, "memo": tempHolidayDesc })
+                        break;
+                    case "2":// 上班
+                        // console.log("====上班日期：" + tempDate);
+                        tempHolidayDesc = tempHolidayDesc + "调休上班"
+                        onWorkWeekendList.push({ "date": tempDate, "id": dataId++, "onwork": 1, "memo": tempHolidayDesc })
+                        break;
+                }
+            }
+        }
+        console.log(holidayList);
+        var holidayOutPut = "";
+        holidayList.forEach(element => {
+            var inser = "insert into `holiday` ( date, memo, on_work, id) values ( '" + element.date + "', '" + element.memo + "', " + element.onwork + ", " + element.id + "); ";
+            console.log(inser);
+            holidayOutPut = holidayOutPut + inser + "\n";
+        });
+
+        var holidayholiday = document.getElementById("holiday-holiday");
+        holidayholiday.value = holidayOutPut;
+
+        var onworkOutPut = "";
+        console.log(onWorkWeekendList);
+        onWorkWeekendList.forEach(element => {
+            var inser = "insert into `on_work_weekend` ( date, memo, on_work, id) values ( '" + element.date + "', '" + element.memo + "', " + element.onwork + ", " + element.id + "); ";
+            console.log(inser);
+            onworkOutPut = onworkOutPut + inser + "\n";
+        });
+        var holidayonwork = document.getElementById("holiday-onwork");
+        holidayonwork.value = onworkOutPut;
+
+        // insert into `holiday` ( date, memo, on_work, id) values ( '2021-02-07', '春节', 1, 211);
+        // insert into `on_work_weekend` ( date, memo, on_work, id) values ( '2021-02-07', '春节', 1, 211);
+        // console.log(data.match(reg))
+    }
+</script>
+
+</html>
