@@ -13,6 +13,11 @@
       margin: 0;
     }
 
+
+    .el-main {
+      min-height: calc(100vh - 122px)
+    }
+
     .el-header,
     .el-footer {
       text-align: center;
@@ -24,6 +29,10 @@
       bottom: 0;
     }
 
+    footer div.el-divider {
+      margin: 0;
+    }
+
     .wraper {
       height: 100vh;
       overflow-x: hidden;
@@ -31,9 +40,7 @@
   </style>
 </head>
 
-<body>
-
-
+<body style="display: none;">
   <div id="hailazApp" class="wraper">
     <template>
       <el-backtop target=".wraper">
@@ -42,19 +49,30 @@
     <el-container>
       <el-header>
         <el-menu class="el-menu-demo" mode="horizontal">
-          <el-menu-item index="1"><a href="/blog" target="_blank">博客</a></el-menu-item>
-          <el-menu-item index="2"><a href="/static/pages/tools/tools.html" target="_blank">工具</a></el-menu-item>
-          <el-menu-item index="3"><a href="/static/pages/tools/dism.html" target="_blank">dism系统优化</a></el-menu-item>
-          <el-menu-item index="4"><a href="/static/pages/tcs.html" target="_blank">贪吃蛇</a></el-menu-item>
-          <el-menu-item index="5"><a href="/static/pages/tools/list.html" target="_blank">list</a></el-menu-item>
+          <el-menu-item index="1">
+            <el-link href="https://goframe.org/spaces/viewspace.action?key=~hailaz" target="_blank" type="primary">博客</el-link>
+          </el-menu-item>
+          <el-menu-item index="2">
+            <el-link href="/static/pages/tools/tools.html" target="_blank" type="primary">工具</el-link>
+          </el-menu-item>
+          <el-menu-item index="3">
+            <el-link href="/static/pages/tools/dism.html" target="_blank">dism系统优化</el-link>
+          </el-menu-item>
+          <el-menu-item index="4">
+            <el-link href="/static/pages/tcs.html" target="_blank">贪吃蛇</el-link>
+          </el-menu-item>
+          <el-menu-item index="5">
+            <el-link href="/static/pages/tools/list.html" target="_blank">&nbsp;</el-link>
+            <el-link href="/blog" target="_blank" type="primary">&nbsp;</el-link>
+          </el-menu-item>
         </el-menu>
       </el-header>
       <el-main>
         <center>Hello world!</center>
       </el-main>
       <el-footer>
-        <el-divider>底线</el-divider>
-        <a href="http://hailaz.cn">hailaz.cn</a>
+        <el-divider></el-divider>
+        <a href="http://www.hailaz.cn">www.hailaz.cn</a>
       </el-footer>
     </el-container>
 
@@ -73,6 +91,7 @@
     methods: {
     },
     mounted() {
+      document.querySelector('body').setAttribute('style', '');// 设置可见
     },
   }
   var Ctor = Vue.extend(Main)
