@@ -38,10 +38,18 @@
       overflow-x: hidden;
     }
 
+    .el-tree {
+      background-color: transparent;
+    }
+
     .loading-bg {
       z-index: -10;
       top: 250px;
       position: absolute;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     }
 
     .loading {
@@ -117,6 +125,20 @@
           <div class="loading"></div>
           <div class="loading-bg">Hello World</div>
         </div>
+        <div>
+          <el-input placeholder="测评收录" v-model="filterText">
+          </el-input>
+          <el-tree class="filter-tree" :data="treeData" :props="defaultProps" default-expand-all
+            :filter-node-method="filterNode" ref="tree">
+            <span class="custom-tree-node" slot-scope="{ node, data }">
+              <span v-if="!data.link">{{ data.label }}</span>
+              <span v-else>
+                <a :href="data.link" target="_blank" type="primary">{{ data.label }}</a>
+              </span>
+            </span>
+          </el-tree>
+        </div>
+
       </el-main>
       <el-footer>
         <el-divider></el-divider>
@@ -134,16 +156,32 @@
   var Main = {
     data() {
       return {
+        filterText: '',
+        treeData: [],
+        defaultProps: {
+          children: 'children',
+          label: 'label'
+        }
       };
     },
+    watch: {
+      filterText(val) {
+        this.$refs.tree.filter(val);
+      }
+    },
     methods: {
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.label.indexOf(value) !== -1;
+      }
     },
     mounted() {
       document.querySelector('body').setAttribute('style', '');// 设置可见
     },
   }
   var Ctor = Vue.extend(Main)
-  new Ctor().$mount('#hailazApp')
+  var v = new Ctor().$mount('#hailazApp')
 </script>
+<script src="static/index.js"></script>
 
 </html>
