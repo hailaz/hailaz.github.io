@@ -1,34 +1,41 @@
-fork ：https://github.com/WakelessDragon/blog
+# Website
 
-# Blog Address
+This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
 
-<https://hailaz.github.io/>
+### Installation
 
-
-# Must Modify
-
-## 1.swiftype
-
-This service provides the on-site search function.
-
-Service address： <https://swiftype.com/>.
-
-After the setup is complete， you need to modify the `swiftype_searchId` in `_config.yml`.
-
-In your swiftype engine, go to `Setup and integration` -> `Install Search`, you could find the `swiftype_searchId`.
-
-```html
-<script type="text/javascript">
-...
-...
-  _st('install','swiftype_searchId','2.0.0');
-</script>
+```
+$ yarn
 ```
 
-## 2.disqus
+### Local Development
 
-This service provides the comment function.
+```
+$ yarn start
+```
 
-Service address： <https://disqus.com/>.
+This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
 
-After the setup is complete， you need to modify the `disqus_shortname` in `_config.yml`.
+### Build
+
+```
+$ yarn build
+```
+
+This command generates static content into the `build` directory and can be served using any static contents hosting service.
+
+### Deployment
+
+Using SSH:
+
+```
+$ USE_SSH=true yarn deploy
+```
+
+Not using SSH:
+
+```
+$ GIT_USER=<Your GitHub username> yarn deploy
+```
+
+If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<center><span style="color: red;">选择文件即可，宽高可选设置，不设置宽高则保持原分辨率。生成后右键另存为即可。</span><br /> 质量：
+			<select id="imgQuality" name="">
+				<option value="0.1">10</option>
+				<option value="0.2">20</option>
+				<option value="0.3">30</option>
+				<option value="0.4">40</option>
+				<option value="0.5">50</option>
+				<option value="0.6">60</option>
+				<option value="0.7" selected="true">70</option>
+				<option value="0.8">80</option>
+				<option value="0.9">90</option>
+			</select><br /> 宽：
+			<input type="text" name="" id="imgWidth" value="" /><br /> 高：
+			<input type="text" name="" id="imgHeight" value="" /><br />
+			<input type="file" name="" id="" value="" onchange="test(this)" /> <br />
+		</center>
+		<br />
+		<center>
+			<div class="" style="width: 600px;height: 700px;border: 1px solid;margin-top: 10px;line-height: 700px;">
+				<img id="transform" src="" width="600" height="700" title="待生成图片" />
+			</div>
+		</center>
+	</body>
+	<script type="text/javascript">
+		function test(e) {
+			console.log(e.files[0])
+			//console.log(window.URL.createObjectURL(e.files[0]))
+
+			// 调用函数处理图片 　　　　　　　　　　　　　　　　
+			dealImage(window.URL.createObjectURL(e.files[0]), {
+				// 注意：在pc端可以用绝对路径或相对路径，移动端最好用绝对路径（因为用take photo后的图片路径，我没有试成功（如果有人试成功了可以分享一下经验））
+				width: document.getElementById("imgWidth").value,
+				height: document.getElementById("imgHeight").value,
+				quality: document.getElementById("imgQuality").value
+			}, function(base) {
+				//直接将获取到的base64的字符串，放到一个image标签中就可看到测试后的压缩之后的样式图了
+				document.getElementById("transform").src = base;
+				//console.log("压缩后：" + base.length / 1024 + " " + base);　　　　
+			})
+		}
+		/**
+		 * 图片压缩，默认同比例压缩
+		 * @param {Object} path 
+		 *   pc端传入的路径可以为相对路径，但是在移动端上必须传入的路径是照相图片储存的绝对路径
+		 * @param {Object} obj
+		 *   obj 对象 有 width， height， quality(0-1)
+		 * @param {Object} callback
+		 *   回调函数有一个参数，base64的字符串数据
+		 */
+		function dealImage(path, obj, callback) {
+			var img = new Image();
+			img.src = path;
+			img.onload = function() {
+				var that = this;
+				// 默认按比例压缩
+				var w = that.width,
+					h = that.height,
+					scale = w / h;
+				w = obj.width || w;
+				h = obj.height || (w / scale);
+				var quality = obj.quality || 0.7; // 默认图片质量为0.7
+				//生成canvas
+				var canvas = document.createElement('canvas');
+				var ctx = canvas.getContext('2d');
+				// 创建属性节点
+				var anw = document.createAttribute("width");
+				anw.nodeValue = w;
+				var anh = document.createAttribute("height");
+				anh.nodeValue = h;
+				canvas.setAttributeNode(anw);
+				canvas.setAttributeNode(anh);
+				ctx.drawImage(that, 0, 0, w, h);
+				// 图像质量
+				if(obj.quality && obj.quality <= 1 && obj.quality > 0) {
+					quality = obj.quality;
+				}
+				// quality值越小，所绘制出的图像越模糊
+				var base64 = canvas.toDataURL('image/jpeg', quality);
+				// 回调函数返回base64的值
+				callback(base64);
+			}
+		}
+		//当然返回的是一个base64的一个字符串；
+
+		//如果可以试着测试一下压缩后的图片大小：
+	</script>
+
+</html>
