@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkhailaz_github_io=self.webpackChunkhailaz_github_io||[]).push([[2375],{5710:a=>{a.exports=JSON.parse('{"label":"mysql","permalink":"/blog/tags/mysql","allTagsPath":"/blog/tags","count":1}')}}]);

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkhailaz_github_io=self.webpackChunkhailaz_github_io||[]).push([[3245],{5471:a=>{a.exports=JSON.parse('{"label":"WebSocket","permalink":"/blog/tags/web-socket","allTagsPath":"/blog/tags","count":1}')}}]);
