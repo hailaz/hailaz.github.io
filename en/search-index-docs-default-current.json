@@ -1,0 +1,1 @@
+{"documents":[{"id":30,"pageTitle":"","sectionTitle":"hello","sectionRoute":"/en/docs/","type":"docs"}],"index":{"version":"2.3.9","fields":["title","content","tags"],"fieldVectors":[["title/30",[0,0.288]],["content/30",[]],["tags/30",[]]],"invertedIndex":[["hello",{"_index":0,"title":{"30":{}},"content":{},"tags":{}}]],"pipeline":["stemmer"]}}
