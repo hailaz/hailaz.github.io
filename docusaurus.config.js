@@ -63,7 +63,7 @@ const config = {
         title: '哩度',
         logo: {
           alt: 'My Site Logo',
-          src: 'img/logo.svg',
+          src: 'img/favicon.ico',
         },
         items: [
           {
@@ -93,6 +93,17 @@ const config = {
         darkTheme: darkCodeTheme,
       },
     }),
+  plugins: [
+    // ...
+    [
+      require.resolve("@cmfcmf/docusaurus-search-local"),
+      {
+        // Options here
+        // language of your documentation, see next section
+        language: "zh",
+      },
+    ],
+  ]
 };
 
 module.exports = config;
