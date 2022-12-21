@@ -73,7 +73,6 @@ const config = {
             label: '学习笔记',
           },
           { to: '/blog', label: '博客', position: 'left' },
-          { to: '/tcs.html', label: '贪吃蛇', position: 'left' },
           {
             href: 'https://hailaz.github.io/tools/tools.html',
             label: '工具',
