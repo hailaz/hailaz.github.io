@@ -70,7 +70,7 @@ const config = {
             type: 'doc',
             docId: 'README',
             position: 'left',
-            label: '学习笔记',
+            label: '待分类',
           },
           { to: '/blog', label: '博客', position: 'left' },
           {
