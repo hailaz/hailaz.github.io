@@ -25,7 +25,7 @@ const config = {
   // to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'zh-Hans',
-    locales: ['en'],
+    locales: ['zh-Hans'],
   },
 
   presets: [
@@ -38,7 +38,7 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/hailaz/hailaz.github.io/blob/master/',
         },
         blog: {
           blogSidebarTitle: '全部博文',
@@ -68,9 +68,15 @@ const config = {
         items: [
           {
             type: 'doc',
-            docId: 'README',
+            docId: 'base/index',
             position: 'left',
             label: '待分类',
+          },
+          {
+            type: 'docSidebar',
+            position: 'left',
+            sidebarId: 'learn',
+            label: '学习',
           },
           { to: '/blog', label: '博客', position: 'left' },
           {
@@ -93,7 +99,18 @@ const config = {
       },
     }),
   plugins: [
-    // ...
+    // 多文档
+    // [
+    //   '@docusaurus/plugin-content-docs',
+    //   {
+    //     id: 'learn',
+    //     path: 'learn',
+    //     routeBasePath: 'learn',
+    //     // sidebarPath: require.resolve('./sidebars.js'),
+    //     // ……其他选项
+    //   },
+    // ],
+    // 搜索
     [
       require.resolve("@cmfcmf/docusaurus-search-local"),
       {
