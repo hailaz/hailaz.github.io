@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkhailaz_github_io=self.webpackChunkhailaz_github_io||[]).push([[6267],{230:s=>{s.exports=JSON.parse('{"label":"mysql","permalink":"/docs/tags/mysql","allTagsPath":"/docs/tags","count":1,"items":[{"id":"learn/mysql/mgr","title":"MGR","description":"mysql\u7684\u5b89\u88c5","permalink":"/docs/learn/mysql/mgr"}]}')}}]);
