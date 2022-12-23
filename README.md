@@ -6,7 +6,7 @@ https://docusaurus.io/zh-CN/docs
 
 https://github.com/cmfcmf/docusaurus-search-local
 
-## 导入代码
+## 从文件导入代码块
 
 https://docusaurus.io/zh-CN/docs/markdown-features/react#importing-code-snippets
 
@@ -29,3 +29,7 @@ import gorun2 from '!!raw-loader!./gorun2.go';// 下面必须空一行
 {gorun2}
 </CodeBlock>
 ```
+
+## 指定安装源
+
+npm install --registry https://registry.npmmirror.com
