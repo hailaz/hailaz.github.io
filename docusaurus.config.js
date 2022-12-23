@@ -27,7 +27,7 @@ const config = {
     defaultLocale: 'zh-Hans',
     locales: ['zh-Hans'],
   },
-
+  themes: ['@docusaurus/theme-live-codeblock'],
   presets: [
     [
       'classic',

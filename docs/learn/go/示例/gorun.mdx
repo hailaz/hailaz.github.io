@@ -1,0 +1,24 @@
+---
+layout: post
+title: gorun
+---
+import CodeBlock from '@theme/CodeBlock';
+
+
+## 限制 go run 个数
+
+### 使用管道
+import gorun2 from '!!raw-loader!./gorun2.go';// 下面必须空一行
+
+<CodeBlock language="go">
+{gorun2}
+</CodeBlock>
+
+
+### 使用互斥锁
+
+import gorun1 from '!!raw-loader!./gorun1.go';// 下面必须空一行
+
+<CodeBlock language="go">
+{gorun1}
+</CodeBlock>

@@ -1,0 +1,24 @@
+---
+layout: post
+title: goset
+---
+import CodeBlock from '@theme/CodeBlock';
+
+## 集合
+
+### 并发安全
+
+import goset_safe from '!!raw-loader!./goset_safe.go';// 下面必须空一行
+
+<CodeBlock language="go">
+{goset_safe}
+</CodeBlock>
+
+
+### 非并发安全
+
+import goset from '!!raw-loader!./goset.go';// 下面必须空一行
+
+<CodeBlock language="go">
+{goset}
+</CodeBlock>
