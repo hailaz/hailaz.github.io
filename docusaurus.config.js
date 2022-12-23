@@ -47,7 +47,7 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/hailaz/hailaz.github.io/blob/master/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -66,19 +66,19 @@ const config = {
           src: 'img/favicon.ico',
         },
         items: [
-          {
-            type: 'doc',
-            docId: 'base/index',
-            position: 'left',
-            label: '待分类',
-          },
+          { to: '/blog', label: '博客', position: 'left' },
           {
             type: 'docSidebar',
             position: 'left',
             sidebarId: 'learn',
             label: '学习',
           },
-          { to: '/blog', label: '博客', position: 'left' },
+          {
+            type: 'doc',
+            docId: 'base/index',
+            position: 'left',
+            label: '待分类',
+          },
           {
             href: 'https://hailaz.github.io/tools/tools.html',
             label: '工具',
