@@ -66,19 +66,25 @@ const config = {
           src: 'img/favicon.ico',
         },
         items: [
-          { to: '/blog', label: '博客', position: 'left' },
+          // {
+          //   type: 'doc',
+          //   docId: 'live/index',
+          //   position: 'left',
+          //   label: '生活',
+          // },
+          {
+            type: 'docSidebar',
+            position: 'left',
+            sidebarId: 'live',
+            label: '生活',
+          },
           {
             type: 'docSidebar',
             position: 'left',
             sidebarId: 'learn',
             label: '学习',
           },
-          {
-            type: 'doc',
-            docId: 'base/index',
-            position: 'left',
-            label: '待分类',
-          },
+          { to: '/blog', label: '博客', position: 'left' },
           {
             href: 'https://hailaz.github.io/tools/tools.html',
             label: '工具',
