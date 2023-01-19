@@ -89,6 +89,7 @@ const config = {
             href: 'https://www.hailaz.cn/gflearn/docs/index',
             label: 'GFLearn',
             position: 'left',
+            target: '_self',
           },
           {
             href: 'https://hailaz.github.io/tools/tools.html',
