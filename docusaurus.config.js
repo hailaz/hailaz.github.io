@@ -86,6 +86,11 @@ const config = {
           },
           { to: '/blog', label: '博客', position: 'left' },
           {
+            href: 'https://www.hailaz.cn/gflearn/docs/index',
+            label: 'GFLearn',
+            position: 'left',
+          },
+          {
             href: 'https://hailaz.github.io/tools/tools.html',
             label: '工具',
             position: 'right',
