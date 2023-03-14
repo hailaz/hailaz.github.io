@@ -25,10 +25,10 @@ use
 
 ```md
 import CodeBlock from '@theme/CodeBlock';
-import gorun2 from '!!raw-loader!./gorun2.go';// 下面必须空一行
+import mycode from '!!raw-loader!./mycode.go';// 下面必须空一行
 
 <CodeBlock language="go">
-{gorun2}
+{mycode}
 </CodeBlock>
 ```
 
@@ -37,4 +37,5 @@ import gorun2 from '!!raw-loader!./gorun2.go';// 下面必须空一行
 npm install --registry <https://registry.npmmirror.com>
 
 ## cherry-markdown
+
 <https://tencent.github.io/cherry-markdown/examples/index.html>
