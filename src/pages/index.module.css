@@ -21,3 +21,12 @@
   align-items: center;
   justify-content: center;
 }
+
+#hommain {
+  text-align: center;
+}
+
+#hommain .table{
+  text-align: center;
+  margin: auto;
+}
