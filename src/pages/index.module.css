@@ -22,11 +22,27 @@
   justify-content: center;
 }
 
-#hommain {
+body{
+  background: url(../../static/img/ruiwen.jpg);
+  background-size: cover;
+}
+
+.mytable {
+  background-color: rgb(255, 255, 255);
+  text-align: center;
+  width: 600px;
+  margin: auto;
+}
+
+.mytable .table{
+  margin: auto;
+}
+
+.mysearch{
   text-align: center;
 }
 
-#hommain .table{
-  text-align: center;
-  margin: auto;
+.mysearch input{
+  margin: 10px;
+  height: 30px;
 }

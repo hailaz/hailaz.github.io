@@ -22,10 +22,22 @@ export default function Home() {
     <Layout
       title={`欢迎来到 ${siteConfig.title}`}
       description="Description will go into a meta tag in <head />">
-      <HomepageHeader />
+      {/* <HomepageHeader /> */}
       <main>
+        <div className={clsx(styles.mysearch)}>
+          <form action="https://www.google.com/search" method="GET" target="_blank">
+            <input type="text" name="q" size="50" />
+            <input type="submit" value="google" style={{width: '80px'}}/>
+          </form>
+          <form action="http://www.baidu.com/s" method="GET" target="_blank">
+            <input type="text" name="wd" size="50" />
+            <input type="submit" value="百度一下" style={{width: '80px'}}/>
+            <input type="hidden" name="ie" value="utf-8" />
+            <input type="hidden" name="tn" value="ace" />
+          </form>
+        </div>
         {/* <HomepageFeatures /> */}
-        <div id='homemain'>
+        <div className={clsx(styles.mytable)}>
           <table>
             <tbody>
               <tr>

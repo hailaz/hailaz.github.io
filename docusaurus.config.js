@@ -104,6 +104,7 @@ const config = {
         ],
       },
       footer: {
+        copyright: `${new Date()}`,
       },
       prism: {
         theme: lightCodeTheme,
