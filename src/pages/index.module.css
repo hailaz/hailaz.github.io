@@ -22,9 +22,9 @@
   justify-content: center;
 }
 
-body{
-  background: url(../../static/img/ruiwen.jpg);
-  background-size: cover;
+.mybackground{
+  /* background: url(../../static/img/ruiwen.jpg); */
+  /* background-size: cover; */
 }
 
 .mytable {
