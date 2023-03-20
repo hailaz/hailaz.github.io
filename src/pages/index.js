@@ -29,11 +29,9 @@ export default function Home() {
             <input type="text" name="q" size="50" />
             <input type="submit" value="google" style={{width: '80px'}}/>
           </form>
-          <form action="http://www.baidu.com/s" method="GET" target="_blank">
+          <form action="https://www.baidu.com/s" method="GET" target="_blank">
             <input type="text" name="wd" size="50" />
             <input type="submit" value="百度一下" style={{width: '80px'}}/>
-            <input type="hidden" name="ie" value="utf-8" />
-            <input type="hidden" name="tn" value="ace" />
           </form>
         </div>
         {/* <HomepageFeatures /> */}
