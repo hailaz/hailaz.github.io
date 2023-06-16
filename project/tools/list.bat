@@ -9,7 +9,7 @@ echo ^</head^> >> list.html
 for  %%s in (*) do (
 if not "%%s" == "list.html"  (
 if not "%%s" == "list.bat"  (
-echo ^<a href=^"/static/pages/tools/%%s^"^>%%s^</a^>^</br^> >> list.html
+echo ^<a href=^"/tools/%%s^"^>%%s^</a^>^</br^> >> list.html
 )
 )
 
