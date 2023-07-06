@@ -5,9 +5,7 @@ tags:
   - learn
 ---
 
-
 ## 学习资料
-
 
 <!-- - [《深入解析 Go》]()
 - [《Go 实战开发》]()
@@ -24,5 +22,6 @@ tags:
 - [《Go语言程序设计》](/blog/static/doc/go/Go语言程序设计.pdf)
 - [《Go语言圣经》](/blog/static/doc/go/Go语言圣经.pdf)
 - [《Go语言编程》](/blog/static/doc/go/Go语言编程.pdf) -->
-- [GO知识图谱](./golang.png)
-- [GO开发指南](./golangdev.jpg)
+
+- [GO 知识图谱](./golang.png)
+- [GO 开发指南](./golangdev.jpg)
