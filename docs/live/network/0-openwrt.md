@@ -12,6 +12,7 @@ title: openwrt
 
 <https://www.cnblogs.com/andyzjb/p/15587004.html>
 
+```
 openwrt-x86-generic-combined-ext4.img.gz<br>
 combined-ext4 是什么意思功能上有些什么差别？？？ rootfs 工作区存储格式为 ext4<br>
 openwrt-x86-generic-combined-jffs2-128k.img combined-jffs2 是什么意思功能上有些什么差别？？？ jffs2 可以修改，也就是可以自行更换（删除）rootfs 的配置文件，而不需要重新刷固件。 openwrt-x86-generic-combined-squashfs.img<br>
@@ -23,6 +24,7 @@ combined-squashfs.img.gz（squashfs 相当于可以恢复出厂设置的固件�
 generic-rootfs.tar.gz（rootfs 的镜像，不带引导，可自行定义用 grub 或者 syslinux 来引导。）
 rootfs-ext4.img.gz（rootfs 的镜像，不带引导，可自行定义用 grub 或者 syslinux 来引导，需要存储区是 ext4。）
 rootfs-squashfs.img.gz（rootfs 的镜像，不带引导，可自行定义用 grub 或者 syslinux 来引导，如果使用中配置错误，可直接恢复默认设置。）
+```
 
 ```
 build.config
