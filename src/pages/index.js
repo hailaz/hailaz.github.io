@@ -87,7 +87,9 @@ export default function Home() {
                     <a href='http://www.facebook.com/' target="_blank">facebook</a>
                   </td>
                   <td>
-                    <a href='https://www.google.com/' target="_blank">google</a>
+                    <a href='https://www.google.com/' target="_blank">
+                      <img src="https://www.example.com/google-icon.png" alt="Google"/>
+                    </a>
                   </td>
                   <td>
                     <a href='https://www.youtube.com/' target="_blank">youtube</a>
