@@ -23,5 +23,6 @@ tags:
 - [《Go语言圣经》](/blog/static/doc/go/Go语言圣经.pdf)
 - [《Go语言编程》](/blog/static/doc/go/Go语言编程.pdf) -->
 
+- [GO 官方文档](https://go.dev/)
 - [GO 知识图谱](./golang.png)
 - [GO 开发指南](./golangdev.jpg)
