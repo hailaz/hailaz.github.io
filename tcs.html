@@ -14,7 +14,7 @@
             text-align: center;
             background-color: white;
         }
-        
+
         .pointSelect {
             background: -webkit-linear-gradient(left top, black, white);
             /* Safari 5.1 - 6.0 */
@@ -22,15 +22,17 @@
             /* Opera 11.1 - 12.0 */
             background: -moz-linear-gradient(bottom right, black, white);
             /* Firefox 3.6 - 15 */
-            background: linear-gradient(to bottom right, black, yellow);
-            /* 标准的语法 */
+            background: red
+                /*linear-gradient(to bottom right, black, yellow);*/
+                /* 标准的语法 */
         }
     </style>
 </head>
 
 <body>
     <div id="snakeId" :style="snakeBoxStyle">
-        <snake-point :style="snakePointStyle" v-for="item in snakeArray" :todo="item" :key="item.id" :class="{point:true, pointSelect: item.isSel }">
+        <snake-point :style="snakePointStyle" v-for="item in snakeArray" :todo="item" :key="item.id"
+            :class="{point:true, pointSelect: item.isSel }">
         </snake-point>
     </div>
 </body>
@@ -44,20 +46,20 @@
         data: {
             snakeArray: new Array(),
             snakeHead: null,
-            snakeBoxSize: 40,
-            snakePointWidth: 10,
+            snakeBoxSize: 30,
+            snakePointWidth: 20,
             snakeBoxStyle: "",
             snakePointStyle: "",
-            snakeMove: 39,
-            snakeEats: -1,
-            snakeLen: 5
+            snakeMove: 39,// 37 左 38 上 39 右 40 下
+            snakeEats: -1,// 果子
+            snakeLen: 10// 蛇的长度
         },
         methods: {
-            snakeNode: function(idx) {
+            snakeNode: function (idx) {
                 this.pointIndex = idx;
                 this.next = null;
             },
-            insertNode: function(idx) {
+            insertNode: function (idx) {
                 var thisSnake = this;
                 var newNode = new thisSnake.snakeNode(idx);
                 var pNode = thisSnake.snakeHead;
@@ -70,7 +72,7 @@
                 }
                 //console.log(this.snakeHead);
             },
-            showNode: function() {
+            showNode: function () {
                 var thisSnake = this;
                 var currNode = thisSnake.snakeHead;
                 while (currNode.next != null) {
@@ -79,7 +81,7 @@
                     thisSnake.snakeArray[currNode.pointIndex].isSel = true;
                 }
             },
-            removeNode: function() {
+            removeNode: function () {
                 var thisSnake = this;
                 var currNode = thisSnake.snakeHead;
                 var frontNode = currNode;
@@ -94,9 +96,14 @@
                     thisSnake.snakeArray[pointIndex].isSel = false;
                 }
             },
-            snakeMoving: function() {
+            snakeMoving: function () {
                 var thisSnake = this;
+                
                 if (this.snakeEats != -1) {
+                    // 显示果子
+                    thisSnake.snakeArray[this.snakeEats].isSel = true;
+                }else{
+                    thisSnake.newSnakeEats();
                     thisSnake.snakeArray[this.snakeEats].isSel = true;
                 }
 
@@ -134,22 +141,23 @@
                         break;
                 }
                 thisSnake.insertNode(index);
+                // 判断是否吃到果子
                 if (thisSnake.snakeEats == index) {
                     thisSnake.snakeEats = -1;
-                    thisSnake.newSnakeEats();
                 } else {
                     thisSnake.removeNode();
                 }
 
                 thisSnake.showNode();
             },
-            newSnakeEats: function() {
+            newSnakeEats: function () {
                 var thisSnake = this;
                 thisSnake.snakeEats = parseInt(thisSnake.snakeBoxSize * thisSnake.snakeBoxSize * Math.random());
             },
-            listKeyDownEvent: function() {
+            listKeyDownEvent: function () {
+                // 按键事件
                 var thisSnake = this;
-                document.onkeydown = function(e) {
+                document.onkeydown = function (e) {
                     var keyCode = window.event ? e.keyCode : e.which;
                     switch (keyCode) {
                         case 37:
@@ -171,7 +179,7 @@
                 }
             }
         },
-        created: function() {
+        created: function () {
             var thisSnake = this;
             for (var i = 0; i < thisSnake.snakeBoxSize * thisSnake.snakeBoxSize; i++) {
                 thisSnake.snakeArray.push({
@@ -188,7 +196,7 @@
             for (var i = 0; i < thisSnake.snakeLen; i++) {
                 thisSnake.insertNode(i);
             }
-            thisSnake.newSnakeEats();
+            // thisSnake.newSnakeEats();
             thisSnake.listKeyDownEvent();
             setInterval(thisSnake.snakeMoving, 100);
 
