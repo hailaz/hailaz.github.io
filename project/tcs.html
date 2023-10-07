@@ -35,6 +35,11 @@
         <snake-point :style="snakePointStyle" v-for="item in snakeArray" :todo="item" :key="item.id"
             :class="{point:true, pointSelect: item.isSel }">
         </snake-point>
+
+        <button @click="handleClick(38)">上</button>
+        <button @click="handleClick(40)">下</button>
+        <button @click="handleClick(37)">左</button>
+        <button @click="handleClick(39)">右</button>
     </div>
 </body>
 <script type="text/javascript">
@@ -220,7 +225,30 @@
             },
             newSnakeEats: function () {
                 var thisSnake = this;
-                thisSnake.snakeEats = parseInt(thisSnake.snakeBoxSize * thisSnake.snakeBoxSize * Math.random());
+                while (thisSnake.isInWall(thisSnake.snakeEats) || thisSnake.snakeEats == -1) {
+                    thisSnake.snakeEats = parseInt(thisSnake.snakeBoxSize * thisSnake.snakeBoxSize * Math.random());
+                }
+                // thisSnake.snakeEats = parseInt(thisSnake.snakeBoxSize * thisSnake.snakeBoxSize * Math.random());
+            },
+            handleClick: function (keyCode) {
+                var thisSnake = this;
+                switch (keyCode) {
+                    case 37:
+                    case 39:
+                        if (thisSnake.snakeMove != 37 && thisSnake.snakeMove != 39) {
+                            thisSnake.snakeMove = keyCode;
+                        }
+                        break;
+                    case 38:
+                    case 40:
+                        if (thisSnake.snakeMove != 38 && thisSnake.snakeMove != 40) {
+                            thisSnake.snakeMove = keyCode;
+                        }
+                        break;
+                    default:
+                        console.log(keyCode)
+                        break;
+                }
             },
             listKeyDownEvent: function () {
                 // 按键事件
@@ -252,7 +280,8 @@
             for (var i = 0; i < thisSnake.snakeBoxSize * thisSnake.snakeBoxSize; i++) {
                 thisSnake.snakeArray.push({
                     id: i,
-                    text: i + ',',
+                    // text: i + ',',
+                    text: '',
                     isSel: false
                 });
                 thisSnake.snakeBoxStyle = "border:1px solid red;width: " +
@@ -267,7 +296,7 @@
             // thisSnake.newSnakeEats();
             thisSnake.copyWall()
             thisSnake.listKeyDownEvent();
-            thisSnake.intervalId = setInterval(thisSnake.snakeMoving, 100);
+            thisSnake.intervalId = setInterval(thisSnake.snakeMoving, 200);
 
         },
     })
