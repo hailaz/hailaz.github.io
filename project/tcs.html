@@ -54,39 +54,40 @@
             snakeMove: 39,// 37 左 38 上 39 右 40 下
             snakeEats: -1,// 果子
             snakeLen: 1,// 蛇的长度
+            intervalId: null,
             wallMap: [
 
 
-            69,70,
-            99,100,
-            124,125,126,127,128,129,130,131,132,133,134,135,
-            154,155,156,157,158,159,160,161,162,163,164,165,
-            189,190,
-            219,220,
-            246,247,248,249,250,251,252,253,
-            276,277,278,279,280,281,282,283,
+                69, 70,
+                99, 100,
+                124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135,
+                154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165,
+                189, 190,
+                219, 220,
+                246, 247, 248, 249, 250, 251, 252, 253,
+                276, 277, 278, 279, 280, 281, 282, 283,
 
-            366,367,368,369,370,371,372,373,
-            396,397,398,399,400,401,402,403,
-            426,427,
-            432,433,
-            456,457,458,459,460,461,462,463,
-            486,487,488,489,490,491,492,493,
-            519,520,
-            549,550,
+                366, 367, 368, 369, 370, 371, 372, 373,
+                396, 397, 398, 399, 400, 401, 402, 403,
+                426, 427,
+                432, 433,
+                456, 457, 458, 459, 460, 461, 462, 463,
+                486, 487, 488, 489, 490, 491, 492, 493,
+                519, 520,
+                549, 550,
 
-            574,575,576,577,578,579,580,581,582,583,584,585,
-            604,605,606,607,608,609,610,611,612,613,614,615,
-            639,640,
-            669,670,
-            696,697,698,699,700,701,702,703,
-            726,727,728,729,730,731,732,733,
-            756,757,
-            762,763,
-            786,787,788,789,790,791,792,793,
-            816,817,818,819,820,821,822,823,
+                574, 575, 576, 577, 578, 579, 580, 581, 582, 583, 584, 585,
+                604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615,
+                639, 640,
+                669, 670,
+                696, 697, 698, 699, 700, 701, 702, 703,
+                726, 727, 728, 729, 730, 731, 732, 733,
+                756, 757,
+                762, 763,
+                786, 787, 788, 789, 790, 791, 792, 793,
+                816, 817, 818, 819, 820, 821, 822, 823,
 
-        ]
+            ]
         },
         methods: {
             snakeNode: function (idx) {
@@ -97,7 +98,7 @@
                 var thisSnake = this;
                 var wallMap = new Array();
                 for (var i = 0; i < thisSnake.wallMap.length; i++) {
-                    wallMap.push(thisSnake.wallMap[i]+10);
+                    wallMap.push(thisSnake.wallMap[i] + 10);
                 }
                 for (var i = 0; i < wallMap.length; i++) {
                     thisSnake.wallMap.push(wallMap[i]);
@@ -201,6 +202,12 @@
                         break;
                 }
                 thisSnake.insertNode(index);
+                if (thisSnake.isInWall(index)) {
+                    clearInterval(thisSnake.intervalId);
+                    alert("game over");
+                    window.location.reload();
+                    return;
+                }
                 // 判断是否吃到果子
                 if (thisSnake.snakeEats == index) {
                     thisSnake.snakeEats = -1;
@@ -245,7 +252,7 @@
             for (var i = 0; i < thisSnake.snakeBoxSize * thisSnake.snakeBoxSize; i++) {
                 thisSnake.snakeArray.push({
                     id: i,
-                    text: i+',',
+                    text: i + ',',
                     isSel: false
                 });
                 thisSnake.snakeBoxStyle = "border:1px solid red;width: " +
@@ -255,12 +262,12 @@
             }
             thisSnake.snakeHead = new thisSnake.snakeNode(0);
             for (var i = 0; i < thisSnake.snakeLen; i++) {
-                thisSnake.insertNode(i+thisSnake.snakeBoxSize*5);
+                thisSnake.insertNode(i + thisSnake.snakeBoxSize);
             }
             // thisSnake.newSnakeEats();
             thisSnake.copyWall()
             thisSnake.listKeyDownEvent();
-            setInterval(thisSnake.snakeMoving, 100);
+            thisSnake.intervalId = setInterval(thisSnake.snakeMoving, 100);
 
         },
     })
