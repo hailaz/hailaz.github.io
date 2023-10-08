@@ -13,7 +13,7 @@
             border: 1px solid white;
             list-style: none;
             text-align: center;
-            background-color: white;
+            background-color: rgb(255, 213, 165);
         }
 
         .pointSelect {
@@ -23,13 +23,17 @@
             /* Opera 11.1 - 12.0 */
             background: -moz-linear-gradient(bottom right, black, white);
             /* Firefox 3.6 - 15 */
-            background: rgb(52, 182, 243)
+            background: rgb(87, 202, 255)
                 /*linear-gradient(to bottom right, black, yellow);*/
                 /* 标准的语法 */
         }
 
         .wall {
-            background-color: rgb(255, 70, 70);
+            background-color: rgb(255, 37, 37);
+        }
+
+        .virtuallWall {
+            background-color: rgba(255, 37, 37, 0.75);
         }
 
         button {
@@ -52,11 +56,12 @@
 <body>
     <div class="">
         <div id="snakeId">
-            <div :style="snakeBoxStyle" style="margin: 30px;">
+            <div :style="snakeBoxStyle" style="margin: 20px;">
                 <snake-point :style="snakePointStyle" v-for="item in snakeArray" :todo="item" :key="item.id"
-                    :class="{point:true, pointSelect: item.isSel, wall: item.isWall }">
+                    :class="{point:true, pointSelect: item.isSel, wall: item.isWall, virtuallWall: item.virtuallWall }">
                 </snake-point>
             </div>
+            <div style="padding: 50px;"></div>
             <div class="btnDiv">
                 <button @click="handleClick(38)">●</button>
             </div>
@@ -88,7 +93,7 @@
             snakeArray: new Array(),
             snakeHead: null,
             snakeBoxSize: 30,
-            snakePointWidth: 30,
+            snakePointWidth: 31,
             snakeBoxStyle: "",
             snakePointStyle: "",
             snakeMove: 39,// 37 左 38 上 39 右 40 下
@@ -108,11 +113,13 @@
                 219, 220,
                 246, 247, 248, 249, 250, 251, 252, 253,
                 276, 277, 278, 279, 280, 281, 282, 283,
+                309, 310,
+                339, 340,
 
                 366, 367, 368, 369, 370, 371, 372, 373,
                 396, 397, 398, 399, 400, 401, 402, 403,
-                426, 427,
-                432, 433,
+                // 426, 427,
+                // 432, 433,
                 456, 457, 458, 459, 460, 461, 462, 463,
                 486, 487, 488, 489, 490, 491, 492, 493,
                 519, 520,
@@ -124,11 +131,18 @@
                 669, 670,
                 696, 697, 698, 699, 700, 701, 702, 703,
                 726, 727, 728, 729, 730, 731, 732, 733,
-                756, 757,
-                762, 763,
+                // 756, 757,
+                // 762, 763,
                 786, 787, 788, 789, 790, 791, 792, 793,
                 816, 817, 818, 819, 820, 821, 822, 823,
 
+            ],
+            // 虚拟墙
+            virtuallWallMap: [
+                426, 427,
+                432, 433,
+                756, 757,
+                762, 763,
             ]
         },
         methods: {
@@ -145,12 +159,23 @@
                 for (var i = 0; i < wallMap.length; i++) {
                     thisSnake.wallMap.push(wallMap[i]);
                 }
+                var virtuallWallMap = new Array();
+                for (var i = 0; i < thisSnake.virtuallWallMap.length; i++) {
+                    virtuallWallMap.push(thisSnake.virtuallWallMap[i] + 10);
+                }
+                for (var i = 0; i < virtuallWallMap.length; i++) {
+                    thisSnake.virtuallWallMap.push(virtuallWallMap[i]);
+                }
             },
             showWall: function () {
                 var thisSnake = this;
                 for (var i = 0; i < thisSnake.wallMap.length; i++) {
                     thisSnake.snakeArray[thisSnake.wallMap[i]].isWall = true;
                 }
+                for (var i = 0; i < thisSnake.virtuallWallMap.length; i++) {
+                    thisSnake.snakeArray[thisSnake.virtuallWallMap[i]].virtuallWall = true;
+                }
+
             },
             isInWall: function (idx) {
                 var thisSnake = this;
@@ -316,6 +341,7 @@
                 thisSnake.snakeArray = new Array();
                 thisSnake.snakeMove = 39;
                 thisSnake.snakeLen = thisSnake.defaultLen;
+                thisSnake.snakeEats = -1;
                 for (var i = 0; i < thisSnake.snakeBoxSize * thisSnake.snakeBoxSize; i++) {
                     thisSnake.snakeArray.push({
                         id: i,
