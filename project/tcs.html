@@ -214,10 +214,6 @@
                     frontNode = currNode;
                     currNode = currNode.next;
                 }
-                // if(thisSnake.isInWall(currNode.pointIndex)){
-
-                //     return;
-                // }
                 if (frontNode != this.snakeHead) {
                     var pointIndex = frontNode.next.pointIndex;
                     frontNode.next = null
@@ -270,13 +266,15 @@
                 }
                 thisSnake.insertNode(index);
                 if (thisSnake.isInWall(index)) {
+                    var score = thisSnake.snakeLen - thisSnake.defaultLen
+                    alert("再接再厉，" + score + "分");
                     clearInterval(thisSnake.intervalId);
-                    alert("再接再厉");
                     this.init();
                     return;
                 }
                 // 判断是否吃到果子
                 if (thisSnake.snakeEats == index) {
+                    thisSnake.snakeLen++;
                     thisSnake.snakeEats = -1;
                 } else {
                     thisSnake.removeNode();
@@ -361,7 +359,9 @@
                     thisSnake.snakePointStyle = "width: " + (thisSnake.snakePointWidth - 2) + "px;height: " + (thisSnake.snakePointWidth - 2) + "px;";
                 }
                 thisSnake.snakeHead = new thisSnake.snakeNode(0);
-                for (var i = 0; i < thisSnake.snakeLen; i++) {
+
+                var tempLen = thisSnake.snakeLen;
+                for (var i = 0; i < tempLen; i++) {
                     thisSnake.insertNode(i + thisSnake.snakeBoxSize);
                 }
                 thisSnake.intervalId = setInterval(thisSnake.snakeMoving, thisSnake.defaultSpeed);
