@@ -11,6 +11,22 @@
             background-color: #fff2f2;
         }
 
+        /* 定义一个 @keyframes 规则，名为 fadeOut */
+        @keyframes fadeOut {
+
+            /* 0% 表示动画开始时的状态 */
+            from {
+                opacity: 1;
+                /* 完全不透明 */
+            }
+
+            /* 100% 表示动画结束时的状态 */
+            to {
+                opacity: 0;
+                /* 完全透明 */
+            }
+        }
+
         .point {
             color: rgb(255, 255, 255);
             font-size: 1px;
@@ -19,6 +35,7 @@
             list-style: none;
             text-align: center;
             background-color: rgb(255, 213, 165);
+
         }
 
         .pointSelect {
@@ -28,9 +45,17 @@
             /* Opera 11.1 - 12.0 */
             background: -moz-linear-gradient(bottom right, black, white);
             /* Firefox 3.6 - 15 */
-            background: rgb(87, 202, 255)
-                /*linear-gradient(to bottom right, black, yellow);*/
-                /* 标准的语法 */
+            background: rgb(87, 202, 255);
+            /*linear-gradient(to bottom right, black, yellow);*/
+            /* 标准的语法 */
+            animation: fadeOut 2s;
+            border-radius: 10px;
+        }
+
+        .apple{
+            background-color: rgb(255, 72, 0);
+            /* border: 1px solid #000000; */
+            border-radius: 20px;
         }
 
         .wall {
@@ -52,6 +77,9 @@
             color: aliceblue;
             border-radius: 100px;
             padding: 0;
+            user-select: none;
+            /* 禁止文字选中 */
+            cursor: pointer;
         }
 
         .btnDiv {
@@ -64,9 +92,9 @@
 <body>
     <div class="">
         <div id="snakeId">
-            <div :style="snakeBoxStyle" style="margin:0 5px;">
+            <div :style="snakeBoxStyle" style="margin:0 5px;background-color: rgb(255, 213, 165);">
                 <snake-point :style="snakePointStyle" v-for="item in snakeArray" :todo="item" :key="item.id"
-                    :class="{point:true, pointSelect: item.isSel, wall: item.isWall, virtuallWall: item.virtuallWall }">
+                    :class="{point:true, pointSelect: item.isSel, wall: item.isWall, virtuallWall: item.virtuallWall ,apple: item.isApple }">
                 </snake-point>
             </div>
             <div style="padding: 50px;"></div>
@@ -244,10 +272,10 @@
 
                 if (this.snakeEats != -1) {
                     // 显示果子
-                    thisSnake.snakeArray[this.snakeEats].isSel = true;
+                    thisSnake.snakeArray[this.snakeEats].isApple = true;
                 } else {
                     thisSnake.newSnakeEats();
-                    thisSnake.snakeArray[this.snakeEats].isSel = true;
+                    thisSnake.snakeArray[this.snakeEats].isApple = true;
                 }
 
                 var index = thisSnake.snakeHead.next.pointIndex;
@@ -295,6 +323,7 @@
                 if (thisSnake.snakeEats == index) {
                     thisSnake.snakeLen++;
                     thisSnake.snakeEats = -1;
+                    thisSnake.snakeArray[index].isApple = false;
                 } else {
                     thisSnake.removeNode();
                 }
@@ -320,14 +349,14 @@
                     case 39:
                         if (thisSnake.snakeMove != 37 && thisSnake.snakeMove != 39) {
                             thisSnake.snakeMove = keyCode;
-                            thisSnake.setInterval(80);
+                            thisSnake.setInterval(100);
                         }
                         break;
                     case 38:
                     case 40:
                         if (thisSnake.snakeMove != 38 && thisSnake.snakeMove != 40) {
                             thisSnake.snakeMove = keyCode;
-                            thisSnake.setInterval(80);
+                            thisSnake.setInterval(100);
                         }
                         break;
                     default:
@@ -348,14 +377,14 @@
                         case 39:
                             if (thisSnake.snakeMove != 37 && thisSnake.snakeMove != 39) {
                                 thisSnake.snakeMove = keyCode;
-                                thisSnake.setInterval(80);
+                                thisSnake.setInterval(100);
                             }
                             break;
                         case 38:
                         case 40:
                             if (thisSnake.snakeMove != 38 && thisSnake.snakeMove != 40) {
                                 thisSnake.snakeMove = keyCode;
-                                thisSnake.setInterval(80);
+                                thisSnake.setInterval(100);
                             }
                             break;
                         default:
