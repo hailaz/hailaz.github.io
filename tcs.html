@@ -192,6 +192,13 @@
                 }
                 return false;
             },
+            isInVirtuallWall: function (idx) {
+                var thisSnake = this;
+                if (thisSnake.virtuallWall.includes(idx)) {
+                    return true;
+                }
+                return false;
+            },
             insertNode: function (idx) {
                 var thisSnake = this;
                 var newNode = new thisSnake.snakeNode(idx);
@@ -293,7 +300,8 @@
             },
             newSnakeEats: function () {
                 var thisSnake = this;
-                while (thisSnake.isInWall(thisSnake.snakeEats) || thisSnake.snakeEats == -1) {
+                // 生成果果
+                while (thisSnake.isInWall(thisSnake.snakeEats) || thisSnake.isInVirtuallWall(thisSnake.snakeEats) || thisSnake.snakeEats == -1) {
                     thisSnake.snakeEats = parseInt(thisSnake.snakeBoxSize * thisSnake.snakeBoxSize * Math.random());
                 }
                 // thisSnake.snakeEats = parseInt(thisSnake.snakeBoxSize * thisSnake.snakeBoxSize * Math.random());
