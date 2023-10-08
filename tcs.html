@@ -338,6 +338,12 @@
             },
             init: function () {
                 var thisSnake = this;
+                var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+                console.log("屏幕宽度：" + screenWidth);
+                if (screenWidth > thisSnake.snakeBoxSize) {
+                    thisSnake.snakePointWidth = Math.floor(screenWidth / thisSnake.snakeBoxSize)
+                }
+
                 thisSnake.snakeArray = new Array();
                 thisSnake.snakeMove = 39;
                 thisSnake.snakeLen = thisSnake.defaultLen;
