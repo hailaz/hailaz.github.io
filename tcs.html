@@ -36,7 +36,7 @@
             border-radius: 10px;
         }
 
-        .apple{
+        .apple {
             background-color: rgb(56, 204, 19);
             /* border: 1px solid #000000; */
             border-radius: 20px;
@@ -107,10 +107,6 @@
         template: '<li>{{ todo.text }}</li>'
     })
 
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
     var thisSnake = new Vue({
         el: '#snakeId',
         data: {
@@ -123,8 +119,9 @@
             snakeMove: 39,// 37 左 38 上 39 右 40 下
             snakeEats: -1,// 果子
             snakeLen: 0,// 蛇的长度
+            snakeSpeed: 300,
             defaultLen: 5,
-            defaultSpeed: 250,
+            defaultSpeed: 300,
             intervalId: null,
             wallMap: [
 
@@ -299,7 +296,6 @@
                 if (thisSnake.isInWall(index)) {
                     var score = thisSnake.snakeLen - thisSnake.defaultLen
                     alert("再接再厉，" + score + "分");
-                    clearInterval(thisSnake.intervalId);
                     this.init();
                     return;
                 }
@@ -308,12 +304,15 @@
                     thisSnake.snakeLen++;
                     thisSnake.snakeEats = -1;
                     thisSnake.snakeArray[index].isApple = false;
+                    if (thisSnake.snakeSpeed > 100) {
+                        thisSnake.snakeSpeed = thisSnake.snakeSpeed - 10;
+                    }
                 } else {
                     thisSnake.removeNode();
                 }
 
                 thisSnake.showNode();
-                thisSnake.showWall();
+
             },
             newSnakeEats: function () {
                 var thisSnake = this;
@@ -330,14 +329,14 @@
                     case 39:
                         if (thisSnake.snakeMove != 37 && thisSnake.snakeMove != 39) {
                             thisSnake.snakeMove = keyCode;
-                            thisSnake.setInterval(100);
+                            thisSnake.setInterval(80);
                         }
                         break;
                     case 38:
                     case 40:
                         if (thisSnake.snakeMove != 38 && thisSnake.snakeMove != 40) {
                             thisSnake.snakeMove = keyCode;
-                            thisSnake.setInterval(100);
+                            thisSnake.setInterval(80);
                         }
                         break;
                     default:
@@ -350,23 +349,29 @@
                 var thisSnake = this;
                 document.onkeydown = function (e) {
                     var keyCode = window.event ? e.keyCode : e.which;
-                    if (keyCode == thisSnake.snakeMove) {
-                        thisSnake.setInterval(50);
-                    }
+
                     switch (keyCode) {
                         case 37:
                         case 39:
+                            if (keyCode == thisSnake.snakeMove) {
+                                thisSnake.setInterval(50);
+                            }
                             if (thisSnake.snakeMove != 37 && thisSnake.snakeMove != 39) {
                                 thisSnake.snakeMove = keyCode;
                                 thisSnake.setInterval(100);
                             }
+
                             break;
                         case 38:
                         case 40:
+                            if (keyCode == thisSnake.snakeMove) {
+                                thisSnake.setInterval(50);
+                            }
                             if (thisSnake.snakeMove != 38 && thisSnake.snakeMove != 40) {
                                 thisSnake.snakeMove = keyCode;
                                 thisSnake.setInterval(100);
                             }
+
                             break;
                         default:
                             console.log(keyCode)
@@ -376,16 +381,20 @@
             },
             setInterval: function (ms) {
                 var thisSnake = this;
-                if (thisSnake.intervalId != null){
+                console.log("snakeSpeed:" + thisSnake.snakeSpeed);
+                if (thisSnake.intervalId != 0) {
                     clearInterval(thisSnake.intervalId);
                 }
-                if (ms != 0){
+                if (ms != 0) {
                     setTimeout(thisSnake.snakeMoving(), ms)
                 }
-                thisSnake.intervalId = setInterval(thisSnake.snakeMoving, thisSnake.defaultSpeed);
+                thisSnake.intervalId = setInterval(thisSnake.snakeMoving, thisSnake.snakeSpeed);
             },
             init: function () {
                 var thisSnake = this;
+                if (thisSnake.intervalId != 0) {
+                    clearInterval(thisSnake.intervalId);
+                }
                 var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
                 console.log("屏幕宽度：" + screenWidth);
                 if (screenWidth > thisSnake.snakeBoxSize) {
@@ -395,6 +404,7 @@
                 thisSnake.snakeArray = new Array();
                 thisSnake.snakeMove = 39;
                 thisSnake.snakeLen = thisSnake.defaultLen;
+                thisSnake.snakeSpeed = thisSnake.defaultSpeed;
                 thisSnake.snakeEats = -1;
                 for (var i = 0; i < thisSnake.snakeBoxSize * thisSnake.snakeBoxSize; i++) {
                     thisSnake.snakeArray.push({
@@ -414,6 +424,7 @@
                 for (var i = 0; i < tempLen; i++) {
                     thisSnake.insertNode(i + thisSnake.snakeBoxSize);
                 }
+                thisSnake.showWall();
                 thisSnake.setInterval(0);
             }
         },
