@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>vue</title>
+    <title>喜喜</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <style type="text/css">
         .point {
@@ -23,23 +23,57 @@
             /* Opera 11.1 - 12.0 */
             background: -moz-linear-gradient(bottom right, black, white);
             /* Firefox 3.6 - 15 */
-            background: rgb(219, 71, 71)
+            background: rgb(52, 182, 243)
                 /*linear-gradient(to bottom right, black, yellow);*/
                 /* 标准的语法 */
+        }
+
+        .wall {
+            background-color: rgb(255, 70, 70);
+        }
+
+        button {
+            width: 150px;
+            height: 150px;
+            font-size: 50px;
+            margin: 0 75px;
+            border: 1px solid #ff0000;
+            background-color: rgb(247, 120, 120);
+            color: aliceblue;
+        }
+
+        .btnDiv {
+            width: 100%;
+            text-align: center;
         }
     </style>
 </head>
 
 <body>
-    <div id="snakeId" :style="snakeBoxStyle">
-        <snake-point :style="snakePointStyle" v-for="item in snakeArray" :todo="item" :key="item.id"
-            :class="{point:true, pointSelect: item.isSel }">
-        </snake-point>
+    <div class="">
+        <div id="snakeId">
+            <div :style="snakeBoxStyle" style="margin: 30px;">
+                <snake-point :style="snakePointStyle" v-for="item in snakeArray" :todo="item" :key="item.id"
+                    :class="{point:true, pointSelect: item.isSel, wall: item.isWall }">
+                </snake-point>
+            </div>
+            <div class="btnDiv">
+                <button @click="handleClick(38)">●</button>
+            </div>
 
-        <button @click="handleClick(38)">上</button>
-        <button @click="handleClick(40)">下</button>
-        <button @click="handleClick(37)">左</button>
-        <button @click="handleClick(39)">右</button>
+            <div class="btnDiv">
+                <button @click="handleClick(37)">●</button>
+                <button @click="handleClick(39)">●</button>
+            </div>
+
+            <div class="btnDiv">
+                <button @click="handleClick(40)">●</button>
+            </div>
+
+
+        </div>
+
+
     </div>
 </body>
 <script type="text/javascript">
@@ -47,6 +81,7 @@
         props: ['todo'],
         template: '<li>{{ todo.text }}</li>'
     })
+
     var thisSnake = new Vue({
         el: '#snakeId',
         data: {
@@ -58,7 +93,9 @@
             snakePointStyle: "",
             snakeMove: 39,// 37 左 38 上 39 右 40 下
             snakeEats: -1,// 果子
-            snakeLen: 1,// 蛇的长度
+            snakeLen: 0,// 蛇的长度
+            defaultLen: 5,
+            defaultSpeed: 150,
             intervalId: null,
             wallMap: [
 
@@ -112,7 +149,7 @@
             showWall: function () {
                 var thisSnake = this;
                 for (var i = 0; i < thisSnake.wallMap.length; i++) {
-                    thisSnake.snakeArray[thisSnake.wallMap[i]].isSel = true;
+                    thisSnake.snakeArray[thisSnake.wallMap[i]].isWall = true;
                 }
             },
             isInWall: function (idx) {
@@ -209,8 +246,8 @@
                 thisSnake.insertNode(index);
                 if (thisSnake.isInWall(index)) {
                     clearInterval(thisSnake.intervalId);
-                    alert("game over");
-                    window.location.reload();
+                    alert("再接再厉");
+                    this.init();
                     return;
                 }
                 // 判断是否吃到果子
@@ -273,31 +310,36 @@
                             break;
                     }
                 }
+            },
+            init: function () {
+                var thisSnake = this;
+                thisSnake.snakeArray = new Array();
+                thisSnake.snakeMove = 39;
+                thisSnake.snakeLen = thisSnake.defaultLen;
+                for (var i = 0; i < thisSnake.snakeBoxSize * thisSnake.snakeBoxSize; i++) {
+                    thisSnake.snakeArray.push({
+                        id: i,
+                        // text: i + ',',
+                        text: '',
+                        isSel: false
+                    });
+                    thisSnake.snakeBoxStyle = "border:1px solid red;width: " +
+                        thisSnake.snakePointWidth * thisSnake.snakeBoxSize +
+                        "px;height: " + thisSnake.snakePointWidth * thisSnake.snakeBoxSize + "px;";
+                    thisSnake.snakePointStyle = "width: " + (thisSnake.snakePointWidth - 2) + "px;height: " + (thisSnake.snakePointWidth - 2) + "px;";
+                }
+                thisSnake.snakeHead = new thisSnake.snakeNode(0);
+                for (var i = 0; i < thisSnake.snakeLen; i++) {
+                    thisSnake.insertNode(i + thisSnake.snakeBoxSize);
+                }
+                thisSnake.intervalId = setInterval(thisSnake.snakeMoving, thisSnake.defaultSpeed);
             }
         },
         created: function () {
-            var thisSnake = this;
-            for (var i = 0; i < thisSnake.snakeBoxSize * thisSnake.snakeBoxSize; i++) {
-                thisSnake.snakeArray.push({
-                    id: i,
-                    // text: i + ',',
-                    text: '',
-                    isSel: false
-                });
-                thisSnake.snakeBoxStyle = "border:1px solid red;width: " +
-                    thisSnake.snakePointWidth * thisSnake.snakeBoxSize +
-                    "px;height: " + thisSnake.snakePointWidth * thisSnake.snakeBoxSize + "px;";
-                thisSnake.snakePointStyle = "width: " + (thisSnake.snakePointWidth - 2) + "px;height: " + (thisSnake.snakePointWidth - 2) + "px;";
-            }
-            thisSnake.snakeHead = new thisSnake.snakeNode(0);
-            for (var i = 0; i < thisSnake.snakeLen; i++) {
-                thisSnake.insertNode(i + thisSnake.snakeBoxSize);
-            }
-            // thisSnake.newSnakeEats();
-            thisSnake.copyWall()
-            thisSnake.listKeyDownEvent();
-            thisSnake.intervalId = setInterval(thisSnake.snakeMoving, 200);
-
+            // 监听键盘事件
+            this.listKeyDownEvent();
+            this.copyWall();
+            this.init();
         },
     })
 </script>
