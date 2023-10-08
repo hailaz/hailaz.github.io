@@ -325,9 +325,6 @@
             },
             handleClick: function (keyCode) {
                 var thisSnake = this;
-                if (keyCode == thisSnake.snakeMove) {
-                    thisSnake.setInterval(50);
-                }
                 switch (keyCode) {
                     case 37:
                     case 39:
@@ -379,8 +376,12 @@
             },
             setInterval: function (ms) {
                 var thisSnake = this;
-                clearInterval(thisSnake.intervalId);
-                setTimeout(thisSnake.snakeMoving(), ms)
+                if (thisSnake.intervalId != null){
+                    clearInterval(thisSnake.intervalId);
+                }
+                if (ms != 0){
+                    setTimeout(thisSnake.snakeMoving(), ms)
+                }
                 thisSnake.intervalId = setInterval(thisSnake.snakeMoving, thisSnake.defaultSpeed);
             },
             init: function () {
@@ -413,7 +414,7 @@
                 for (var i = 0; i < tempLen; i++) {
                     thisSnake.insertNode(i + thisSnake.snakeBoxSize);
                 }
-                thisSnake.setInterval();
+                thisSnake.setInterval(0);
             }
         },
         created: function () {
