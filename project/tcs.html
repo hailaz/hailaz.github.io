@@ -11,21 +11,6 @@
             background-color: #fff2f2;
         }
 
-        /* 定义一个 @keyframes 规则，名为 fadeOut */
-        @keyframes fadeOut {
-
-            /* 0% 表示动画开始时的状态 */
-            from {
-                opacity: 1;
-                /* 完全不透明 */
-            }
-
-            /* 100% 表示动画结束时的状态 */
-            to {
-                opacity: 0;
-                /* 完全透明 */
-            }
-        }
 
         .point {
             color: rgb(255, 255, 255);
@@ -48,12 +33,11 @@
             background: rgb(87, 202, 255);
             /*linear-gradient(to bottom right, black, yellow);*/
             /* 标准的语法 */
-            animation: fadeOut 2s;
             border-radius: 10px;
         }
 
         .apple{
-            background-color: rgb(255, 72, 0);
+            background-color: rgb(56, 204, 19);
             /* border: 1px solid #000000; */
             border-radius: 20px;
         }
@@ -140,7 +124,7 @@
             snakeEats: -1,// 果子
             snakeLen: 0,// 蛇的长度
             defaultLen: 5,
-            defaultSpeed: 200,
+            defaultSpeed: 250,
             intervalId: null,
             wallMap: [
 
