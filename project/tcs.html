@@ -56,7 +56,7 @@
 <body>
     <div class="">
         <div id="snakeId">
-            <div :style="snakeBoxStyle" style="margin: 20px;">
+            <div :style="snakeBoxStyle">
                 <snake-point :style="snakePointStyle" v-for="item in snakeArray" :todo="item" :key="item.id"
                     :class="{point:true, pointSelect: item.isSel, wall: item.isWall, virtuallWall: item.virtuallWall }">
                 </snake-point>
