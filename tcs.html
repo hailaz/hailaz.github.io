@@ -95,6 +95,10 @@
         template: '<li>{{ todo.text }}</li>'
     })
 
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
     var thisSnake = new Vue({
         el: '#snakeId',
         data: {
@@ -308,17 +312,22 @@
             },
             handleClick: function (keyCode) {
                 var thisSnake = this;
+                if (keyCode == thisSnake.snakeMove) {
+                    thisSnake.setInterval(50);
+                }
                 switch (keyCode) {
                     case 37:
                     case 39:
                         if (thisSnake.snakeMove != 37 && thisSnake.snakeMove != 39) {
                             thisSnake.snakeMove = keyCode;
+                            thisSnake.setInterval(80);
                         }
                         break;
                     case 38:
                     case 40:
                         if (thisSnake.snakeMove != 38 && thisSnake.snakeMove != 40) {
                             thisSnake.snakeMove = keyCode;
+                            thisSnake.setInterval(80);
                         }
                         break;
                     default:
@@ -331,17 +340,22 @@
                 var thisSnake = this;
                 document.onkeydown = function (e) {
                     var keyCode = window.event ? e.keyCode : e.which;
+                    if (keyCode == thisSnake.snakeMove) {
+                        thisSnake.setInterval(50);
+                    }
                     switch (keyCode) {
                         case 37:
                         case 39:
                             if (thisSnake.snakeMove != 37 && thisSnake.snakeMove != 39) {
                                 thisSnake.snakeMove = keyCode;
+                                thisSnake.setInterval(80);
                             }
                             break;
                         case 38:
                         case 40:
                             if (thisSnake.snakeMove != 38 && thisSnake.snakeMove != 40) {
                                 thisSnake.snakeMove = keyCode;
+                                thisSnake.setInterval(80);
                             }
                             break;
                         default:
@@ -349,6 +363,12 @@
                             break;
                     }
                 }
+            },
+            setInterval: function (ms) {
+                var thisSnake = this;
+                clearInterval(thisSnake.intervalId);
+                setTimeout(thisSnake.snakeMoving(), ms)
+                thisSnake.intervalId = setInterval(thisSnake.snakeMoving, thisSnake.defaultSpeed);
             },
             init: function () {
                 var thisSnake = this;
@@ -380,7 +400,7 @@
                 for (var i = 0; i < tempLen; i++) {
                     thisSnake.insertNode(i + thisSnake.snakeBoxSize);
                 }
-                thisSnake.intervalId = setInterval(thisSnake.snakeMoving, thisSnake.defaultSpeed);
+                thisSnake.setInterval();
             }
         },
         created: function () {
