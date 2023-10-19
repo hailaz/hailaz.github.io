@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkhailaz_github_io=self.webpackChunkhailaz_github_io||[]).push([[7310],{2110:a=>{a.exports=JSON.parse('{"label":"learn","permalink":"/docs/tags/learn","allTagsPath":"/docs/tags","count":1,"items":[{"id":"learn/go/index","title":"\u5b66\u4e60\u8d44\u6599","description":"\u5b66\u4e60\u8d44\u6599","permalink":"/docs/learn/go/index"}]}')}}]);
