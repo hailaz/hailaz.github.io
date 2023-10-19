@@ -5,6 +5,20 @@ tags:
   - learn
 ---
 
+## 开发环境搭建
+
+1. 安装 go
+
+   https://go.dev/dl/
+
+2. 配置 proxy
+
+   https://goproxy.cn/
+
+3. 安装 vscode
+
+   安装 vscode 的 go 插件
+
 ## 学习资料
 
 <!-- - [《深入解析 Go》]()
@@ -24,5 +38,10 @@ tags:
 - [《Go语言编程》](/blog/static/doc/go/Go语言编程.pdf) -->
 
 - [GO 官方文档](https://go.dev/)
+- [《Go 语言圣经》](http://books.studygolang.com/gopl-zh/)
 - [GO 知识图谱](./golang.png)
 - [GO 开发指南](./golangdev.jpg)
+
+## 教程
+
+### [微软教程](https://learn.microsoft.com/zh-cn/training/paths/go-first-steps/)
