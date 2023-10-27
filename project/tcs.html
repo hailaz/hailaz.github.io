@@ -93,6 +93,7 @@
             /* 设置高度以撑开整个视口 */
             margin-top: 10px;
         }
+
         .container {
             display: flex;
             justify-content: center;
@@ -126,7 +127,8 @@
     <div class="">
         <div id="snakeId">
             <div class="container-snake-box">
-                <div :style="snakeBoxStyle" style="background-color: rgb(255, 213, 165);">
+                <div :style="snakeBoxStyle">
+                    <!-- style="background-color: rgb(255, 213, 165);" -->
                     <snake-point :style="snakePointStyle" v-for="item in snakeArray" :todo="item" :key="item.id"
                         :class="{point:true, pointSelect: item.isSel, wall: item.isWall, virtuallWall: item.virtuallWall ,apple: item.isApple }">
                     </snake-point>
@@ -475,7 +477,7 @@
                 screenWidth = screenWidth;
                 console.log("屏幕宽度：" + screenWidth);
                 if (screenWidth > thisSnake.snakeBoxSize) {
-                    thisSnake.snakePointWidth = Math.floor(screenWidth / thisSnake.snakeBoxSize)-2;
+                    thisSnake.snakePointWidth = Math.floor(screenWidth / thisSnake.snakeBoxSize) - 1;
                 }
 
                 thisSnake.snakeArray = new Array();
@@ -490,9 +492,10 @@
                         text: '',
                         isSel: false
                     });
-                    thisSnake.snakeBoxStyle = "width: " +
-                        thisSnake.snakePointWidth * thisSnake.snakeBoxSize +
-                        "px;height: " + thisSnake.snakePointWidth * thisSnake.snakeBoxSize + "px;";
+
+                    var width = thisSnake.snakePointWidth * thisSnake.snakeBoxSize + 2
+                    var height = thisSnake.snakePointWidth * thisSnake.snakeBoxSize
+                    thisSnake.snakeBoxStyle = "width: " + width + "px;height: " + height + "px;";
                     thisSnake.snakePointStyle = "width: " + (thisSnake.snakePointWidth - 2) + "px;height: " + (thisSnake.snakePointWidth - 2) + "px;";
                 }
                 thisSnake.snakeHead = new thisSnake.snakeNode(0);
