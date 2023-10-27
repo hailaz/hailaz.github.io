@@ -134,6 +134,12 @@
                     </snake-point>
                 </div>
             </div>
+            <div>
+                <center>
+                    <p>{{snakeLen-defaultLen}} 分</p>
+                </center>
+
+            </div>
             <!-- <div style="padding: 50px;"></div> -->
 
             <!-- <div class="btnDiv">
@@ -170,7 +176,23 @@
                 </div>
             </div>
 
-
+            <div>
+                <center>
+                    <p>snakeBoxSize:{{snakeBoxSize}}</p>
+                </center>
+                <center>
+                    <p>snakePointWidth:{{snakePointWidth}}</p>
+                </center>
+                <center>
+                    <p>snakeBoxSize:{{snakeBoxStyle}}</p>
+                </center>
+                <center>
+                    <p>snakeBoxSize:{{snakePointStyle}}</p>
+                </center>
+                <center>
+                    <p>snakeSpeed:{{snakeSpeed}}ms</p>
+                </center>
+            </div>
 
 
 
@@ -497,6 +519,7 @@
                     var height = thisSnake.snakePointWidth * thisSnake.snakeBoxSize
                     thisSnake.snakeBoxStyle = "width: " + width + "px;height: " + height + "px;";
                     thisSnake.snakePointStyle = "width: " + (thisSnake.snakePointWidth - 2) + "px;height: " + (thisSnake.snakePointWidth - 2) + "px;";
+
                 }
                 thisSnake.snakeHead = new thisSnake.snakeNode(0);
 
