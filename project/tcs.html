@@ -45,7 +45,7 @@
         }
 
         .wall {
-            /* background-color: rgb(255, 37, 37); */
+            background-color: rgb(255, 37, 37);
         }
 
         .virtuallWall {
@@ -128,7 +128,7 @@
     <div class="">
         <div id="snakeId">
             <div class="container-snake-box">
-                <div :style="snakeBoxStyle" style="border: 1px solid #000000;">
+                <div :style="snakeBoxStyle" style="background-color: rgb(255, 234, 234);">
                     <!-- style="background-color: rgb(255, 213, 165);" -->
                     <snake-point :style="snakePointStyle" v-for="item in snakeArray" :todo="item" :key="item.id"
                         :class="{point:true, pointSelect: item.isSel, wall: item.isWall, virtuallWall: item.virtuallWall ,apple: item.isApple }">
@@ -137,7 +137,7 @@
             </div>
             <div>
                 <center>
-                    <p>{{snakeLen-defaultLen}} 分；速度{{300/snakeSpeed}}</p>
+                    速度：{{(300/snakeSpeed).toFixed(2)}} 分数：{{snakeLen-defaultLen}} 分
                 </center>
 
             </div>
@@ -177,7 +177,7 @@
                 </div>
             </div>
 
-            <div>
+            <!-- <div>
                 <center>
                     snakeBoxSize:{{snakeBoxSize}}
                 </center>
@@ -193,7 +193,7 @@
                 <center>
                     snakeSpeed:{{snakeSpeed}}ms
                 </center>
-            </div>
+            </div> -->
 
 
 
