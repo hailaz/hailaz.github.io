@@ -127,7 +127,7 @@
     <div class="">
         <div id="snakeId">
             <div class="container-snake-box">
-                <div :style="snakeBoxStyle">
+                <div :style="snakeBoxStyle" style="border: 1px solid #000000;">
                     <!-- style="background-color: rgb(255, 213, 165);" -->
                     <snake-point :style="snakePointStyle" v-for="item in snakeArray" :todo="item" :key="item.id"
                         :class="{point:true, pointSelect: item.isSel, wall: item.isWall, virtuallWall: item.virtuallWall ,apple: item.isApple }">
@@ -493,7 +493,7 @@
                         isSel: false
                     });
 
-                    var width = thisSnake.snakePointWidth * thisSnake.snakeBoxSize -1
+                    var width = thisSnake.snakePointWidth * thisSnake.snakeBoxSize
                     var height = thisSnake.snakePointWidth * thisSnake.snakeBoxSize
                     thisSnake.snakeBoxStyle = "width: " + width + "px;height: " + height + "px;";
                     thisSnake.snakePointStyle = "width: " + (thisSnake.snakePointWidth - 2) + "px;height: " + (thisSnake.snakePointWidth - 2) + "px;";
