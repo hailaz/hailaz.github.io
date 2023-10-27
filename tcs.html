@@ -86,12 +86,12 @@
 
 
         .container-snake-box {
-            /* display: flex; */
-            /* justify-content: center;
-            align-items: center; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
             /* height: 45vh; */
             /* 设置高度以撑开整个视口 */
-            /* padding: 5px; */
+            margin-top: 10px;
         }
         .container {
             display: flex;
@@ -188,7 +188,7 @@
         data: {
             snakeArray: new Array(),
             snakeHead: null,
-            snakeBoxSize: 30,
+            snakeBoxSize: 30,// 每一行的格子数量
             snakePointWidth: 31,
             snakeBoxStyle: "",
             snakePointStyle: "",
@@ -472,10 +472,10 @@
                     clearInterval(thisSnake.intervalId);
                 }
                 var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-                screenWidth = screenWidth - 10;
+                screenWidth = screenWidth;
                 console.log("屏幕宽度：" + screenWidth);
                 if (screenWidth > thisSnake.snakeBoxSize) {
-                    thisSnake.snakePointWidth = Math.floor(screenWidth / thisSnake.snakeBoxSize);
+                    thisSnake.snakePointWidth = Math.floor(screenWidth / thisSnake.snakeBoxSize)-2;
                 }
 
                 thisSnake.snakeArray = new Array();
