@@ -17,7 +17,8 @@
             color: rgb(255, 255, 255);
             font-size: 1px;
             float: left;
-            border: 1px solid white;
+            /* border: 1px solid white; */
+            margin: 1px;
             list-style: none;
             text-align: center;
             background-color: rgb(255, 213, 165);
@@ -44,7 +45,7 @@
         }
 
         .wall {
-            background-color: rgb(255, 37, 37);
+            /* background-color: rgb(255, 37, 37); */
         }
 
         .virtuallWall {
@@ -136,7 +137,7 @@
             </div>
             <div>
                 <center>
-                    <p>{{snakeLen-defaultLen}} 分</p>
+                    <p>{{snakeLen-defaultLen}} 分；速度{{300/snakeSpeed}}</p>
                 </center>
 
             </div>
@@ -178,19 +179,19 @@
 
             <div>
                 <center>
-                    <p>snakeBoxSize:{{snakeBoxSize}}</p>
+                    snakeBoxSize:{{snakeBoxSize}}
                 </center>
                 <center>
-                    <p>snakePointWidth:{{snakePointWidth}}</p>
+                    snakePointWidth:{{snakePointWidth}}
                 </center>
                 <center>
-                    <p>snakeBoxSize:{{snakeBoxStyle}}</p>
+                    snakeBoxSize:{{snakeBoxStyle}}
                 </center>
                 <center>
-                    <p>snakeBoxSize:{{snakePointStyle}}</p>
+                    snakeBoxSize:{{snakePointStyle}}
                 </center>
                 <center>
-                    <p>snakeSpeed:{{snakeSpeed}}ms</p>
+                    snakeSpeed:{{snakeSpeed}}ms
                 </center>
             </div>
 
