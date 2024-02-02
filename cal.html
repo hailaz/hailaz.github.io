@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>每日口算-防痴呆</title>
+    <style>
+        .add {
+            color: blue;
+        }
+
+        .subtract {
+            color: red;
+        }
+
+        .multiply {
+            color: green;
+        }
+
+        .divide {
+            color: purple;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+        }
+
+        .grid-container button {
+            width: 100%;
+            height: 50px;
+            font-size: 20px;
+        }
+
+        #answer-display {
+            font-size: 20px;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            width: 200px;
+        }
+
+        #score {
+            margin-bottom: 5px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        #history-container {
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            width: 400px;
+        }
+
+        #history-container h3 {
+            margin-top: 0;
+        }
+
+        #history-container p {
+            margin-bottom: 5px;
+        }
+
+        .correct {
+            color: green;
+        }
+
+        .incorrect {
+            color: red;
+        }
+
+        #upper-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #question-container {
+            display: flex;
+            align-items: center;
+        }
+
+        #question {
+            margin-right: 10px;
+        }
+
+        #history-container {
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            width: 98%;
+            /* 设置为100%宽度，或者您希望的具体像素值 */
+            margin-top: 20px;
+            /* 增加与上面的距离 */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="upper-container">
+        <div id="question-container">
+            <h2 id="question" style="display: inline;"></h2>
+            <div id="answer-container" style="display: inline;">
+                <input type="text" id="answer-display" placeholder="?">
+            </div>
+        </div>
+        <p id="score">得分: 0 难度: 1</p>
+    </div>
+    <div class="grid-container">
+        <button onclick="enterNumber(1)">1</button>
+        <button onclick="enterNumber(2)">2</button>
+        <button onclick="enterNumber(3)">3</button>
+        <button onclick="enterNumber(4)">4</button>
+        <button onclick="enterNumber(5)">5</button>
+        <button onclick="enterNumber(6)">6</button>
+        <button onclick="enterNumber(7)">7</button>
+        <button onclick="enterNumber(8)">8</button>
+        <button onclick="enterNumber(9)">9</button>
+        <button onclick="enterNumber(0)">0</button>
+        <button onclick="checkAnswer()">确认</button>
+        <button onclick="clearAnswer()">清除</button>
+    </div>
+
+
+    <div id="history-container">
+        <h3>答题历史</h3>
+        <div id="history"></div>
+    </div>
+
+    <script>
+        var score = 0;
+        var difficulty = 1;
+        var question = '';
+        var answer = '';
+        var answerHistory = [];
+
+        function generateQuestion() {
+            var operators = ['+', '-', '*', '/'];
+            var operator = operators[Math.floor(Math.random() * operators.length)];
+            var number1 = Math.floor(Math.random() * 10 * difficulty);
+            var number2 = Math.floor(Math.random() * 10 * difficulty);
+
+            // 处理除数为0的情况
+            if (operator === '/' && number2 === 0) {
+                number2 = 1 + Math.floor(Math.random() * 10 * difficulty);
+            }
+
+            // 处理除法只出整除的情况
+            if (operator === '/' && number1 % number2 !== 0) {
+                number1 = number2 * Math.floor(number1 / number2);
+            }
+
+            // 处理减法可能导致负数的情况
+            if (operator === '-' && number1 < number2) {
+                var temp = number1;
+                number1 = number2;
+                number2 = temp;
+            }
+
+            question = number1 + ' ' + operator + ' ' + number2;
+            answer = calculateAnswer(number1, operator, number2);
+
+            var questionElement = document.getElementById('question');
+            questionElement.innerHTML = question + ' = ';
+            document.getElementById('answer-display').placeholder = '?';
+
+            switch (operator) {
+                case '+':
+                    questionElement.className = 'add';
+                    break;
+                case '-':
+                    questionElement.className = 'subtract';
+                    break;
+                case '*':
+                    questionElement.className = 'multiply';
+                    break;
+                case '/':
+                    questionElement.className = 'divide';
+                    break;
+            }
+
+            document.getElementById('answer-display').value = '';
+        }
+
+        function enterNumber(number) {
+            document.getElementById('answer-display').value += number;
+        }
+
+        function clearAnswer() {
+            document.getElementById('answer-display').value = '';
+        }
+
+        function calculateAnswer(number1, operator, number2) {
+            var result;
+
+            switch (operator) {
+                case '+':
+                    result = number1 + number2;
+                    break;
+                case '-':
+                    result = number1 - number2;
+                    break;
+                case '*':
+                    result = number1 * number2;
+                    break;
+                case '/':
+                    result = number1 / number2;
+                    break;
+            }
+
+            return result;
+        }
+
+        function checkAnswer() {
+            var userAnswer = parseInt(document.getElementById('answer-display').value);
+            var scoreElement = document.getElementById('score');
+            var historyElement = document.getElementById('history');
+
+            var result = {
+                question: question + ' = ' + userAnswer,
+                answer: answer,
+                correct: userAnswer === answer
+            };
+
+            answerHistory.unshift(result); // 使用unshift而不是push来在数组前面添加元素
+
+            if (userAnswer === answer) {
+                score += 1;
+                historyElement.innerHTML = '<p class="correct">' + result.question + ' 正确</p>' + historyElement.innerHTML; // 添加到历史记录的最前面
+            } else {
+                score -= 1;
+                historyElement.innerHTML = '<p class="incorrect">' + result.question + ' 错误，正确为 ' + result.answer + '</p>' + historyElement.innerHTML; // 添加到历史记录的最前面
+            }
+
+            // 根据得分范围调整难度
+            if (score >= 130) {
+                difficulty = 7;
+            } else if (score >= 50) {
+                difficulty = 6;
+            } else if (score >= 40) {
+                difficulty = 5;
+            } else if (score >= 30) {
+                difficulty = 4;
+            } else if (score >= 20) {
+                difficulty = 3;
+            } else if (score >= 10) {
+                difficulty = 2;
+            } else if (score >= 5) {
+                difficulty = 2;
+            } else {
+                difficulty = 1;
+            }
+
+            scoreElement.innerHTML = '得分: ' + score + ' 难度: ' + difficulty;
+
+            generateQuestion();
+        }
+
+
+        function handleKeyPress(event) {
+            var key = event.key;
+
+            if (key === 'Enter') {
+                checkAnswer();
+            } else if (key === 'Delete' || key === 'Backspace') {
+                clearAnswer();
+            } else if (key >= '0' && key <= '9') {
+                enterNumber(parseInt(key, 10));
+            } else if (event.key >= 'Numpad0' && event.key <= 'Numpad9') {
+                enterNumber(parseInt(key.replace('Numpad', ''), 10));
+            }
+        }
+
+        document.addEventListener('keydown', handleKeyPress);
+
+        generateQuestion();
+    </script>
+</body>
+
+</html>
