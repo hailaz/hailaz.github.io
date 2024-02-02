@@ -93,32 +93,53 @@
             margin-top: 20px;
             /* 增加与上面的距离 */
         }
+
+        @media only screen and (max-device-width: 480px) {
+            .grid-container button {
+                font-size: 40px;
+                height: 100px;
+            }
+
+            #answer-display {
+                font-size: 40px;
+                width: 400px;
+            }
+
+            #score {
+                font-size: 40px;
+            }
+
+            body {
+                font-size: 40px;
+            }
+        }
     </style>
 </head>
 
 <body>
-    <div id="upper-container">
-        <div id="question-container">
-            <h2 id="question" style="display: inline;"></h2>
-            <div id="answer-container" style="display: inline;">
-                <input type="text" id="answer-display" placeholder="?">
-            </div>
+
+    <div id="question-container">
+        <h2 id="question" style="display: inline;"></h2>
+        <div id="answer-container" style="display: inline;">
+            <input type="text" id="answer-display" placeholder="?">
         </div>
+    </div>
+    <div id="upper-container">
         <p id="score">得分: 0 难度: 1</p>
     </div>
     <div class="grid-container">
-        <button onclick="enterNumber(1)">1</button>
-        <button onclick="enterNumber(2)">2</button>
-        <button onclick="enterNumber(3)">3</button>
-        <button onclick="enterNumber(4)">4</button>
-        <button onclick="enterNumber(5)">5</button>
-        <button onclick="enterNumber(6)">6</button>
         <button onclick="enterNumber(7)">7</button>
         <button onclick="enterNumber(8)">8</button>
         <button onclick="enterNumber(9)">9</button>
+        <button onclick="enterNumber(4)">4</button>
+        <button onclick="enterNumber(5)">5</button>
+        <button onclick="enterNumber(6)">6</button>
+        <button onclick="enterNumber(1)">1</button>
+        <button onclick="enterNumber(2)">2</button>
+        <button onclick="enterNumber(3)">3</button>
         <button onclick="enterNumber(0)">0</button>
-        <button onclick="checkAnswer()">确认</button>
         <button onclick="clearAnswer()">清除</button>
+        <button onclick="checkAnswer()">确认</button>
     </div>
 
 
