@@ -233,6 +233,9 @@
         }
 
         function checkAnswer() {
+            if (document.getElementById('answer-display').value === '') {
+                return;
+            }
             var userAnswer = parseInt(document.getElementById('answer-display').value);
             var scoreElement = document.getElementById('score');
             var historyElement = document.getElementById('history');
