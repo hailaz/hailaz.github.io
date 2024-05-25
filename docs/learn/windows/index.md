@@ -33,3 +33,21 @@ https://www.disktool.cn/content-center/exfat-drive-not-recognized-windows-10-666
 多数情况下 CPU 占用过高都是某个插件引起的，我们手动逐个排除会比较麻烦，但是 VSCode 给我们提供了自动排查的功能，你只需要按住 Cmd+Shift+P 打开快捷命令窗口，输入 Start extension bisect，按回车后，根据提示确认，即可定位到有问题的插件。
 
 第一次会自动禁用全部插件，我们可以通过观察 Code Helper 进程，发现 CPU 占用已经正常，说明就是某个插件除了问题；接着我们点击 Good Now, VSCode 会再次自动禁用一部分插件，继续观察 CPU 进程，如果有异常，就选 This is bad，没问题就选择 Good Now,不出意外的话，最终会定位到一个插件，这就是有问题的那个插件；它的查找方法如命令的名称一样，使用二分查找法，快速定位有问题的插件。
+
+
+## Linux 的 Windows 子系统 (WSL)
+
+https://learn.microsoft.com/zh-cn/windows/wsl/
+
+### wsl2老是提示“参考的对象类型不支持尝试的操作”
+https://cloud.tencent.com/developer/article/1986728
+```shell
+.\NoLsp.exe C:\windows\system32\wsl.exe
+```
+
+```shell
+# 查看系统版本
+lsb_release -a
+uname -a
+
+```
