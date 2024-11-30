@@ -51,3 +51,19 @@ lsb_release -a
 uname -a
 
 ```
+
+## Windows10/Windows11 家庭版共享访问时需要输入密码的解决办法
+一般第一步就可以访问别人的匿名共享了
+
+1. 首先Win+Q,输入powershell,选择用管理员身份运行:
+
+Set-SmbClientConfiguration -RequireSecuritySignature $false
+
+----
+
+2. 然后Win+Q,输入regedit修改注册表:
+
+计算机\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters
+
+新建名称为AllowInsecureGuestAuth的DWORD(32位)值,数据为1;
+
