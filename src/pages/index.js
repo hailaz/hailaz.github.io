@@ -24,19 +24,18 @@ export default function Home() {
       description="Description will go into a meta tag in <head />">
       {/* <HomepageHeader /> */}
       <main>
-        <div className={clsx(styles.mybackground)}>
-          <div className={clsx(styles.mysearch)}>
-            <form action="https://www.google.com/search" method="GET" target="_blank">
-              <input type="text" name="q" size="50" />
-              <input type="submit" value="google" />
+        <div className={clsx(styles.pageWrapper)}>
+          <div className={clsx(styles.searchContainer)}>
+            <form action="https://www.google.com/search" method="GET" target="_blank" className={styles.searchForm}>
+              <input type="text" name="q" size="50" className={styles.searchInput} />
+              <input type="submit" value="google" className={styles.searchButton} />
             </form>
-            <form action="https://www.baidu.com/s" method="GET" target="_blank">
-              <input type="text" name="wd" size="50" />
-              <input type="submit" value="百度一下" />
+            <form action="https://www.baidu.com/s" method="GET" target="_blank" className={styles.searchForm}>
+              <input type="text" name="wd" size="50" className={styles.searchInput} />
+              <input type="submit" value="百度一下" className={styles.searchButton} />
             </form>
           </div>
-          {/* <HomepageFeatures /> */}
-          <div className={clsx(styles.mytable)}>
+          <div className={clsx(styles.linksContainer)}>
             <div className={styles.linkSection}>
               <div className={styles.sectionTitle}>常用</div>
               <div className={styles.linkList}>
@@ -77,7 +76,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-
       </main>
     </Layout>
   );
