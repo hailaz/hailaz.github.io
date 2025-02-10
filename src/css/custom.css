@@ -29,6 +29,33 @@
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
 
-body{
-  /* background-color: rgb(230, 227, 220); */
+body {
+  background-color: rgb(253, 251, 245);
+}
+
+/* 页脚样式美化 */
+.footer {
+  background: var(--ifm-navbar-background-color);
+  padding: 1rem 0; /* 从 2rem 改为 1rem */
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.footer__link-item {
+  color: var(--ifm-navbar-link-color);
+  transition: color 0.2s;
+}
+
+.footer__link-item:hover {
+  color: var(--ifm-navbar-link-color);
+  text-decoration: none;
+}
+
+.footer__copyright {
+  color: var(--ifm-navbar-link-color);
+  font-size: 0.85rem; /* 稍微减小字体大小 */
+  margin-top: 0.5rem; /* 从 1rem 改为 0.5rem */
+}
+
+[data-theme='dark'] .footer {
+  background: var(--ifm-navbar-background-color);
 }
