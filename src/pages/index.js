@@ -1,9 +1,52 @@
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import clsx from 'clsx';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import styles from './index.module.css';
+
+// 水波纹组件
+const RippleEffect = () => {
+  useEffect(() => {
+    let lastRippleTime = 0;
+    const RIPPLE_DELAY = 50; // 控制水波纹产生的最小间隔
+
+    const createRipple = (x, y) => {
+      const ripple = document.createElement('div');
+      ripple.classList.add(styles.ripple);
+      document.body.appendChild(ripple);
+
+      const size = 30; // 固定大小
+      ripple.style.width = ripple.style.height = `${size}px`;
+      ripple.style.left = `${x - size/2}px`;
+      ripple.style.top = `${y - size/2}px`;
+
+      ripple.classList.add(styles.rippleEffect);
+
+      setTimeout(() => {
+        ripple.remove();
+      }, 600);
+    };
+
+    const handleMouseMove = (event) => {
+      const currentTime = Date.now();
+      
+      // 控制水波纹生成频率
+      if (currentTime - lastRippleTime > RIPPLE_DELAY) {
+        createRipple(event.clientX, event.clientY);
+        lastRippleTime = currentTime;
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
+  return null;
+};
 
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
@@ -41,6 +84,7 @@ export default function Home() {
     <Layout
       title={`欢迎来到 ${siteConfig.title}`}
       description="Description will go into a meta tag in <head />">
+      <RippleEffect />
       {/* <HomepageHeader /> */}
       <main>
         <div className={clsx(styles.pageWrapper)}>

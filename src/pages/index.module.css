@@ -150,3 +150,27 @@
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
+
+.ripple {
+  position: fixed;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+}
+
+.rippleEffect {
+  animation: ripple-effect 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes ripple-effect {
+  0% {
+    transform: scale(0.3);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
