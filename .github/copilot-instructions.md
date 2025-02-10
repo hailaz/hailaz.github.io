@@ -7,6 +7,17 @@
 
 ## 开发规范
 
+### 技术栈
+- 基于 React 和 Docusaurus 框架
+- 使用 Markdown 和 MDX 编写文档
+- 使用 CSS Modules 编写样式
+- 使用 GitHub Actions 自动构建和部署
+
+### 代码规范
+- 使用 ESLint 和 Prettier 进行代码规范检查
+- 所有代码需经过格式化和检查后才能提交
+- 代码需要配套对应的注释和文档说明
+
 ### 文件组织
 - 文档放置在 `docs` 目录下
 - 博客文章放置在 `blog` 目录下
