@@ -32,8 +32,8 @@
   max-width: 800px;
   margin: 2rem auto;
   padding: 2rem;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.2);  /* 增加不透明度 */
+  backdrop-filter: blur(5px);  /* 降低模糊度 */
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -47,6 +47,8 @@
   align-items: center;
   justify-content: center;
   position: relative;
+  margin-bottom: 10px;
+  position: relative;
 }
 
 .searchInput {
@@ -59,6 +61,14 @@
   transition: all 0.3s ease;
   margin: 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
+  width: 500px;
+  font-weight: 500;  /* 增加字重 */
+  -webkit-font-smoothing: antialiased;  /* 优化字体渲染 */
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .searchInput::placeholder {
@@ -133,6 +143,9 @@
   color: #4c566a;
   text-decoration: none;
   transition: all 0.2s ease;
+  font-weight: 500;  /* 增加字重 */
+  -webkit-font-smoothing: antialiased;  /* 优化字体渲染 */
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .linkItem:hover {
@@ -145,8 +158,8 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.2);  /* 增加不透明度 */
+  backdrop-filter: blur(5px);  /* 降低模糊度 */
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
@@ -168,5 +181,29 @@
   to {
     transform: scale(800);
     opacity: 0;
+  }
+}
+
+/* 添加媒体查询，适配移动端 */
+@media screen and (max-width: 768px) {
+  .searchInput {
+    width: calc(100vw - 120px); /* 减去按钮宽度和边距的空间 */
+    min-width: 200px;
+    background: rgba(255, 255, 255, 0.8);  /* 增加输入框背景不透明度 */
+  }
+  
+  .searchForm {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .searchContainer,
+  .linksContainer {
+    background: rgba(255, 255, 255, 0.3);  /* 移动端增加背景不透明度 */
+    backdrop-filter: blur(3px);  /* 移动端降低模糊度 */
+  }
+
+  .linkItem {
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);  /* 添加文字阴影提高可读性 */
   }
 }
