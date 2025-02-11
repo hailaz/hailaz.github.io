@@ -9,23 +9,27 @@ import styles from './index.module.css';
 const RippleEffect = () => {
   useEffect(() => {
     let lastRippleTime = 0;
-    const RIPPLE_DELAY = 50; // 控制水波纹产生的最小间隔
+    const RIPPLE_DELAY = 300; // 控制水波纹产生的最小间隔
 
     const createRipple = (x, y) => {
       const ripple = document.createElement('div');
       ripple.classList.add(styles.ripple);
       document.body.appendChild(ripple);
 
-      const size = 30; // 固定大小
+      const size = 5; // 固定大小
       ripple.style.width = ripple.style.height = `${size}px`;
-      ripple.style.left = `${x - size/2}px`;
-      ripple.style.top = `${y - size/2}px`;
+      
+      // 调整水波纹位置，考虑鼠标指针的偏移
+      const cursorOffset = 0; // 鼠标指针的偏移量
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y - cursorOffset}px`;
+      ripple.style.transform = 'translate(-50%, -50%)';
 
       ripple.classList.add(styles.rippleEffect);
 
       setTimeout(() => {
         ripple.remove();
-      }, 600);
+      }, 5000);
     };
 
     const handleMouseMove = (event) => {
