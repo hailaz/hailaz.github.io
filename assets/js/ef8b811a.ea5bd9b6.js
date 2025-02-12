@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkhailaz_github_io=self.webpackChunkhailaz_github_io||[]).push([[8947],{6600:a=>{a.exports=JSON.parse('{"authors":[{"name":"Hailaz","title":"\u300c\u4eba\u5982\u5929\u6c14 \u5343\u53d8\u4e07\u5316\u300d","url":"https://github.com/hailaz","imageURL":"https://github.com/hailaz.png","key":"hailaz","page":null,"count":1}]}')}}]);
