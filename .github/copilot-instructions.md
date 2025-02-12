@@ -1,3 +1,5 @@
+使用中文交流
+
 # 项目开发指南
 
 ## 项目概述
@@ -44,10 +46,8 @@
 - branch 命名规范：feature/xxx, fix/xxx
 
 ## 本地开发
-1. 克隆仓库
-2. 安装依赖：`npm install`
-3. 本地预览：`npm start`
-4. 构建网站：`npm run build`
+
+参考README.md文档
 
 ## 部署说明
 - 提交到 master 分支自动触发部署
