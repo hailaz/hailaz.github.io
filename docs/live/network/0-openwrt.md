@@ -4,13 +4,13 @@ title: openwrt
 
 # 固件
 
-<https://github.com/haiibo/OpenWrt/tree/X86_64>
+https://github.com/haiibo/OpenWrt/tree/X86_64
 
 # 固件命名区别
 
 ![1690598469089](1690598469088.png)
 
-<https://www.cnblogs.com/andyzjb/p/15587004.html>
+https://www.cnblogs.com/andyzjb/p/15587004.html
 
 ```
 openwrt-x86-generic-combined-ext4.img.gz<br>

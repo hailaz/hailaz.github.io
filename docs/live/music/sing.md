@@ -7,9 +7,9 @@ title: 学唱歌
 
 
 
-正在学唱歌的你，请务必点进这个视频！从零基础开始进行针对性的提升！【建议收藏】_哔哩哔哩_bilibili <https://www.bilibili.com/video/BV1wv411W7pn>
+正在学唱歌的你，请务必点进这个视频！从零基础开始进行针对性的提升！【建议收藏】_哔哩哔哩_bilibili https://www.bilibili.com/video/BV1wv411W7pn
 
-<https://space.bilibili.com/540564177/channel/detail?cid=126361&ctype=0>
+https://space.bilibili.com/540564177/channel/detail?cid=126361&ctype=0
 
 |目前程度|判断条件|学习目标|
 |---|---|---|
@@ -26,15 +26,15 @@ title: 学唱歌
 
 ## 音准
 
-零基础如何辨别自己是不是五音不全，五音不全真的就没救了吗？【系统学唱歌第一课 —— 音准（一）】_哔哩哔哩_bilibili <https://www.bilibili.com/video/BV1iZ4y1s7Qs>
+零基础如何辨别自己是不是五音不全，五音不全真的就没救了吗？【系统学唱歌第一课 —— 音准（一）】_哔哩哔哩_bilibili https://www.bilibili.com/video/BV1iZ4y1s7Qs
 
-<https://www.bilibili.com/video/BV1iZ4y1s7Qs?p=2>
+https://www.bilibili.com/video/BV1iZ4y1s7Qs?p=2
 
-快进来测试一下，你唱歌到底准不准？！【系统学唱歌第二课 —— 音准（二）】_哔哩哔哩_bilibili <https://www.bilibili.com/video/BV1dK4y1b7yD>
+快进来测试一下，你唱歌到底准不准？！【系统学唱歌第二课 —— 音准（二）】_哔哩哔哩_bilibili https://www.bilibili.com/video/BV1dK4y1b7yD
 
 在线钢琴
 
-<https://www.autopiano.cn/>
+https://www.autopiano.cn/
 
 记忆旋律
 
