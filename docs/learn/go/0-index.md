@@ -42,6 +42,10 @@ tags:
 - [GO 知识图谱](./golang.png)
 - [GO 开发指南](./golangdev.jpg)
 
-## 教程
+### 教程
 
-### [微软教程](https://learn.microsoft.com/zh-cn/training/paths/go-first-steps/)
+- [微软教程](https://learn.microsoft.com/zh-cn/training/paths/go-first-steps/)
+
+## [学习路径](https://github.com/darius-khll/golang-developer-roadmap/blob/master/i18n/zh-CN/ReadMe-zh-CN.md)
+
+![alt text](image.png)
