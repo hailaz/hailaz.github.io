@@ -1,0 +1,120 @@
+.toolsContainer {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 80vh;
+}
+
+.toolGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.toolCard {
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.toolCard:hover {
+  transform: translateY(-5px);
+}
+
+.toolLink {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: var(--ifm-color-primary);
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.toolLink:hover {
+  background: var(--ifm-color-primary-dark);
+  text-decoration: none;
+  color: white;
+}
+
+.gameContainer {
+  margin: 2rem auto;
+  padding: 1rem;
+  background: var(--ifm-color-emphasis-0);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.toolDescription {
+  text-align: center;
+  margin: 1rem 0;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 1.1rem;
+}
+
+.toolContent {
+  margin: 2rem auto;
+  padding: 1rem;
+  background: var(--ifm-color-emphasis-0);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.tabs {
+  margin: 2rem 0;
+}
+
+.tabContent {
+  background: var(--ifm-color-emphasis-0);
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+:global(.tabs-container) {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+  background: var(--ifm-color-emphasis-0);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+  .toolsContainer {
+    padding: 1rem;
+  }
+  
+  .toolGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .gameContainer {
+    padding: 0.5rem;
+    margin: 1rem auto;
+  }
+
+  .toolContent {
+    padding: 0.5rem;
+    margin: 1rem auto;
+  }
+
+  .toolDescription {
+    font-size: 1rem;
+  }
+
+  .tabs {
+    margin: 1rem 0;
+  }
+
+  :global(.tabs-container) {
+    padding: 0.5rem;
+  }
+}

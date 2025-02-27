@@ -1,1 +1,1 @@
-npm run start -- --no-open
+yarn start

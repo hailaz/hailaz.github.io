@@ -67,12 +67,6 @@ const config = {
           src: 'img/favicon.ico',
         },
         items: [
-          // {
-          //   type: 'doc',
-          //   docId: 'live/index',
-          //   position: 'left',
-          //   label: '生活',
-          // },
           {
             type: 'docSidebar',
             position: 'left',
@@ -87,16 +81,17 @@ const config = {
           },
           { to: '/blog', label: '博客', position: 'left' },
           {
+            to: '/tools',
+            label: '工具',
+            position: 'left',
+          },
+          {
             href: 'https://www.hailaz.cn/gflearn/docs/index',
             label: 'GFLearn',
             position: 'left',
             target: '_self',
           },
-          {
-            href: 'https://hailaz.github.io/tools/tools.html',
-            label: '工具',
-            position: 'right',
-          },
+         
           {
             href: 'https://github.com/hailaz',
             label: 'GitHub',
