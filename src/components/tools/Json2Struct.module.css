@@ -1,0 +1,42 @@
+.container {
+  margin: 20px 0;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: var(--ifm-card-background-color);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.textArea {
+  width: 100%;
+  min-height: 200px;
+  padding: 10px;
+  border: 1px solid var(--ifm-color-gray-300);
+  border-radius: 4px;
+  font-family: monospace;
+  margin-bottom: 15px;
+  background-color: var(--ifm-code-background);
+  color: var(--ifm-font-color-base);
+}
+
+.button {
+  padding: 8px 16px;
+  background-color: var(--ifm-color-primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  margin: 10px 0 20px 0;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background-color: var(--ifm-color-primary-dark);
+}

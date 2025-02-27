@@ -1,7 +1,7 @@
 .toolsContainer {
-  padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
+  padding: 2rem 1rem;
   min-height: 80vh;
 }
 
@@ -56,28 +56,58 @@
 
 .toolDescription {
   text-align: center;
-  margin: 1rem 0;
+  margin-bottom: 1rem;
   color: var(--ifm-color-emphasis-700);
   font-size: 1.1rem;
 }
 
 .toolContent {
-  margin: 2rem auto;
-  padding: 1rem;
-  background: var(--ifm-color-emphasis-0);
+  background: var(--ifm-color-emphasis-100);
   border-radius: 8px;
+  padding: 1.5rem;
+  margin: 2rem auto;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 
 .tabs {
-  margin: 2rem 0;
+  margin-top: 1.5rem;
 }
 
 .tabContent {
   background: var(--ifm-color-emphasis-0);
   border-radius: 8px;
   margin-top: 1rem;
+  padding: 1rem 0;
+}
+
+.textArea {
+  width: 100%;
+  min-height: 200px;
+  font-family: monospace;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 4px;
+}
+
+.inputField {
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 4px;
+}
+
+.button {
+  margin-bottom: 1rem;
+  margin-right: 0.5rem;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
 }
 
 :global(.tabs-container) {
