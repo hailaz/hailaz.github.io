@@ -1,150 +1,48 @@
 .toolsContainer {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  min-height: 80vh;
+  display: flex;
+  width: 100%;
+  min-height: 70vh;
+  margin: 2rem 0;
 }
 
-.toolGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-.toolCard {
-  background: var(--ifm-color-emphasis-100);
-  border-radius: 8px;
-  padding: 1.5rem;
-  text-align: center;
-  transition: transform 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+.tabsContainer {
+  display: flex;
   width: 100%;
 }
 
-.toolCard:hover {
-  transform: translateY(-5px);
+.tabList {
+  width: 200px;
+  border-right: 1px solid var(--ifm-color-emphasis-300);
+  padding: 0 1rem 0 1rem; /* 添加左侧内边距 */
+  flex-shrink: 0;
 }
 
-.toolLink {
-  display: inline-block;
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  background: var(--ifm-color-primary);
-  color: white;
-  border-radius: 4px;
-  text-decoration: none;
-  transition: background 0.2s ease;
-}
-
-.toolLink:hover {
-  background: var(--ifm-color-primary-dark);
-  text-decoration: none;
-  color: white;
-}
-
-.gameContainer {
-  margin: 2rem auto;
-  padding: 1rem;
-  background: var(--ifm-color-emphasis-0);
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  max-width: 100%;
-  overflow-x: auto;
-}
-
-.toolDescription {
-  text-align: center;
-  margin-bottom: 1rem;
-  color: var(--ifm-color-emphasis-700);
-  font-size: 1.1rem;
-}
-
-.toolContent {
-  background: var(--ifm-color-emphasis-100);
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin: 2rem auto;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-.tabs {
-  margin-top: 1.5rem;
-}
-
-.tabContent {
-  background: var(--ifm-color-emphasis-0);
-  border-radius: 8px;
-  margin-top: 1rem;
-  padding: 1rem 0;
-}
-
-.textArea {
-  width: 100%;
-  min-height: 200px;
-  font-family: monospace;
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  border: 1px solid var(--ifm-color-emphasis-300);
-  border-radius: 4px;
-}
-
-.inputField {
-  width: 100%;
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  border: 1px solid var(--ifm-color-emphasis-300);
-  border-radius: 4px;
-}
-
-.button {
-  margin-bottom: 1rem;
-  margin-right: 0.5rem;
-}
-
-.label {
+.tabList button {
   display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
   margin-bottom: 0.5rem;
+  border-radius: var(--ifm-global-radius);
+}
+
+.tabList button.tabActive {
+  background-color: var(--ifm-color-emphasis-100);
+  border: 3px solid var(--ifm-color-primary);
   font-weight: bold;
 }
 
-:global(.tabs-container) {
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
-  background: var(--ifm-color-emphasis-0);
-  border-radius: 8px;
-  padding: 1rem;
+.tabContent {
+  flex-grow: 1;
+  padding: 0 1rem 1rem 2rem;
 }
 
-@media screen and (max-width: 768px) {
-  .toolsContainer {
-    padding: 1rem;
-  }
-  
-  .toolGrid {
-    grid-template-columns: 1fr;
-  }
-  
-  .gameContainer {
-    padding: 0.5rem;
-    margin: 1rem auto;
-  }
+.toolDescription {
+  margin-bottom: 1.5rem;
+  font-style: italic;
+  color: var(--ifm-color-emphasis-700);
+}
 
-  .toolContent {
-    padding: 0.5rem;
-    margin: 1rem auto;
-  }
-
-  .toolDescription {
-    font-size: 1rem;
-  }
-
-  .tabs {
-    margin: 1rem 0;
-  }
-
-  :global(.tabs-container) {
-    padding: 0.5rem;
-  }
+.toolContent {
+  width: 100%;
+  min-height: 400px;
 }

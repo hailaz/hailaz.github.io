@@ -1,14 +1,12 @@
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
-import TabItem from '@theme/TabItem';
-import Tabs from '@theme/Tabs';
 import React from 'react';
+import CaseConverter from '../components/CaseConverter/CaseConverter';
+import CodeGenerator from '../components/CodeGenerator/CodeGenerator';
 import ImageEditor from '../components/ImageEditor';
-import CaseConverter from '../components/tools/CaseConverter';
-import CodeGenerator from '../components/tools/CodeGenerator';
-import Json2Struct from '../components/tools/Json2Struct';
-import QrCodeGenerator from '../components/tools/QrCodeGenerator';
-import SnakeGame from '../components/tools/SnakeGame';
+import Json2Struct from '../components/Json2Struct/Json2Struct';
+import QrCodeGenerator from '../components/QrCodeGenerator/QrCodeGenerator';
+import SnakeGame from '../components/SnakeGame/SnakeGame';
 import styles from './tools.module.css';
 
 const toolsList = [
@@ -31,7 +29,7 @@ const toolsList = [
     component: <QrCodeGenerator />,
   },
   {
-    label: '代码生成器',
+    label: '模板代码生成器',
     value: 'codegen',
     description: '根据模板生成代码的工具',
     component: <CodeGenerator />,
@@ -53,29 +51,39 @@ const toolsList = [
 
 export default function Tools() {
   const {siteConfig} = useDocusaurusContext();
+    const [activeTab, setActiveTab] = React.useState(toolsList[0].value);
   
+  const handleTabChange = (tabValue) => {
+    setActiveTab(tabValue);
+  };
+
+  const activeTool = toolsList.find((tool) => tool.value === activeTab);
+
   return (
     <Layout
       title="工具集"
       description="实用的在线工具集合">
       <main>
         <div className={styles.toolsContainer}>
-          <h1>实用工具集</h1>
-          <Tabs defaultValue={toolsList[0].value} className={styles.tabs}>
-            {toolsList.map((tool) => (
-              <TabItem 
-                key={tool.value} 
-                value={tool.value} 
-                label={tool.label}
-                className={styles.tabContent}
-              >
-                <div className={styles.toolDescription}>{tool.description}</div>
-                <div className={styles.toolContent}>
-                  {tool.component}
-                </div>
-              </TabItem>
-            ))}
-          </Tabs>
+          <div className={styles.tabsContainer}>
+            <div className={styles.tabList}>
+              {toolsList.map((tool) => (
+                <button
+                  key={tool.value}
+                  className={activeTab === tool.value ? styles.tabActive : ''}
+                  onClick={() => handleTabChange(tool.value)}
+                >
+                  {tool.label}
+                </button>
+              ))}
+            </div>
+            <div className={styles.tabContent}>
+              <div className={styles.toolDescription}>{activeTool.description}</div>
+              <div className={styles.toolContent}>
+                {activeTool.component}
+              </div>
+            </div>
+          </div>
         </div>
       </main>
     </Layout>
