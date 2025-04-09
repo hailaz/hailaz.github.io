@@ -1,49 +1,92 @@
-.gameContainer {
+.snakeGameContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 auto;
-  max-width: 500px;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-.scoreBoard {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+.gameInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.score {
+  font-size: 24px;
+  margin-bottom: 10px;
   font-weight: bold;
 }
 
-.gameCanvas {
-  border: 2px solid var(--ifm-color-primary);
-  background-color: #f0f0f0;
-}
-
-.controls {
-  margin-top: 1rem;
-  display: flex;
-  gap: 1rem;
-}
-
-.button {
-  background-color: var(--ifm-color-primary);
+.gameButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #2e8555; /* Docusaurus 主题绿色 */
   color: white;
   border: none;
   border-radius: 4px;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
   cursor: pointer;
+  margin-bottom: 10px;
   transition: background-color 0.3s;
 }
 
-.button:hover {
-  background-color: var(--ifm-color-primary-dark);
+.gameButton:hover {
+  background-color: #277148;
+}
+
+.gameOverText {
+  color: #ff6b6b;
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.snakeBox {
+  position: relative;
+  border: 1px solid #ccc;
+  background-color: #f8f9fa;
+  display: flex;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.point {
+  margin: 1px;
+  background-color: transparent;
+  transition: background-color 0.1s;
+}
+
+.pointSelect {
+  background-color: #2e8555; /* 蛇身颜色 */
+  border-radius: 2px;
+}
+
+.food {
+  background-color: #ff6b6b !important; /* 食物颜色 */
+  border-radius: 50%;
+  animation: foodPulse 1s infinite alternate;
+}
+
+@keyframes foodPulse {
+  from {
+    transform: scale(0.9);
+  }
+  to {
+    transform: scale(1.1);
+  }
 }
 
 .instructions {
-  margin-top: 1.5rem;
+  margin-top: 20px;
   text-align: center;
-  font-size: 0.9rem;
+  color: #666;
 }
 
-.instructions h3 {
-  margin-bottom: 0.5rem;
+@media (max-width: 768px) {
+  .snakeBox {
+    width: 300px !important;
+    height: 300px !important;
+  }
 }
