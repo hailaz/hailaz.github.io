@@ -45,7 +45,6 @@
 
 .snakeBox {
   position: relative;
-  border: 1px solid #ccc;
   background-color: #f8f9fa;
   display: flex;
   flex-wrap: wrap;

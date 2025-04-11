@@ -1,22 +1,28 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import styles from './SnakeGame.module.css';
 
-const SnakeGame = () => {
-  const [snakeArray, setSnakeArray] = useState([]);
-  const [snakeBoxSize] = useState(40);
-  const [snakePointWidth] = useState(10);
-  const [snakeLen] = useState(5);
-  const [snakeEats, setSnakeEats] = useState(-1);
-  const [score, setScore] = useState(0);
-  const [gameOver, setGameOver] = useState(false);
-  const [gameStarted, setGameStarted] = useState(false);
+class SnakeGame extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      snakeArray: [],
+      snakeEats: -1,
+      score: 0,
+      gameOver: false,
+      gameStarted: false
+    };
 
-  const snakeHeadRef = useRef(null);
-  const snakeMoveRef = useRef(39); // 默认向右移动
-  const intervalIdRef = useRef(null);
+    // 固定配置
+    this.snakeBoxSize = 40;
+    this.snakePointWidth = 10;
+    this.snakeLen = 5;
+    this.snakeHead = null;
+    this.snakeMove = 39; // 默认向右移动
+    this.intervalId = null;
+  }
 
   // 蛇节点构造函数
-  class SnakeNode {
+  SnakeNode = class {
     constructor(idx) {
       this.pointIndex = idx;
       this.next = null;
@@ -24,66 +30,57 @@ const SnakeGame = () => {
   }
 
   // 初始化游戏
-  const initGame = () => {
+  initGame = () => {
     console.log('初始化游戏开始');
-    
-    
+
     // 创建游戏板块
     const newSnakeArray = [];
-    for (let i = 0; i < snakeBoxSize * snakeBoxSize; i++) {
+    for (let i = 0; i < this.snakeBoxSize * this.snakeBoxSize; i++) {
       newSnakeArray.push({
         id: i,
         isSel: false
       });
     }
-    setSnakeArray(newSnakeArray);
+    this.setState({ snakeArray: newSnakeArray });
 
     // 创建蛇头和初始蛇身
-    const startPosition = Math.floor(snakeBoxSize * snakeBoxSize / 2);
-    const snakeHead = new SnakeNode(startPosition);
-    snakeHeadRef.current = snakeHead;
+    const startPosition = Math.floor(this.snakeBoxSize * this.snakeBoxSize / 2);
+    const snakeHead = new this.SnakeNode(startPosition);
+    this.snakeHead = snakeHead;
 
     // 初始化蛇身，从右向左依次添加节点
-    for (let i = 1; i < snakeLen; i++) {
-      insertNode(startPosition - i);
+    for (let i = 1; i < this.snakeLen; i++) {
+      this.insertNode(startPosition - i);
     }
 
     // 显示蛇
-    showNode();
+    this.showNode();
 
     // 生成食物
-    newSnakeEats();
+    this.newSnakeEats();
 
     // 重置游戏状态
-    setScore(0);
-    setGameOver(false);
-    setGameStarted(true);
+    this.setState({
+      score: 0,
+      gameOver: false,
+      gameStarted: true
+    });
 
-    console.log('正在启动游戏计时器...');
-
-    // setInterval(() => {
-    //   console.log('游戏开始');
-    // }, 1000);
-    
     // 清除旧的计时器
-    if (intervalIdRef.current) {
-      console.log('清除旧的计时器');
-      clearInterval(intervalIdRef.current);
-      intervalIdRef.current = null;
-    }    // 启动新的计时器
-    console.log('设置新的计时器');
-    intervalIdRef.current = setInterval(() => {
-      console.log('计时器触发移动');
-      snakeMoving();
-    }, 200);  // 速度调整为200ms一次移动
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
 
-    console.log('游戏初始化完成，计时器ID:', intervalIdRef.current);
+    // 启动新的计时器
+    this.intervalId = setInterval(() => {
+      this.snakeMoving();
+    }, 200);
   };
 
   // 插入蛇身节点
-  const insertNode = (idx) => {
-    const newNode = new SnakeNode(idx);
-    const snakeHead = snakeHeadRef.current;
+  insertNode = (idx) => {
+    const newNode = new this.SnakeNode(idx);
+    const snakeHead = this.snakeHead;
     const pNode = snakeHead;
     const currNode = snakeHead;
 
@@ -96,160 +93,161 @@ const SnakeGame = () => {
   };
 
   // 显示蛇身
-  const showNode = () => {
-    setSnakeArray(prevArray => {
-      const newArray = [...prevArray];
-      let currNode = snakeHeadRef.current;
-      
-      while (currNode.next != null) {
-        currNode = currNode.next;
-        const pointIndex = currNode.pointIndex;
-        if (pointIndex >= 0 && pointIndex < newArray.length) {
-          newArray[pointIndex] = { ...newArray[pointIndex], isSel: true };
-        }
-      }
-      
-      return newArray;
-    });
-  };
+  showNode = () => {
+    const newArray = [...this.state.snakeArray];
+    let currNode = this.snakeHead;
 
-  // 移除尾部节点
-  const removeNode = () => {
-    let currNode = snakeHeadRef.current;
-    let frontNode = currNode;
-    
     while (currNode.next != null) {
-      frontNode = currNode;
       currNode = currNode.next;
-    }
-    
-    if (frontNode !== snakeHeadRef.current) {
       const pointIndex = currNode.pointIndex;
-      frontNode.next = null;
-      
-      setSnakeArray(prevArray => {
-        const newArray = [...prevArray];
-        if (pointIndex >= 0 && pointIndex < newArray.length) {
-          newArray[pointIndex] = { ...newArray[pointIndex], isSel: false };
-        }
-        return newArray;
-      });
+      if (pointIndex >= 0 && pointIndex < newArray.length) {
+        newArray[pointIndex] = { ...newArray[pointIndex], isSel: true };
+      }
     }
+
+    this.setState({ snakeArray: newArray });
   };
 
-  // 蛇移动逻辑
-  const snakeMoving = () => {
+  /**
+   * 蛇移动逻辑
+   * 主要步骤：
+   * 1. 计算新的头部位置
+   * 2. 检查是否撞到自己
+   * 3. 处理尾巴删除
+   * 4. 更新蛇头位置
+   * 5. 处理吃食逻辑
+   * 6. 更新游戏状态
+   */
+  snakeMoving = () => {
+    const { gameOver, gameStarted } = this.state;
+    // 游戏结束或未开始时不执行移动
     if (gameOver || !gameStarted) {
-      console.log('游戏未开始或已结束，停止移动');
       return;
     }
-    
-    const snakeHead = snakeHeadRef.current;
+
+    const snakeHead = this.snakeHead;
     if (!snakeHead) {
-      console.log('找不到蛇头节点');
       return;
     }
-    
-    console.log('当前移动方向:', snakeMoveRef.current);
-    // 修正：直接使用蛇头的位置
+
     const currentHeadIndex = snakeHead.pointIndex;
-    console.log('当前蛇头位置:', currentHeadIndex);
-    
     let newIndex;
-    
-    switch (snakeMoveRef.current) {
+
+    // 1. 根据移动方向计算新的头部位置
+    switch (this.snakeMove) {
       case 37: // 左
-        if (currentHeadIndex % snakeBoxSize === 0) {
-          newIndex = currentHeadIndex + snakeBoxSize - 1;
+        if (currentHeadIndex % this.snakeBoxSize === 0) {
+          // 如果在最左边，则从右边出现
+          newIndex = currentHeadIndex + this.snakeBoxSize - 1;
         } else {
           newIndex = currentHeadIndex - 1;
         }
-        console.log('向左移动，新位置:', newIndex);
         break;
       case 38: // 上
-        if (currentHeadIndex - snakeBoxSize < 0) {
-          newIndex = snakeBoxSize * snakeBoxSize + currentHeadIndex - snakeBoxSize;
+        if (currentHeadIndex - this.snakeBoxSize < 0) {
+          // 如果在最上边，则从下边出现
+          newIndex = this.snakeBoxSize * this.snakeBoxSize + currentHeadIndex - this.snakeBoxSize;
         } else {
-          newIndex = currentHeadIndex - snakeBoxSize;
+          newIndex = currentHeadIndex - this.snakeBoxSize;
         }
-        console.log('向上移动，新位置:', newIndex);
         break;
       case 39: // 右
-        if ((currentHeadIndex + 1) % snakeBoxSize === 0) {
-          newIndex = currentHeadIndex - (snakeBoxSize - 1);
+        if ((currentHeadIndex + 1) % this.snakeBoxSize === 0) {
+          // 如果在最右边，则从左边出现
+          newIndex = currentHeadIndex - (this.snakeBoxSize - 1);
         } else {
           newIndex = currentHeadIndex + 1;
         }
-        console.log('向右移动，新位置:', newIndex);
         break;
       case 40: // 下
-        if (currentHeadIndex + snakeBoxSize >= snakeBoxSize * snakeBoxSize) {
-          newIndex = currentHeadIndex % snakeBoxSize;
+        if (currentHeadIndex + this.snakeBoxSize >= this.snakeBoxSize * this.snakeBoxSize) {
+          // 如果在最下边，则从上边出现
+          newIndex = currentHeadIndex % this.snakeBoxSize;
         } else {
-          newIndex = currentHeadIndex + snakeBoxSize;
+          newIndex = currentHeadIndex + this.snakeBoxSize;
         }
-        console.log('向下移动，新位置:', newIndex);
         break;
       default:
         newIndex = currentHeadIndex;
-        console.log('未知方向，保持原位置');
         break;
     }
 
-    // 移动蛇身
-    setSnakeArray(prevArray => {
-      const newArray = [...prevArray];
-      // 清除原来的位置
-      newArray[currentHeadIndex] = { ...newArray[currentHeadIndex], isSel: false };
-      // 设置新的位置
-      newArray[newIndex] = { ...newArray[newIndex], isSel: true };
-      return newArray;
-    });
-    
-    // 检查是否碰到自己
+    // 2. 检查是否撞到自己
     let currNode = snakeHead.next;
     while (currNode) {
       if (currNode.pointIndex === newIndex) {
-        console.log('蛇撞到自己了，游戏结束');
-        setGameOver(true);
-        if (intervalIdRef.current) {
-          clearInterval(intervalIdRef.current);
-          intervalIdRef.current = null;
+        this.setState({ gameOver: true });
+        if (this.intervalId) {
+          clearInterval(this.intervalId);
+          this.intervalId = null;
         }
         return;
       }
       currNode = currNode.next;
     }
 
-    // 更新蛇头位置
-    snakeHead.pointIndex = newIndex;
-    
+    // 创建游戏区域状态的副本
+    const newArray = [...this.state.snakeArray];
+
     // 检查是否吃到食物
-    if (snakeEats === newIndex) {
-      console.log('吃到食物！生成新食物');
-      setSnakeEats(-1);
-      newSnakeEats();
-      setScore(prevScore => prevScore + 10);
-      insertNode(newIndex);
-    } else {
-      removeNode();
-      insertNode(newIndex);
+    const isEatingFood = this.state.snakeEats === newIndex;
+
+    // 3. 如果不是吃到食物，需要删除尾巴
+    if (!isEatingFood) {
+      // 找到并记录尾部节点的索引
+      let tail = this.snakeHead;
+      while (tail.next && tail.next.next) {
+        tail = tail.next;
+      }
+      if (tail.next) {
+        const tailIndex = tail.next.pointIndex;
+        // 将尾部节点在视图上设为不可见
+        newArray[tailIndex] = { ...newArray[tailIndex], isSel: false };
+        // 从链表中删除尾节点
+        tail.next = null;
+      }
     }
 
-    showNode();
+    // 4. 更新蛇头位置
+    // 将原头部位置标记为蛇身
+    newArray[currentHeadIndex] = { ...newArray[currentHeadIndex], isSel: true };
+    // 将新头部位置标记为蛇身
+    newArray[newIndex] = { ...newArray[newIndex], isSel: true };
+    
+    // 将旧头部位置变为蛇身节点
+    const newNode = new this.SnakeNode(currentHeadIndex);
+    newNode.next = this.snakeHead.next;
+    this.snakeHead.next = newNode;
+    // 更新蛇头到新位置
+    this.snakeHead.pointIndex = newIndex;
+
+    // 5. 处理吃到食物的情况
+    if (isEatingFood) {
+      this.setState(prevState => ({
+        snakeEats: -1,
+        score: prevState.score + 10
+      }));
+      // 生成新的食物
+      this.newSnakeEats();
+    }
+
+    // 6. 更新游戏状态
+    this.setState({ snakeArray: newArray });
+    
+    // 此处移除 showNode() 调用，因为我们已经正确更新了视图状态
   };
 
   // 生成新食物
-  const newSnakeEats = () => {
+  newSnakeEats = () => {
     let newEats;
     let isFoodOnSnake;
-    
+
     do {
       isFoodOnSnake = false;
-      newEats = Math.floor(Math.random() * snakeBoxSize * snakeBoxSize);
-      
+      newEats = Math.floor(Math.random() * this.snakeBoxSize * this.snakeBoxSize);
+
       // 检查食物是否生成在蛇身上
-      let currNode = snakeHeadRef.current;
+      let currNode = this.snakeHead;
       while (currNode && currNode.next) {
         currNode = currNode.next;
         if (currNode.pointIndex === newEats) {
@@ -258,111 +256,126 @@ const SnakeGame = () => {
         }
       }
     } while (isFoodOnSnake);
-    
-    setSnakeEats(newEats);
+
+    this.setState({ snakeEats: newEats });
   };
 
-  // 键盘事件处理
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (!gameStarted || gameOver) return;
-      
-      const keyCode = e.keyCode;
-      switch (keyCode) {
-        case 37: // 左
-        case 39: // 右
-          if (snakeMoveRef.current !== 37 && snakeMoveRef.current !== 39) {
-            snakeMoveRef.current = keyCode;
-          }
-          e.preventDefault();
-          break;
-        case 38: // 上
-        case 40: // 下
-          if (snakeMoveRef.current !== 38 && snakeMoveRef.current !== 40) {
-            snakeMoveRef.current = keyCode;
-          }
-          e.preventDefault();
-          break;
-        default:
-          break;
-      }
-    };
+  handleKeyDown = (e) => {
+    if (!this.state.gameStarted || this.state.gameOver) return;
 
-    document.addEventListener('keydown', handleKeyDown);
-    
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      if (intervalIdRef.current) {
-        clearInterval(intervalIdRef.current);
-      }
-    };
-  }, [gameStarted, gameOver, snakeBoxSize]);
-
-  // 游戏按钮
-  const handleGameAction = () => {
-    if (gameOver || !gameStarted) {
-      initGame();
+    const keyCode = e.keyCode;
+    switch (keyCode) {
+      case 37: // 左
+      case 39: // 右
+        if (this.snakeMove !== 37 && this.snakeMove !== 39) {
+          this.snakeMove = keyCode;
+        }
+        e.preventDefault();
+        break;
+      case 38: // 上
+      case 40: // 下
+        if (this.snakeMove !== 38 && this.snakeMove !== 40) {
+          this.snakeMove = keyCode;
+        }
+        e.preventDefault();
+        break;
+      default:
+        break;
+    }
+  };
+  /**
+   * 处理游戏按钮点击事件
+   * 如果游戏未开始或已结束，则初始化游戏
+   * 如果游戏正在进行，则结束游戏并清除游戏界面
+   */
+  handleGameAction = () => {
+    if (this.state.gameOver || !this.state.gameStarted) {
+      this.initGame();
     } else {
-      setGameOver(true);
-      setGameStarted(false);
-      if (intervalIdRef.current) {
-        clearInterval(intervalIdRef.current);
-        intervalIdRef.current = null;
+      // 清除游戏界面上的蛇和食物
+      const clearedArray = this.state.snakeArray.map(item => ({
+        id: item.id,
+        isSel: false // 将所有格子设置为不可见
+      }));
+
+      this.setState({
+        gameOver: true,
+        gameStarted: false,
+        snakeArray: clearedArray, // 更新清空后的游戏区域
+        snakeEats: -1 // 移除食物
+      });
+
+      // 清除蛇的链表结构
+      this.snakeHead = null;
+      
+      if (this.intervalId) {
+        clearInterval(this.intervalId);
+        this.intervalId = null;
       }
     }
   };
 
-  // 初始渲染
-  useEffect(() => {
+  componentDidMount() {
     const newSnakeArray = [];
-    for (let i = 0; i < snakeBoxSize * snakeBoxSize; i++) {
+    for (let i = 0; i < this.snakeBoxSize * this.snakeBoxSize; i++) {
       newSnakeArray.push({
         id: i,
         isSel: false
       });
     }
-    setSnakeArray(newSnakeArray);
-  }, [snakeBoxSize]);
+    this.setState({ snakeArray: newSnakeArray });
+    document.addEventListener('keydown', this.handleKeyDown);
+  }
 
-  const buttonText = !gameStarted ? '开始游戏' : gameOver ? '重新开始' : '暂停游戏';
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyDown);
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+  }
 
-  return (
-    <div className={styles.snakeGameContainer}>
-      <div className={styles.gameInfo}>
-        <div className={styles.score}>分数: {score}</div>
-        <button 
-          className={styles.gameButton} 
-          onClick={handleGameAction}
+  render() {
+    const { snakeArray, score, gameOver, gameStarted, snakeEats } = this.state;
+    const buttonText = !gameStarted ? '开始游戏' : gameOver ? '重新开始' : '结束游戏';
+
+    return (
+      <div className={styles.snakeGameContainer}>
+        <div className={styles.gameInfo}>
+          <div className={styles.score}>分数: {score}</div>
+          <button
+            className={styles.gameButton}
+            onClick={this.handleGameAction}
+          >
+            {buttonText}
+          </button>
+          {gameOver && <div className={styles.gameOverText}>游戏结束!</div>}
+        </div>
+
+        <div
+          className={styles.snakeBox}
+          style={{
+            width: `${this.snakePointWidth * this.snakeBoxSize}px`,
+            height: `${this.snakePointWidth * this.snakeBoxSize}px`
+          }}
         >
-          {buttonText}
-        </button>
-        {gameOver && <div className={styles.gameOverText}>游戏结束!</div>}
+          {snakeArray.map(item => (
+            <div
+              key={item.id}
+              className={`${styles.point} ${item.isSel ? styles.pointSelect : ''} ${item.id === snakeEats ? styles.food : ''}`}
+              style={{
+                width: `${this.snakePointWidth - 2}px`,
+                height: `${this.snakePointWidth - 2}px`
+              }}
+            />
+          ))}
+        </div>
+
+        <div className={styles.instructions}>
+          <p>使用方向键 ↑ ↓ ← → 控制蛇的移动</p>
+        </div>
       </div>
-      
-      <div 
-        className={styles.snakeBox}
-        style={{
-          width: `${snakePointWidth * snakeBoxSize}px`,
-          height: `${snakePointWidth * snakeBoxSize}px`
-        }}
-      >
-        {snakeArray.map(item => (
-          <div
-            key={item.id}
-            className={`${styles.point} ${item.isSel ? styles.pointSelect : ''} ${item.id === snakeEats ? styles.food : ''}`}
-            style={{
-              width: `${snakePointWidth - 2}px`,
-              height: `${snakePointWidth - 2}px`
-            }}
-          />
-        ))}
-      </div>
-      
-      <div className={styles.instructions}>
-        <p>使用方向键 ↑ ↓ ← → 控制蛇的移动</p>
-      </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 export default SnakeGame;
