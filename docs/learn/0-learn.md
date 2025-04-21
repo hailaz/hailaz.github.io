@@ -27,8 +27,6 @@ title: 目录
 
 这两个网站还都提供免费的数据库下载（[ipinfo 下载](https://ipinfo.io/developers/ip-to-country-asn-database)， [ipapi 下载](https://ipapi.is/geolocation.html)）。
 
-
-
 ## FinalShell SSH
 
 FinalShell 是一体化的服务器远程管理工具，支持 SSH 终端、SFTP 文件传输、文本编辑等功能。它具有以下特点：
@@ -45,8 +43,26 @@ FinalShell 是一体化的服务器远程管理工具，支持 SSH 终端、SFTP
 - Windows 版本：http://www.hostbuf.com/downloads/finalshell_install.exe
 - Mac 版本：http://www.hostbuf.com/downloads/finalshell_install.pkg
 - Linux 版本安装命令：
+
 ```bash
 wget www.hostbuf.com/downloads/finalshell_install_linux.sh
 chmod +x finalshell_install_linux.sh
 ./finalshell_install_linux.sh
 ```
+
+## truenas
+
+### 修改 pool 的名称
+
+相关的地址依赖记得修改，例如共享文件夹的地址等。
+
+1. 在 UI 中导出需要修改名字的 pool
+2. 在 shell 中执行以下命令
+
+```bash
+zpool import oldpoolname newpoolname
+zpool status newpoolname
+zpool export newpoolname
+```
+
+3. 在 UI 中导入新的 pool
