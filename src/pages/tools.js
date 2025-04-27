@@ -1,6 +1,7 @@
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import React from 'react';
+import AvatarGenerator from '../components/AvatarGenerator/AvatarGenerator';
 import CaseConverter from '../components/CaseConverter/CaseConverter';
 import CodeGenerator from '../components/CodeGenerator/CodeGenerator';
 import ImageEditor from '../components/ImageEditor';
@@ -39,12 +40,17 @@ const toolsList = [
     value: 'caseconverter',
     description: '转换文本的大小写',
     component: <CaseConverter />,
-  },
-  {
+  },  {
     label: '贪吃蛇游戏',
     value: 'snakegame',
     description: '经典的贪吃蛇游戏',
     component: <SnakeGame />,
+  },
+  {
+    label: '橙子头像生成器',
+    value: 'avatar',
+    description: '生成可爱的橙子头像',
+    component: <AvatarGenerator />,
   },
   // 这里可以继续添加更多工具
 ];
