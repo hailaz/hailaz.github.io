@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>100Hz音频生成</title>
+    <style>
+        .controls {
+            margin: 10px 0;
+        }
+
+        #progressBar {
+            width: 300px;
+            height: 20px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div class="controls">
+            <button onclick="togglePlay()">播放100Hz声音</button>
+            <button onclick="stopSound()" id="stopBtn" disabled>停止</button>
+        </div>
+        <div class="controls">
+            <label for="volume">音量：</label>
+            <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5">
+            <span id="volumeValue">50%</span>
+        </div>
+        <div class="controls">
+            <label for="duration">播放时长（秒）：</label>
+            <input type="range" id="duration" min="1" max="120" step="1" value="60">
+            <span id="durationValue">60秒</span>
+        </div>
+        <div class="controls">
+            <label for="progressBar">播放时长：</label>
+            <progress id="progressBar" value="60" max="60"></progress>
+            <span id="progressText">60秒</span>
+        </div>
+    </div>
+
+    <script>
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let context;
+        let gainNode;
+        let oscillator = null;
+        let startTime = 0;
+        let isPlaying = false;
+        let progressInterval;
+
+        // 获取DOM元素
+        const volumeSlider = document.getElementById('volume');
+        const volumeValue = document.getElementById('volumeValue');
+        const durationSlider = document.getElementById('duration');
+        const durationValue = document.getElementById('durationValue');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const stopBtn = document.getElementById('stopBtn');
+
+        volumeSlider.addEventListener('input', function () {
+            const value = this.value;
+            volumeValue.textContent = Math.round(value * 100) + '%';
+            if (gainNode) {
+                gainNode.gain.value = value;
+            }
+        });
+
+        durationSlider.addEventListener('input', function () {
+            const value = this.value;
+            durationValue.textContent = value + '秒';
+            progressBar.max = value;
+            progressBar.value = value;
+            progressText.textContent = value + '秒';
+        });
+
+        function updateProgress() {
+            if (!isPlaying) return;
+
+            const currentTime = context.currentTime - startTime;
+            const duration = parseFloat(durationSlider.value);
+            const remainingTime = Math.max(0, duration - currentTime);
+
+            if (remainingTime <= 0) {
+                stopSound();
+                return;
+            }
+
+            progressBar.value = remainingTime;
+            progressText.textContent = Math.round(remainingTime) + '秒';
+        }
+
+        function togglePlay() {
+            if (isPlaying) {
+                stopSound();
+            } else {
+                play100Hz();
+            }
+        }
+
+        function play100Hz() {
+            if (!context) {
+                context = new AudioContext();
+                gainNode = context.createGain();
+                gainNode.connect(context.destination);
+            }
+
+            if (oscillator) {
+                stopSound();
+            }
+
+            const duration = parseFloat(durationSlider.value);
+            progressBar.max = duration;
+            progressBar.value = duration;
+            progressText.textContent = duration + '秒';
+
+            gainNode.gain.value = volumeSlider.value;
+            oscillator = context.createOscillator();
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(100, context.currentTime);
+            oscillator.connect(gainNode);
+
+            startTime = context.currentTime;
+            oscillator.start();
+            isPlaying = true;
+            stopBtn.disabled = false;
+
+            // 开始进度更新
+            progressInterval = setInterval(updateProgress, 100);
+
+            // 设置结束时间
+            oscillator.stop(context.currentTime + duration);
+            oscillator.onended = stopSound;
+        }
+
+        function stopSound() {
+            if (oscillator) {
+                oscillator.stop();
+                oscillator.disconnect();
+                oscillator = null;
+            }
+            isPlaying = false;
+            stopBtn.disabled = true;
+            clearInterval(progressInterval);
+
+            const duration = parseFloat(durationSlider.value);
+            progressBar.value = duration;
+            progressText.textContent = duration + '秒';
+        }
+    </script>
+</body>
+
+</html>
