@@ -4,6 +4,7 @@ import React from 'react';
 import AvatarGenerator from '../components/AvatarGenerator/AvatarGenerator';
 import CaseConverter from '../components/CaseConverter/CaseConverter';
 import CodeGenerator from '../components/CodeGenerator/CodeGenerator';
+import EncoderDecoder from '../components/EncoderDecoder/EncoderDecoder';
 import ImageEditor from '../components/ImageEditor';
 import Json2Struct from '../components/Json2Struct/Json2Struct';
 import QrCodeGenerator from '../components/QrCodeGenerator/QrCodeGenerator';
@@ -34,13 +35,19 @@ const toolsList = [
     value: 'codegen',
     description: '根据模板生成代码的工具',
     component: <CodeGenerator />,
-  },
-  {
+  },  {
     label: '大小写转换器',
     value: 'caseconverter',
     description: '转换文本的大小写',
     component: <CaseConverter />,
-  },  {
+  },
+  {
+    label: '编解码工具',
+    value: 'encoder',
+    description: '常用编码解码工具，支持Base64、URL、HTML、Unicode等',
+    component: <EncoderDecoder />,
+  },
+  {
     label: '贪吃蛇游戏',
     value: 'snakegame',
     description: '经典的贪吃蛇游戏',
