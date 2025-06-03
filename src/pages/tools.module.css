@@ -3,6 +3,32 @@
   width: 100%;
   min-height: 70vh;
   margin: 2rem 0;
+  position: relative;
+}
+
+/* 复制成功提示样式 */
+.copySuccessToast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: var(--ifm-color-success);
+  color: white;
+  padding: 12px 20px;
+  border-radius: var(--ifm-global-radius);
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 .tabsContainer {
@@ -17,12 +43,40 @@
   flex-shrink: 0;
 }
 
-.tabList button {
-  display: block;
-  width: 100%;
-  padding: 0.75rem 1rem;
+/* 标签项容器 */
+.tabItem {
+  display: flex;
+  align-items: center;
   margin-bottom: 0.5rem;
   border-radius: var(--ifm-global-radius);
+}
+
+.tabList button {
+  display: block;
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: var(--ifm-global-radius);
+  margin-right: 0.5rem;
+}
+
+/* 小型复制按钮 */
+.copyButton {
+  background: transparent;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-size: 12px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+  min-width: auto;
+  flex-shrink: 0;
+}
+
+.copyButton:hover {
+  opacity: 1;
+  background-color: var(--ifm-color-emphasis-100);
+  border-color: var(--ifm-color-primary);
 }
 
 .tabList button.tabActive {
@@ -36,10 +90,40 @@
   padding: 0 1rem 1rem 2rem;
 }
 
-.toolDescription {
+/* 工具头部区域 */
+.toolHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.toolDescription {
   font-style: italic;
   color: var(--ifm-color-emphasis-700);
+  flex: 1;
+  margin: 0;
+}
+
+/* 当前工具复制按钮 */
+.copyCurrentButton {
+  background-color: var(--ifm-color-primary);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--ifm-global-radius);
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.copyCurrentButton:hover {
+  background-color: var(--ifm-color-primary-dark);
 }
 
 .toolContent {
@@ -363,5 +447,52 @@
   .exampleButton {
     flex: 1;
     min-width: 0;
+  }
+
+  .toolsContainer {
+    flex-direction: column;
+  }
+
+  .tabList {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--ifm-color-emphasis-300);
+    padding: 1rem;
+    display: flex;
+    overflow-x: auto;
+    gap: 0.5rem;
+  }
+
+  .tabItem {
+    flex-shrink: 0;
+    margin-bottom: 0;
+    margin-right: 0.5rem;
+  }
+
+  .tabList button {
+    margin-right: 0.25rem;
+    white-space: nowrap;
+  }
+
+
+  .tabContent {
+    padding: 1rem;
+  }
+
+  .toolHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .copyCurrentButton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .copySuccessToast {
+    right: 10px;
+    left: 10px;
+    text-align: center;
   }
 }
