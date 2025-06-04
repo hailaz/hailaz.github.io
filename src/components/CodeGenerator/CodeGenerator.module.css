@@ -1,0 +1,503 @@
+/* CodeGenerator 组件样式 */
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.copySuccessToast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--ifm-color-success);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  z-index: 1000;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.inputSection {
+  margin-bottom: 20px;
+  background: var(--ifm-background-color);
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.labelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: var(--ifm-color-emphasis-800);
+  font-size: 0.95rem;
+}
+
+.controlGroup {
+  display: flex;
+  align-items: center;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.smallButton {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: white;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.smallButton:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.smallButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.inputField {
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+}
+
+.inputField:focus {
+  outline: none;
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 2px var(--ifm-color-primary-lighter);
+}
+
+.textArea {
+  width: 100%;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 4px;
+  padding: 12px;
+  font-size: 0.9rem;
+  font-family: var(--ifm-font-family-monospace);
+  resize: vertical;
+  min-height: 100px;
+}
+
+.textArea:focus {
+  outline: none;
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 2px var(--ifm-color-primary-lighter);
+}
+
+.buttonSection {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.button {
+  background: var(--ifm-color-primary);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.button:hover:not(:disabled) {
+  background: var(--ifm-color-primary-dark);
+  transform: translateY(-1px);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.outputSection {
+  margin-bottom: 20px;
+}
+
+.helpSection {
+  background: var(--ifm-color-info-contrast-background);
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid var(--ifm-color-info);
+}
+
+.helpSection h4 {
+  margin-top: 0;
+  color: var(--ifm-color-info-dark);
+}
+
+.helpSection ul {
+  margin-bottom: 0;
+}
+
+.helpSection li {
+  margin-bottom: 8px;
+}
+
+/* 参数计数控制器样式 */
+.paramCountControls {
+  align-items: center;
+}
+
+.paramCountControls .smallButton {
+  padding: 0 10px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: var(--ifm-color-emphasis-300);
+}
+
+.paramCountControls .inputField {
+  width: 60px;
+  text-align: center;
+  margin: 0 5px;
+}
+
+.paramCountHint {
+  margin-left: 10px;
+  font-size: 0.85rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+/* 模板示例按钮样式 */
+.templateButton {
+  background-color: var(--ifm-color-info);
+}
+
+.templateButton.list {
+  background-color: var(--ifm-color-success);
+}
+
+.templateButton.code {
+  background-color: var(--ifm-color-warning);
+}
+
+/* 自动生成复选框样式 */
+.autoGenerateLabel {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.autoGenerateLabel input {
+  margin-right: 5px;
+}
+
+.autoGenerateLabel span {
+  font-size: 0.9rem;
+}
+
+/* 模板错误提示样式 */
+.templateError {
+  color: var(--ifm-color-warning);
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* 参数操作按钮样式 */
+.clearAllParamsButton {
+  background-color: var(--ifm-color-danger);
+}
+
+.importTextButton {
+  background-color: var(--ifm-color-info);
+}
+
+.toggleTipsButton {
+  background-color: var(--ifm-color-emphasis-700);
+}
+
+/* 参数提示框样式 */
+.paramTips {
+  background-color: var(--ifm-color-info-contrast-background);
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.paramTips p {
+  margin: 0 0 8px 0;
+}
+
+.paramTips ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+/* 参数卡片网格布局 */
+.paramGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+/* 参数卡片样式 */
+.paramCard {
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  background-color: var(--ifm-background-color);
+  position: relative;
+}
+
+.paramCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--ifm-color-primary-light);
+}
+
+/* 参数卡片头部 */
+.paramCardHeader {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.paramCardHeader.color0 { background-color: var(--ifm-color-primary-lightest); }
+.paramCardHeader.color1 { background-color: var(--ifm-color-info-lightest); }
+.paramCardHeader.color2 { background-color: var(--ifm-color-success-lightest); }
+.paramCardHeader.color3 { background-color: var(--ifm-color-warning-lightest); }
+.paramCardHeader.color4 { background-color: var(--ifm-color-danger-lightest); }
+
+.paramCardLabel {
+  font-weight: bold;
+  color: var(--ifm-color-emphasis-800);
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.paramCardIndex {
+  font-size: 0.75rem;
+  color: var(--ifm-color-emphasis-600);
+  background-color: rgba(255, 255, 255, 0.6);
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+/* 参数卡片内容 */
+.paramCardContent {
+  position: relative;
+  padding: 12px;
+}
+
+.paramCardInput {
+  width: 100%;
+  padding: 10px 36px 10px 12px;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.paramCardInput:focus {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 2px var(--ifm-color-primary-lighter);
+}
+
+/* 参数值计数器 */
+.paramValueCounter {
+  position: absolute;
+  left: 24px;
+  bottom: -5px;
+  background-color: white;
+  padding: 0 4px;
+  font-size: 0.75rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+/* 参数控制按钮 */
+.paramControls {
+  position: absolute;
+  right: 20px;
+  top: 22px;
+  display: flex;
+  gap: 8px;
+}
+
+.paramClearButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--ifm-color-danger);
+  padding: 0;
+  font-size: 18px;
+  opacity: 0.7;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.paramClearButton:hover {
+  background-color: var(--ifm-color-danger-lightest);
+  opacity: 1;
+}
+
+/* 参数值标签 */
+.paramValueTags {
+  padding: 0 12px 12px;
+  font-size: 0.85rem;
+}
+
+.paramTagContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.paramTag {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+
+.paramTag.color0 {
+  background-color: var(--ifm-color-primary-lightest);
+  border: 1px solid var(--ifm-color-primary-lighter);
+}
+
+.paramTag.color1 {
+  background-color: var(--ifm-color-info-lightest);
+  border: 1px solid var(--ifm-color-info-lighter);
+}
+
+.paramTag.color2 {
+  background-color: var(--ifm-color-success-lightest);
+  border: 1px solid var(--ifm-color-success-lighter);
+}
+
+.paramTag.color3 {
+  background-color: var(--ifm-color-warning-lightest);
+  border: 1px solid var(--ifm-color-warning-lighter);
+}
+
+.paramTag.color4 {
+  background-color: var(--ifm-color-danger-lightest);
+  border: 1px solid var(--ifm-color-danger-lighter);
+}
+
+/* 输出操作按钮样式 */
+.copyButton {
+  background-color: var(--ifm-color-primary);
+}
+
+.clearOutputButton {
+  background-color: var(--ifm-color-danger);
+}
+
+.outputTextArea {
+  min-height: 150px;
+}
+
+.outputTextAreaEmpty {
+  background-color: var(--ifm-color-emphasis-100);
+}
+
+.outputTextAreaFilled {
+  background-color: var(--ifm-pre-background);
+}
+
+/* 历史记录样式 */
+.historySection {
+  margin-top: 20px;
+}
+
+.clearHistoryButton {
+  background-color: var(--ifm-color-danger);
+}
+
+.historyContainer {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.historyItem {
+  padding: 10px;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  transition: background-color 0.2s;
+  background-color: var(--ifm-background-color);
+}
+
+.historyItem:hover {
+  background-color: var(--ifm-color-emphasis-100);
+}
+
+.historyItemContent {
+  flex: 1;
+}
+
+.historyItemTimestamp {
+  font-size: 0.8rem;
+  color: var(--ifm-color-emphasis-600);
+  margin-bottom: 5px;
+}
+
+.historyItemPreview {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 60px;
+}
+
+.historyDeleteButton {
+  background: none;
+  border: none;
+  color: var(--ifm-color-danger);
+  cursor: pointer;
+  font-size: 1rem;
+  margin-left: 10px;
+  opacity: 0.7;
+  padding: 5px;
+}

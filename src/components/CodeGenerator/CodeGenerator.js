@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import styles from '../../pages/tools.module.css';
+import styles from './CodeGenerator.module.css';
 
 export default function CodeGenerator() {
   const [paramCount, setParamCount] = useState(2);
@@ -306,7 +306,6 @@ export default function CodeGenerator() {
         break;
     }
   };
-
   return (
     <div className={styles.container}>
       {showCopyToast && (
@@ -318,17 +317,11 @@ export default function CodeGenerator() {
       <div className={styles.inputSection}>
         <div className={styles.labelRow}>
           <label className={styles.label}>参数数量:</label>
-          <div className={styles.controlGroup} style={{ alignItems: 'center' }}>
+          <div className={`${styles.controlGroup} ${styles.paramCountControls}`}>
             <button
               className={styles.smallButton}
               onClick={decrementParamCount}
               disabled={paramCount <= 1}
-              style={{ 
-                padding: '0 10px', 
-                fontSize: '16px', 
-                fontWeight: 'bold',
-                backgroundColor: 'var(--ifm-color-emphasis-300)'
-              }}
             >
               -
             </button>
@@ -339,71 +332,51 @@ export default function CodeGenerator() {
               max="20"
               value={paramCount} 
               onChange={(e) => handleParamCountChange(e.target.value)} 
-              style={{ width: '60px', textAlign: 'center', margin: '0 5px' }}
             />
             <button
               className={styles.smallButton}
               onClick={incrementParamCount}
               disabled={paramCount >= 20}
-              style={{ 
-                padding: '0 10px', 
-                fontSize: '16px', 
-                fontWeight: 'bold',
-                backgroundColor: 'var(--ifm-color-emphasis-300)'
-              }}
             >
               +
             </button>
-            <span style={{ marginLeft: '10px', fontSize: '0.85rem', color: 'var(--ifm-color-emphasis-600)' }}>
+            <span className={styles.paramCountHint}>
               (最大: 20)
             </span>
           </div>
-        </div>
-        
+        </div>        
         <div className={styles.labelRow}>
           <label className={styles.label}>模板 (使用 {'{#n}'} 作为占位符):</label>
           <div className={styles.buttonGroup}>
             <button 
-              className={styles.smallButton} 
+              className={`${styles.smallButton} ${styles.templateButton}`} 
               onClick={() => useTemplate('sql')}
-              style={{ backgroundColor: 'var(--ifm-color-info)' }}
             >
               SQL示例
             </button>
             <button 
-              className={styles.smallButton} 
+              className={`${styles.smallButton} ${styles.templateButton} ${styles.list}`} 
               onClick={() => useTemplate('list')}
-              style={{ backgroundColor: 'var(--ifm-color-success)' }}
             >
               列表示例
             </button>
             <button 
-              className={styles.smallButton} 
+              className={`${styles.smallButton} ${styles.templateButton} ${styles.code}`} 
               onClick={() => useTemplate('code')}
-              style={{ backgroundColor: 'var(--ifm-color-warning)' }}
             >
               代码示例
             </button>
-            <label 
-              style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                marginLeft: '10px',
-                cursor: 'pointer'
-              }}
-            >
+            <label className={styles.autoGenerateLabel}>
               <input 
                 type="checkbox" 
                 checked={autoGenerate} 
                 onChange={() => setAutoGenerate(!autoGenerate)} 
-                style={{ marginRight: '5px' }}
               />
-              <span style={{ fontSize: '0.9rem' }}>自动生成</span>
+              <span>自动生成</span>
             </label>
           </div>
         </div>
-        
-        <textarea 
+          <textarea 
           className={styles.textArea}
           value={template} 
           onChange={(e) => setTemplate(e.target.value)}
@@ -411,34 +384,30 @@ export default function CodeGenerator() {
         />
         
         {templateError && (
-          <div style={{ color: 'var(--ifm-color-warning)', fontSize: '0.9rem', marginTop: '0.5rem' }}>
+          <div className={styles.templateError}>
             {templateError}
           </div>
         )}
       </div>
-      
-      <div className={styles.inputSection}>
+        <div className={styles.inputSection}>
         <div className={styles.labelRow}>
           <label className={styles.label}>参数值 (用逗号分隔多个值):</label>
           <div className={styles.buttonGroup}>
             <button 
-              className={styles.smallButton}
+              className={`${styles.smallButton} ${styles.clearAllParamsButton}`}
               onClick={clearAllParams}
-              style={{ backgroundColor: 'var(--ifm-color-danger)' }}
             >
               清空所有参数
             </button>
             <button 
-              className={styles.smallButton}
+              className={`${styles.smallButton} ${styles.importTextButton}`}
               onClick={extractParamsFromText}
-              style={{ backgroundColor: 'var(--ifm-color-info)' }}
             >
               从文本批量导入
             </button>
             <button 
-              className={styles.smallButton}
+              className={`${styles.smallButton} ${styles.toggleTipsButton}`}
               onClick={() => setShowParamTips(!showParamTips)}
-              style={{ backgroundColor: 'var(--ifm-color-emphasis-700)' }}
             >
               {showParamTips ? '隐藏提示' : '显示提示'}
             </button>
@@ -446,15 +415,9 @@ export default function CodeGenerator() {
         </div>
         
         {showParamTips && (
-          <div style={{ 
-            backgroundColor: 'var(--ifm-color-info-contrast-background)', 
-            padding: '10px', 
-            borderRadius: '4px',
-            marginBottom: '10px',
-            fontSize: '0.9rem'
-          }}>
-            <p style={{ margin: '0 0 8px 0' }}><strong>提示：</strong></p>
-            <ul style={{ margin: '0', paddingLeft: '20px' }}>
+          <div className={styles.paramTips}>
+            <p><strong>提示：</strong></p>
+            <ul>
               <li>在最后一个参数按 <strong>Tab</strong> 键可以自动添加新参数</li>
               <li>用 <strong>逗号</strong> 分隔多个值，例如：<code>值1,值2,值3</code></li>
               <li>使用 <strong>从文本批量导入</strong> 可以快速填充多个参数值</li>
@@ -462,159 +425,53 @@ export default function CodeGenerator() {
               <li>开启 <strong>自动生成</strong> 后，修改参数或模板会自动更新结果</li>
             </ul>
           </div>
-        )}
-          <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', 
-          gap: '16px',
-          marginTop: '16px' 
-        }}>
+        )}        <div className={styles.paramGrid}>
           {params.map((param, index) => (
-            <div key={index} style={{ 
-              borderRadius: '8px',
-              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.05)',
-              overflow: 'hidden',
-              transition: 'all 0.3s ease',
-              border: '1px solid var(--ifm-color-emphasis-200)',
-              backgroundColor: 'var(--ifm-background-color)',
-              position: 'relative'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
-              e.currentTarget.style.borderColor = 'var(--ifm-color-primary-light)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.05)';
-              e.currentTarget.style.borderColor = 'var(--ifm-color-emphasis-200)';
-            }}
-            >
-              <div style={{
-                backgroundColor: `var(--ifm-color-${index % 5 === 0 ? 'primary' : index % 5 === 1 ? 'info' : index % 5 === 2 ? 'success' : index % 5 === 3 ? 'warning' : 'danger'}-lightest)`,
-                padding: '8px 12px',
-                borderBottom: '1px solid var(--ifm-color-emphasis-200)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}>
-                <label style={{ 
-                  fontWeight: 'bold',
-                  color: 'var(--ifm-color-emphasis-800)',
-                  margin: 0,
-                  fontSize: '0.9rem'
-                }}>
+            <div key={index} className={styles.paramCard}>
+              <div className={`${styles.paramCardHeader} ${styles[`color${index % 5}`]}`}>
+                <label className={styles.paramCardLabel}>
                   参数 {index}
                 </label>
-                <span style={{
-                  fontSize: '0.75rem',
-                  color: 'var(--ifm-color-emphasis-600)',
-                  backgroundColor: 'rgba(255, 255, 255, 0.6)',
-                  padding: '2px 6px',
-                  borderRadius: '10px'
-                }}>
+                <span className={styles.paramCardIndex}>
                   #{index}
                 </span>
               </div>
 
-              <div style={{ position: 'relative', padding: '12px' }}>
+              <div className={styles.paramCardContent}>
                 <input 
                   ref={paramRefs.current[index]}
-                  className={styles.inputField}
+                  className={styles.paramCardInput}
                   type="text" 
                   value={param} 
                   onChange={(e) => handleParamChange(index, e.target.value)} 
                   onKeyDown={(e) => handleParamKeyDown(e, index)}
-                  style={{ 
-                    width: '100%',
-                    padding: '10px 36px 10px 12px', // 为清除按钮和图标留出空间
-                    border: '1px solid var(--ifm-color-emphasis-300)',
-                    borderRadius: '6px',
-                    fontSize: '0.95rem',
-                    transition: 'all 0.2s ease'
-                  }}
                   placeholder={`参数${index + 1}的值，多个值用逗号分隔`}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = 'var(--ifm-color-primary)';
-                    e.target.style.boxShadow = '0 0 0 2px var(--ifm-color-primary-lighter)';
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = 'var(--ifm-color-emphasis-300)';
-                    e.target.style.boxShadow = 'none';
-                  }}
-                />                <div style={{
-                  position: 'absolute',
-                  left: '24px',
-                  bottom: '-5px',
-                  backgroundColor: 'white',
-                  padding: '0 4px',
-                  fontSize: '0.75rem',
-                  color: 'var(--ifm-color-emphasis-600)'
-                }}>
+                />
+                <div className={styles.paramValueCounter}>
                   {param.split(',').filter(v => v.trim()).length > 0 ? 
                     (param.split(',').filter(v => v.trim()).length > 1 ? 
                       `${param.split(',').filter(v => v.trim()).length} 个值` : '单值') : '无值'}
                 </div>
-                <div style={{
-                  position: 'absolute',
-                  right: '20px',
-                  top: '22px',
-                  display: 'flex',
-                  gap: '8px'
-                }}>
+                <div className={styles.paramControls}>
                   {param && (
                     <button 
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        cursor: 'pointer',
-                        color: 'var(--ifm-color-danger)',
-                        padding: '0',
-                        fontSize: '18px',
-                        opacity: '0.7',
-                        width: '24px',
-                        height: '24px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        borderRadius: '50%',
-                        transition: 'all 0.2s ease'
-                      }}
+                      className={styles.paramClearButton}
                       onClick={() => clearParamValue(index)}
                       title="清空此参数"
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = 'var(--ifm-color-danger-lightest)';
-                        e.currentTarget.style.opacity = '1';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = 'transparent';
-                        e.currentTarget.style.opacity = '0.7';
-                      }}
                     >
                       ×
                     </button>
                   )}
                 </div>
               </div>
-                {param.split(',').filter(v => v.trim()).length > 0 && (
-                <div style={{
-                  padding: '0 12px 12px',
-                  fontSize: '0.85rem'
-                }}>
-                  <div style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    gap: '6px'
-                  }}>
+              {param.split(',').filter(v => v.trim()).length > 0 && (
+                <div className={styles.paramValueTags}>
+                  <div className={styles.paramTagContainer}>
                     {param.split(',').map((value, vIndex) => (
                       value.trim() && (
                         <span 
                           key={vIndex}
-                          style={{
-                            backgroundColor: `var(--ifm-color-${index % 5 === 0 ? 'primary' : index % 5 === 1 ? 'info' : index % 5 === 2 ? 'success' : index % 5 === 3 ? 'warning' : 'danger'}-lightest)`,
-                            padding: '3px 8px',
-                            borderRadius: '12px',
-                            fontSize: '0.8rem',
-                            border: `1px solid var(--ifm-color-${index % 5 === 0 ? 'primary' : index % 5 === 1 ? 'info' : index % 5 === 2 ? 'success' : index % 5 === 3 ? 'warning' : 'danger'}-lighter)`
-                          }}
+                          className={`${styles.paramTag} ${styles[`color${index % 5}`]}`}
                         >
                           {value.trim()}
                         </span>
@@ -627,8 +484,7 @@ export default function CodeGenerator() {
           ))}
         </div>
       </div>
-      
-      {!autoGenerate && (
+        {!autoGenerate && (
         <div className={styles.buttonSection}>
           <button 
             className={styles.button} 
@@ -639,24 +495,21 @@ export default function CodeGenerator() {
           </button>
         </div>
       )}
-      
-      <div className={styles.outputSection}>
+        <div className={styles.outputSection}>
         <div className={styles.labelRow}>
           <label className={styles.label}>输出结果:</label>
           <div className={styles.buttonGroup}>
             <button 
-              className={styles.smallButton} 
+              className={`${styles.smallButton} ${styles.copyButton}`} 
               onClick={copyToClipboard}
               disabled={!output}
-              style={{ backgroundColor: 'var(--ifm-color-primary)' }}
             >
               复制结果
             </button>
             <button 
-              className={styles.smallButton} 
+              className={`${styles.smallButton} ${styles.clearOutputButton}`} 
               onClick={clearOutput}
               disabled={!output}
-              style={{ backgroundColor: 'var(--ifm-color-danger)' }}
             >
               清空结果
             </button>
@@ -664,87 +517,44 @@ export default function CodeGenerator() {
         </div>
         <textarea 
           ref={outputRef}
-          className={styles.textArea}
+          className={`${styles.textArea} ${styles.outputTextArea} ${output ? styles.outputTextAreaFilled : styles.outputTextAreaEmpty}`}
           value={output} 
           readOnly 
-          style={{ 
-            minHeight: '150px',
-            backgroundColor: output ? 'var(--ifm-pre-background)' : 'var(--ifm-color-emphasis-100)'
-          }}
           placeholder="生成的代码将显示在这里..."
         />
       </div>
-      
-      {/* 历史记录部分 */}
+        {/* 历史记录部分 */}
       {history.length > 0 && (
-        <div className={styles.inputSection} style={{ marginTop: '20px' }}>
+        <div className={`${styles.inputSection} ${styles.historySection}`}>
           <div className={styles.labelRow}>
             <label className={styles.label}>历史结果:</label>
             <div className={styles.buttonGroup}>
               <button 
-                className={styles.smallButton}
+                className={`${styles.smallButton} ${styles.clearHistoryButton}`}
                 onClick={clearAllHistory}
-                style={{ backgroundColor: 'var(--ifm-color-danger)' }}
               >
                 清空历史记录
               </button>
             </div>
           </div>
           
-          <div style={{ 
-            maxHeight: '300px', 
-            overflowY: 'auto',
-            border: '1px solid var(--ifm-color-emphasis-300)',
-            borderRadius: '4px',
-            marginTop: '10px'
-          }}>
+          <div className={styles.historyContainer}>
             {history.map((item) => (
               <div 
                 key={item.id} 
-                style={{ 
-                  padding: '10px',
-                  borderBottom: '1px solid var(--ifm-color-emphasis-200)',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'flex-start',
-                  transition: 'background-color 0.2s',
-                  backgroundColor: 'var(--ifm-background-color)'
-                }}
+                className={styles.historyItem}
                 onClick={() => loadFromHistory(item)}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--ifm-color-emphasis-100)'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--ifm-background-color)'}
               >
-                <div style={{ flex: 1 }}>
-                  <div style={{ 
-                    fontSize: '0.8rem', 
-                    color: 'var(--ifm-color-emphasis-600)',
-                    marginBottom: '5px'
-                  }}>
+                <div className={styles.historyItemContent}>
+                  <div className={styles.historyItemTimestamp}>
                     {item.timestamp}
                   </div>
-                  <div style={{
-                    fontFamily: 'var(--ifm-font-family-monospace)',
-                    fontSize: '0.9rem',
-                    whiteSpace: 'pre-wrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    maxHeight: '60px'
-                  }}>
+                  <div className={styles.historyItemPreview}>
                     {item.preview}
                   </div>
                 </div>
                 <button
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: 'var(--ifm-color-danger)',
-                    cursor: 'pointer',
-                    fontSize: '1rem',
-                    marginLeft: '10px',
-                    opacity: '0.7',
-                    padding: '5px'
-                  }}
+                  className={styles.historyDeleteButton}
                   onClick={(e) => deleteHistoryItem(item.id, e)}
                   title="删除此记录"
                 >
@@ -755,8 +565,7 @@ export default function CodeGenerator() {
           </div>
         </div>
       )}
-      
-      <div className={styles.helpSection}>
+        <div className={styles.helpSection}>
         <h4>使用说明</h4>
         <ul>
           <li>在<strong>模板</strong>中使用 {'{#0}'}, {'{#1}'} 等作为参数占位符</li>
