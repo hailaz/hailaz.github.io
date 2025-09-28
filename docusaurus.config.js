@@ -28,6 +28,14 @@ const config = {
     defaultLocale: 'zh-Hans',
     locales: ['zh-Hans'],
   },
+  
+  // 百度统计
+  scripts: [
+    {
+      src: 'https://hm.baidu.com/hm.js?e87ca5e773373ad269ebd9ffcc09e213', // Replace with your Baidu Analytics ID
+      async: true,
+    },
+  ],
   themes: ['@docusaurus/theme-live-codeblock'],
   presets: [
     [
