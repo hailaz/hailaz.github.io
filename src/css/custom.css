@@ -17,17 +17,7 @@
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
-[data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
-}
+
 
 body {
   background-color: rgb(253, 251, 245);
@@ -36,7 +26,8 @@ body {
 /* 页脚样式美化 */
 .footer {
   background: var(--ifm-navbar-background-color);
-  padding: 1rem 0; /* 从 2rem 改为 1rem */
+  padding: 1rem 0;
+  /* 从 2rem 改为 1rem */
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -52,8 +43,26 @@ body {
 
 .footer__copyright {
   color: var(--ifm-navbar-link-color);
-  font-size: 0.85rem; /* 稍微减小字体大小 */
-  margin-top: 0.5rem; /* 从 1rem 改为 0.5rem */
+  font-size: 0.85rem;
+  /* 稍微减小字体大小 */
+  margin-top: 0.5rem;
+  /* 从 1rem 改为 0.5rem */
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  --ifm-color-primary: #25c2a0;
+  --ifm-color-primary-dark: #21af90;
+  --ifm-color-primary-darker: #1fa588;
+  --ifm-color-primary-darkest: #1a8870;
+  --ifm-color-primary-light: #29d5b0;
+  --ifm-color-primary-lighter: #32d8b4;
+  --ifm-color-primary-lightest: #4fddbf;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+body[data-theme='dark'] {
+  background-color: rgba(20, 20, 20, 0.801);
 }
 
 [data-theme='dark'] .footer {
