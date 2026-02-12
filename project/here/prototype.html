@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>物业出租管理 - 交互原型</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .quick-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0 16px 16px}
+    .quick-action{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;background:var(--color-bg-white);border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.04);cursor:pointer;transition:all .15s ease}
+    .quick-action:active{transform:scale(.95)}
+    .quick-action .ic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+    .quick-action .ic svg{width:20px;height:20px;color:#fff}
+    .quick-action span{font-size:11px;color:var(--color-text);font-weight:500}
+    .welcome-banner{margin:12px 16px;padding:20px;background:linear-gradient(135deg,#07C160,#10AEFF);border-radius:16px;color:#fff;position:relative;overflow:hidden}
+    .welcome-banner::after{content:'';position:absolute;right:-20px;top:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.1)}
+    .building-card{background:var(--color-bg-white);border-radius:12px;padding:16px;margin:0 16px 12px;box-shadow:0 1px 4px rgba(0,0,0,.04);cursor:pointer;transition:all .15s ease}
+    .building-card:active{transform:scale(.98)}
+    .room-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 16px 16px}
+    .room-cell{background:var(--color-bg-white);border-radius:10px;padding:12px 8px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.04);cursor:pointer;transition:all .15s ease;border:1.5px solid transparent}
+    .room-cell:active{transform:scale(.95)}
+    .room-cell.rented{border-color:rgba(7,193,96,.3)}.room-cell.vacant{border-color:rgba(0,0,0,.05)}.room-cell.expiring{border-color:rgba(255,195,0,.3)}
+    .bill-card{background:var(--color-bg-white);border-radius:12px;padding:16px;margin:0 16px 12px;box-shadow:0 1px 4px rgba(0,0,0,.04);cursor:pointer;transition:all .15s ease}
+    .bill-card:active{transform:scale(.98)}
+    .bill-fees{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 10px}
+    .bill-fee-tag{font-size:11px;color:var(--color-text-muted);background:var(--color-bg);padding:2px 8px;border-radius:4px}
+    .settle-table{width:100%;margin:12px 0;border-collapse:collapse}
+    .settle-table th{font-size:12px;color:var(--color-text-muted);font-weight:500;text-align:left;padding:8px 4px;border-bottom:1px solid var(--color-bg)}
+    .settle-table td{font-size:13px;color:var(--color-text);padding:10px 4px;border-bottom:.5px solid rgba(0,0,0,.04)}
+    .settle-table td:last-child{text-align:right;font-weight:600}
+    .chart-placeholder{background:var(--color-bg-white);border-radius:12px;margin:0 16px 16px;padding:20px 16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+    .chart-title{font-size:14px;font-weight:600;color:var(--color-text);margin-bottom:16px}
+    .bar-chart{display:flex;align-items:flex-end;gap:8px;height:120px;padding-top:8px}
+    .bar-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+    .bar-fill{width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,var(--color-primary),var(--color-primary-dark))}
+    .bar-label{font-size:10px;color:var(--color-text-muted)}.bar-value{font-size:10px;color:var(--color-text);font-weight:600}
+    .pie-chart{width:120px;height:120px;border-radius:50%;margin:0 auto;background:conic-gradient(var(--color-primary) 0deg 216deg,var(--color-bg-gray) 216deg 270deg,var(--color-warning) 270deg 324deg,var(--color-info) 324deg 360deg);position:relative}
+    .pie-chart::after{content:'';position:absolute;top:25%;left:25%;width:50%;height:50%;background:var(--color-bg-white);border-radius:50%}
+    .pie-legend{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+    .pie-legend-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--color-text-muted)}
+    .pie-legend-dot{width:8px;height:8px;border-radius:2px}
+    .poster-preview{background:linear-gradient(135deg,#07C160,#10AEFF);border-radius:16px;padding:24px 20px;margin:16px;color:#fff;text-align:center}
+    .poster-qr{width:80px;height:80px;background:#fff;border-radius:8px;margin:16px auto;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:11px}
+    .manager-card{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--color-bg-white);border-bottom:.5px solid rgba(0,0,0,.05);cursor:pointer}
+    .manager-card:active{background:var(--color-bg)}
+    .sub-page{position:absolute;top:0;left:0;right:0;bottom:0;background:var(--color-bg);z-index:150;display:none;flex-direction:column}
+    .sub-page.active{display:flex;animation:slideInRight .25s ease-out}
+    .sub-page .page-content{flex:1;overflow-y:auto}
+    .room-detail-header{padding:60px 16px 20px;background:linear-gradient(135deg,#07C160,#1AAD19);color:#fff}
+    .tenant-room-card{margin:12px 16px;padding:20px;background:linear-gradient(135deg,#FFC300,#FF9500);border-radius:16px;color:#fff}
+  </style>
+</head>
+<body>
+<div class="phone-shell" id="app">
+  <div class="status-bar"><span class="time">9:41</span><div class="icons"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg></div></div>
+  <div class="nav-bar" id="navBar"><span id="navTitle">首页</span></div>
+  <div class="page-content" id="mainContent">
+
+    <!-- HOME -->
+    <div class="page-view active" id="page-home">
+      <div class="welcome-banner"><div style="font-size:18px;font-weight:700">张先生</div><div style="font-size:12px;opacity:.8;margin-top:4px">个人房东 · 管理2栋楼</div></div>
+      <div class="stats-grid">
+        <div class="stat-card" onclick="switchTab('property')"><div class="stat-value" style="color:#10AEFF">28</div><div class="stat-label">总房间</div></div>
+        <div class="stat-card" onclick="switchTab('property')"><div class="stat-value" style="color:#07C160">22</div><div class="stat-label">已出租</div></div>
+        <div class="stat-card" onclick="switchTab('property')"><div class="stat-value" style="color:#B2B2B2">4</div><div class="stat-label">空置</div></div>
+        <div class="stat-card" onclick="switchTab('bill')"><div class="stat-value" style="color:#E6A700">¥3.6w</div><div class="stat-label">本月收入</div></div>
+      </div>
+      <div class="section"><div class="section-title">快捷操作</div></div>
+      <div class="quick-actions">
+        <div class="quick-action" onclick="switchTab('property')"><div class="ic" style="background:linear-gradient(135deg,#07C160,#1AAD19)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div><span>添加房产</span></div>
+        <div class="quick-action" onclick="switchTab('bill')"><div class="ic" style="background:linear-gradient(135deg,#10AEFF,#576B95)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><span>录入费用</span></div>
+        <div class="quick-action" onclick="switchTab('bill')"><div class="ic" style="background:linear-gradient(135deg,#FFC300,#FF9500)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><span>生成账单</span></div>
+        <div class="quick-action" onclick="switchTab('stats')"><div class="ic" style="background:linear-gradient(135deg,#FA5151,#FF6B6B)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><span>统计</span></div>
+      </div>
+      <div class="section"><div class="section-title">待处理</div></div>
+      <div class="card" onclick="switchTab('bill')"><div style="display:flex;align-items:center;gap:10px"><span class="badge badge-yellow">待结算</span><span style="font-size:14px">A栋301 李明 · 2月 ¥2,046</span></div></div>
+      <div class="card" onclick="switchTab('bill')"><div style="display:flex;align-items:center;gap:10px"><span class="badge badge-yellow">待结算</span><span style="font-size:14px">A栋502 王芳 · 2月 ¥1,648</span></div></div>
+      <div class="card"><div style="display:flex;align-items:center;gap:10px"><span class="badge badge-red">即将到期</span><span style="font-size:14px">B栋201 张伟 · 3月15日到期</span></div></div>
+      <div style="height:20px"></div>
+    </div>
+
+    <!-- PROPERTY -->
+    <div class="page-view" id="page-property">
+      <div class="search-bar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:var(--color-text-muted)"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input placeholder="搜索楼栋/房间" readonly></div>
+      <div class="stats-grid"><div class="stat-card"><div class="stat-value" style="color:#10AEFF">28</div><div class="stat-label">总房间</div></div><div class="stat-card"><div class="stat-value" style="color:#07C160">78.6%</div><div class="stat-label">出租率</div></div></div>
+      <div class="section"><div class="section-title">我的楼栋</div></div>
+      <div class="building-card" onclick="showSub('building')">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px"><div><div style="font-size:16px;font-weight:600">幸福小区A栋</div><div style="font-size:12px;color:var(--color-text-muted)">幸福路88号</div></div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B2B2B2" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+        <div class="progress-bar"><div class="fill" style="width:85%"></div></div>
+        <div style="display:flex;gap:16px;margin-top:10px;font-size:12px;color:var(--color-text-muted)"><span>总 <strong style="color:var(--color-text)">16</strong></span><span>已租 <strong style="color:var(--color-text)">14</strong></span><span>空置 <strong style="color:var(--color-text)">2</strong></span></div>
+      </div>
+      <div class="building-card" onclick="showSub('building')">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px"><div><div style="font-size:16px;font-weight:600">幸福小区B栋</div><div style="font-size:12px;color:var(--color-text-muted)">幸福路88号</div></div><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B2B2B2" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+        <div class="progress-bar"><div class="fill" style="width:67%"></div></div>
+        <div style="display:flex;gap:16px;margin-top:10px;font-size:12px;color:var(--color-text-muted)"><span>总 <strong style="color:var(--color-text)">12</strong></span><span>已租 <strong style="color:var(--color-text)">8</strong></span><span>空置 <strong style="color:var(--color-text)">2</strong></span></div>
+      </div>
+      <div style="height:80px"></div>
+      <div class="fab" onclick="showSub('addroom')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+    </div>
+
+    <!-- BILL -->
+    <div class="page-view" id="page-bill">
+      <div class="month-selector"><div class="month-item">2025-10</div><div class="month-item">2025-11</div><div class="month-item">2025-12</div><div class="month-item">2026-01</div><div class="month-item active">2026-02</div></div>
+      <div class="section"><div class="section-title">2月账单 · 共4笔</div></div>
+      <div class="bill-card" onclick="showSub('settle')"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:15px;font-weight:600">A栋301 · 李明</span><span class="badge badge-yellow">待结算</span></div><div class="bill-fees"><span class="bill-fee-tag">租金¥1500</span><span class="bill-fee-tag">电费¥180</span><span class="bill-fee-tag">水费¥36</span><span class="bill-fee-tag">物业¥200</span><span class="bill-fee-tag">网费¥100</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:.5px solid rgba(0,0,0,.05)"><span style="font-size:12px;color:var(--color-text-muted)">合计</span><span style="font-size:20px;font-weight:700">¥2,046</span></div></div>
+      <div class="bill-card" onclick="showSub('settle')"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:15px;font-weight:600">A栋502 · 王芳</span><span class="badge badge-yellow">待结算</span></div><div class="bill-fees"><span class="bill-fee-tag">租金¥1200</span><span class="bill-fee-tag">电费¥120</span><span class="bill-fee-tag">水费¥28</span><span class="bill-fee-tag">物业¥200</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:.5px solid rgba(0,0,0,.05)"><span style="font-size:12px;color:var(--color-text-muted)">合计</span><span style="font-size:20px;font-weight:700">¥1,548</span></div></div>
+      <div class="bill-card"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:15px;font-weight:600">A栋203 · 陈刚</span><span class="badge badge-green">已结算</span></div><div class="bill-fees"><span class="bill-fee-tag">租金¥1800</span><span class="bill-fee-tag">电费¥210</span><span class="bill-fee-tag">水费¥42</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:.5px solid rgba(0,0,0,.05)"><span style="font-size:12px;color:var(--color-text-muted)">合计</span><span style="font-size:20px;font-weight:700">¥2,052</span></div></div>
+      <div style="height:20px"></div>
+    </div>
+
+    <!-- STATS -->
+    <div class="page-view" id="page-stats">
+      <div class="tabs"><div class="tab active" onclick="stTab('chart')">统计</div><div class="tab" onclick="stTab('log')">操作流水</div></div>
+      <div id="v-chart">
+        <div class="stats-grid" style="margin-top:16px"><div class="stat-card"><div class="stat-value" style="color:#07C160">¥36,200</div><div class="stat-label">本月总收入</div></div><div class="stat-card"><div class="stat-value" style="color:#10AEFF">¥32,800</div><div class="stat-label">已收</div></div><div class="stat-card"><div class="stat-value" style="color:#E6A700">¥3,400</div><div class="stat-label">待收</div></div><div class="stat-card"><div class="stat-value" style="color:#FA5151">78.6%</div><div class="stat-label">出租率</div></div></div>
+        <div class="chart-placeholder"><div class="chart-title">近6个月收入趋势</div><div class="bar-chart"><div class="bar-item"><div class="bar-value">2.8w</div><div class="bar-fill" style="height:56px"></div><div class="bar-label">9月</div></div><div class="bar-item"><div class="bar-value">3.1w</div><div class="bar-fill" style="height:62px"></div><div class="bar-label">10月</div></div><div class="bar-item"><div class="bar-value">3.0w</div><div class="bar-fill" style="height:60px"></div><div class="bar-label">11月</div></div><div class="bar-item"><div class="bar-value">3.4w</div><div class="bar-fill" style="height:68px"></div><div class="bar-label">12月</div></div><div class="bar-item"><div class="bar-value">3.5w</div><div class="bar-fill" style="height:70px"></div><div class="bar-label">1月</div></div><div class="bar-item"><div class="bar-value">3.6w</div><div class="bar-fill" style="height:72px;background:linear-gradient(180deg,#10AEFF,#576B95)"></div><div class="bar-label">2月</div></div></div></div>
+        <div class="chart-placeholder"><div class="chart-title">房间状态</div><div class="pie-chart"></div><div class="pie-legend"><div class="pie-legend-item"><div class="pie-legend-dot" style="background:#07C160"></div>已租60%</div><div class="pie-legend-item"><div class="pie-legend-dot" style="background:#EDEDED"></div>空置15%</div><div class="pie-legend-item"><div class="pie-legend-dot" style="background:#FFC300"></div>到期15%</div><div class="pie-legend-item"><div class="pie-legend-dot" style="background:#10AEFF"></div>维修10%</div></div></div>
+        <div class="chart-placeholder"><div class="chart-title">费用构成</div>
+          <div style="font-size:12px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="color:var(--color-text-muted);width:36px">租金</span><div style="flex:1;height:14px;background:var(--color-bg);border-radius:7px;overflow:hidden"><div style="width:68%;height:100%;background:linear-gradient(90deg,#07C160,#1AAD19);border-radius:7px"></div></div><span style="font-weight:600;width:32px;text-align:right">68%</span></div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="color:var(--color-text-muted);width:36px">电费</span><div style="flex:1;height:14px;background:var(--color-bg);border-radius:7px;overflow:hidden"><div style="width:12%;height:100%;background:linear-gradient(90deg,#FFC300,#FF9500);border-radius:7px"></div></div><span style="font-weight:600;width:32px;text-align:right">12%</span></div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="color:var(--color-text-muted);width:36px">物业</span><div style="flex:1;height:14px;background:var(--color-bg);border-radius:7px;overflow:hidden"><div style="width:10%;height:100%;background:linear-gradient(90deg,#10AEFF,#576B95);border-radius:7px"></div></div><span style="font-weight:600;width:32px;text-align:right">10%</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span style="color:var(--color-text-muted);width:36px">其他</span><div style="flex:1;height:14px;background:var(--color-bg);border-radius:7px;overflow:hidden"><div style="width:10%;height:100%;background:linear-gradient(90deg,#B2B2B2,#999);border-radius:7px"></div></div><span style="font-weight:600;width:32px;text-align:right">10%</span></div></div>
+        </div>
+      </div>
+      <div id="v-log" style="display:none">
+        <div class="filter-bar"><select class="filter-select"><option>全部操作人</option><option>张先生</option><option>小王</option></select><select class="filter-select"><option>全部类型</option><option>房产管理</option><option>费用管理</option><option>租户管理</option><option>账单管理</option><option>权限管理</option></select></div>
+        <div class="timeline" style="padding-top:16px">
+          <div class="timeline-item"><div class="timeline-dot" style="background:rgba(7,193,96,.1);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#07C160" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg></div><div class="timeline-body"><div class="timeline-title"><strong>张先生</strong> 生成了A栋301的2月账单</div><div class="timeline-time">02-12 14:30 <span class="badge badge-green" style="font-size:10px">账单</span></div></div></div>
+          <div class="timeline-item"><div class="timeline-dot" style="background:rgba(16,174,255,.1);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10AEFF" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/></svg></div><div class="timeline-body"><div class="timeline-title"><strong>小王</strong> 录入B栋102电费85度</div><div class="timeline-time">02-12 11:20 <span class="badge badge-blue" style="font-size:10px">费用</span></div></div></div>
+          <div class="timeline-item"><div class="timeline-dot" style="background:rgba(255,195,0,.1);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E6A700" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="timeline-body"><div class="timeline-title"><strong>张先生</strong> 绑定租户赵丽到B栋102</div><div class="timeline-time">02-11 16:45 <span class="badge badge-yellow" style="font-size:10px">租户</span></div></div></div>
+          <div class="timeline-item"><div class="timeline-dot" style="background:rgba(250,81,81,.1);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FA5151" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="timeline-body"><div class="timeline-title"><strong>张先生</strong> 授予小王「房产+费用」权限</div><div class="timeline-time">02-10 09:15 <span class="badge badge-red" style="font-size:10px">权限</span></div></div></div>
+          <div class="timeline-item"><div class="timeline-dot" style="background:rgba(7,193,96,.1);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#07C160" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div><div class="timeline-body"><div class="timeline-title"><strong>小王</strong> 添加房间B栋305</div><div class="timeline-time">02-09 15:30 <span class="badge badge-green" style="font-size:10px">房产</span></div></div></div>
+        </div>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+
+    <!-- MINE -->
+    <div class="page-view" id="page-mine">
+      <div style="text-align:center;padding:32px 16px 20px"><div class="avatar" style="width:64px;height:64px;font-size:24px;margin:0 auto 12px">张</div><div style="font-size:18px;font-weight:700">张先生</div><div style="margin-top:6px"><span class="badge badge-green">个人房东</span></div></div>
+      <div style="background:var(--color-bg-white);border-radius:12px;margin:0 16px 16px;overflow:hidden">
+        <div class="list-item" onclick="showSub('mgr')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#07C160" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg><span style="margin-left:12px;font-size:15px">代管理员管理</span><span style="margin-left:auto;color:var(--color-text-muted)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></span></div>
+        <div class="list-item" onclick="switchTab('stats');setTimeout(function(){stTab('log')},100)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10AEFF" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span style="margin-left:12px;font-size:15px">操作流水</span><span style="margin-left:auto;color:var(--color-text-muted)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></span></div>
+        <div class="list-item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFC300" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 010 4h-.09c-.658.003-1.25.396-1.51 1z"/></svg><span style="margin-left:12px;font-size:15px">个人设置</span><span style="margin-left:auto;color:var(--color-text-muted)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></span></div>
+      </div>
+      <div style="text-align:center;padding:20px"><a href="index.html" style="font-size:13px;color:var(--color-primary);text-decoration:none">← 返回角色选择</a></div>
+    </div>
+
+    <!-- TENANT BILLS -->
+    <div class="page-view" id="page-tenant-bills">
+      <div class="tenant-room-card"><h3 style="font-size:16px;font-weight:700;margin-bottom:8px">B栋102 · 单间</h3><p style="font-size:13px;opacity:.9">幸福小区B栋 · 入住 2025-06-01 · 到期 2026-06-01</p></div>
+      <div class="section"><div class="section-title">我的账单</div></div>
+      <div class="bill-card" onclick="showSub('tbill')"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:15px;font-weight:600">2026年2月</span><span class="badge badge-yellow">待确认</span></div><div class="bill-fees"><span class="bill-fee-tag">租金¥900</span><span class="bill-fee-tag">电费¥85</span><span class="bill-fee-tag">水费¥20</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:.5px solid rgba(0,0,0,.05)"><span style="font-size:12px;color:var(--color-text-muted)">合计</span><span style="font-size:20px;font-weight:700">¥1,005</span></div></div>
+      <div class="bill-card" onclick="showSub('tbill')"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:15px;font-weight:600">2026年1月</span><span class="badge badge-green">已结算</span></div><div class="bill-fees"><span class="bill-fee-tag">租金¥900</span><span class="bill-fee-tag">电费¥102</span><span class="bill-fee-tag">水费¥18</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:.5px solid rgba(0,0,0,.05)"><span style="font-size:12px;color:var(--color-text-muted)">合计</span><span style="font-size:20px;font-weight:700">¥1,020</span></div></div>
+      <div class="bill-card"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:15px;font-weight:600">2025年12月</span><span class="badge badge-green">已结算</span></div><div class="bill-fees"><span class="bill-fee-tag">租金¥900</span><span class="bill-fee-tag">电费¥95</span><span class="bill-fee-tag">水费¥22</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:.5px solid rgba(0,0,0,.05)"><span style="font-size:12px;color:var(--color-text-muted)">合计</span><span style="font-size:20px;font-weight:700">¥1,017</span></div></div>
+    </div>
+
+    <!-- TENANT MINE -->
+    <div class="page-view" id="page-tenant-mine">
+      <div style="text-align:center;padding:32px 16px 20px"><div class="avatar" style="width:64px;height:64px;font-size:24px;margin:0 auto 12px;background:linear-gradient(135deg,#FFC300,#FF9500)">赵</div><div style="font-size:18px;font-weight:700">赵丽</div><div style="margin-top:6px"><span class="badge badge-yellow">租户</span></div></div>
+      <div style="background:var(--color-bg-white);border-radius:12px;margin:0 16px;overflow:hidden">
+        <div class="list-item"><span style="font-size:14px;color:var(--color-text-muted);width:70px">房间</span><span style="font-size:14px;font-weight:500">B栋102·单间</span></div>
+        <div class="list-item"><span style="font-size:14px;color:var(--color-text-muted);width:70px">入住</span><span style="font-size:14px;font-weight:500">2025-06-01</span></div>
+        <div class="list-item"><span style="font-size:14px;color:var(--color-text-muted);width:70px">到期</span><span style="font-size:14px;font-weight:500">2026-06-01</span></div>
+        <div class="list-item"><span style="font-size:14px;color:var(--color-text-muted);width:70px">月租</span><span style="font-size:14px;font-weight:500">¥900</span></div>
+        <div class="list-item"><span style="font-size:14px;color:var(--color-text-muted);width:70px">房东</span><span style="font-size:14px;color:var(--color-primary);font-weight:500">138****8888</span></div>
+      </div>
+      <div style="text-align:center;padding:24px"><a href="index.html" style="font-size:13px;color:var(--color-primary);text-decoration:none">← 返回角色选择</a></div>
+    </div>
+  </div>
+
+  <!-- SUB PAGES -->
+  <div class="sub-page" id="sub-building"><div class="nav-bar"><div class="nav-back" onclick="hideSub('building')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><polyline points="15 18 9 12 15 6"/></svg></div><span>幸福小区A栋</span></div><div class="page-content">
+    <div class="section"><div class="section-title">1楼</div></div>
+    <div class="room-grid"><div class="room-cell rented" onclick="showSub('room')"><div style="font-size:15px;font-weight:600">101</div><div style="font-size:11px;color:var(--color-text-muted)">一房一厅</div><span class="badge badge-green" style="margin-top:4px">已租</span></div><div class="room-cell rented" onclick="showSub('room')"><div style="font-size:15px;font-weight:600">102</div><div style="font-size:11px;color:var(--color-text-muted)">单间</div><span class="badge badge-green" style="margin-top:4px">已租</span></div><div class="room-cell vacant" onclick="showSub('room')"><div style="font-size:15px;font-weight:600">103</div><div style="font-size:11px;color:var(--color-text-muted)">两房一厅</div><span class="badge badge-gray" style="margin-top:4px">空置</span></div></div>
+    <div class="section"><div class="section-title">2楼</div></div>
+    <div class="room-grid"><div class="room-cell rented" onclick="showSub('room')"><div style="font-size:15px;font-weight:600">201</div><div style="font-size:11px;color:var(--color-text-muted)">一房一厅</div><span class="badge badge-green" style="margin-top:4px">已租</span></div><div class="room-cell expiring" onclick="showSub('room')"><div style="font-size:15px;font-weight:600">202</div><div style="font-size:11px;color:var(--color-text-muted)">单间</div><span class="badge badge-yellow" style="margin-top:4px">到期</span></div><div class="room-cell rented" onclick="showSub('room')"><div style="font-size:15px;font-weight:600">203</div><div style="font-size:11px;color:var(--color-text-muted)">两房一厅</div><span class="badge badge-green" style="margin-top:4px">已租</span></div></div>
+    <div class="section"><div class="section-title">3楼</div></div>
+    <div class="room-grid"><div class="room-cell rented" onclick="showSub('room')"><div style="font-size:15px;font-weight:600">301</div><div style="font-size:11px;color:var(--color-text-muted)">一房一厅</div><span class="badge badge-green" style="margin-top:4px">已租</span></div><div class="room-cell rented" onclick="showSub('room')"><div style="font-size:15px;font-weight:600">302</div><div style="font-size:11px;color:var(--color-text-muted)">三房一厅</div><span class="badge badge-green" style="margin-top:4px">已租</span></div><div class="room-cell vacant" onclick="showSub('room')"><div style="font-size:15px;font-weight:600">303</div><div style="font-size:11px;color:var(--color-text-muted)">单间</div><span class="badge badge-gray" style="margin-top:4px">空置</span></div></div>
+  </div></div>
+
+  <div class="sub-page" id="sub-room"><div class="nav-bar" style="position:absolute;background:transparent;z-index:10"><div class="nav-back" onclick="hideSub('room')" style="color:white"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><polyline points="15 18 9 12 15 6"/></svg></div><span style="color:white">房间详情</span></div><div class="page-content" style="padding-top:0">
+    <div class="room-detail-header"><h2 style="font-size:20px;font-weight:700">A栋 301</h2><p style="font-size:13px;opacity:.85;margin-top:4px">一房一厅 · 45㎡ · ¥1,500/月</p></div>
+    <div style="background:var(--color-bg-white);border-radius:12px;margin:12px 16px;overflow:hidden">
+      <div style="padding:16px;border-bottom:.5px solid rgba(0,0,0,.05)"><div style="font-size:14px;font-weight:600;margin-bottom:8px">当前租户</div><div style="display:flex;align-items:center;gap:12px"><div class="avatar avatar-sm">李</div><div><div style="font-size:14px;font-weight:500">李明</div><div style="font-size:12px;color:var(--color-text-muted)">139****6666 · 2025-03入住</div></div></div></div>
+      <div style="padding:16px"><div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:.5px solid rgba(0,0,0,.05)"><span style="color:var(--color-text-muted);font-size:14px">房型</span><span style="font-size:14px;font-weight:500">一房一厅</span></div><div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:.5px solid rgba(0,0,0,.05)"><span style="color:var(--color-text-muted);font-size:14px">面积</span><span style="font-size:14px;font-weight:500">45㎡</span></div><div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:.5px solid rgba(0,0,0,.05)"><span style="color:var(--color-text-muted);font-size:14px">月租</span><span style="font-size:14px;font-weight:500">¥1,500</span></div><div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:.5px solid rgba(0,0,0,.05)"><span style="color:var(--color-text-muted);font-size:14px">押金</span><span style="font-size:14px;font-weight:500">¥3,000（已收）</span></div><div style="display:flex;justify-content:space-between;padding:10px 0"><span style="color:var(--color-text-muted);font-size:14px">到期</span><span style="font-size:14px;font-weight:500">2026-03-01</span></div></div>
+    </div>
+    <div style="padding:0 16px 16px;display:flex;gap:10px"><button class="btn btn-outline" style="flex:1" onclick="showSub('addroom')">编辑</button><button class="btn btn-primary" style="flex:1" onclick="showSub('settle')">生成账单</button></div>
+  </div></div>
+
+  <div class="sub-page" id="sub-addroom"><div class="nav-bar"><div class="nav-back" onclick="hideSub('addroom')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><polyline points="15 18 9 12 15 6"/></svg></div><span>添加房间</span><span class="nav-right">保存</span></div><div class="page-content" style="padding:16px">
+    <div class="form-group"><label class="form-label">所属楼栋</label><select class="form-select"><option>幸福小区A栋</option><option>幸福小区B栋</option></select></div>
+    <div class="form-group"><label class="form-label">楼层</label><select class="form-select"><option>1楼</option><option>2楼</option><option>3楼</option><option>4楼</option><option>5楼</option></select></div>
+    <div class="form-group"><label class="form-label">房间号</label><input class="form-input" placeholder="如：301"></div>
+    <div class="form-group"><label class="form-label">房型</label><select class="form-select"><option>单间</option><option>一房一厅</option><option>两房一厅</option><option>三房一厅</option><option>四房一厅</option><option>五房一厅</option></select></div>
+    <div class="form-group"><label class="form-label">出租方式</label><select class="form-select"><option>整租</option><option>合租</option></select></div>
+    <div class="form-group"><label class="form-label">面积（㎡）</label><input class="form-input" type="number" placeholder="45"></div>
+    <div class="form-group"><label class="form-label">月租金（元）</label><input class="form-input" type="number" placeholder="1500"></div>
+    <div style="margin-top:8px"><div class="form-label" style="margin-bottom:12px">费用配置</div>
+      <div class="checkbox-item checked" onclick="this.classList.toggle('checked')"><div class="checkbox-box"></div><span class="checkbox-label">租金 — 按月</span></div>
+      <div class="checkbox-item checked" onclick="this.classList.toggle('checked')"><div class="checkbox-box"></div><span class="checkbox-label">押金 — 一次性</span></div>
+      <div class="checkbox-item checked" onclick="this.classList.toggle('checked')"><div class="checkbox-box"></div><span class="checkbox-label">电费 — ¥1.2/度</span></div>
+      <div class="checkbox-item checked" onclick="this.classList.toggle('checked')"><div class="checkbox-box"></div><span class="checkbox-label">水费 — ¥4.5/吨</span></div>
+      <div class="checkbox-item checked" onclick="this.classList.toggle('checked')"><div class="checkbox-box"></div><span class="checkbox-label">物业费 — ¥200/月</span></div>
+      <div class="checkbox-item" onclick="this.classList.toggle('checked')"><div class="checkbox-box"></div><span class="checkbox-label">垃圾费 — ¥30/月</span></div>
+      <div class="checkbox-item checked" onclick="this.classList.toggle('checked')"><div class="checkbox-box"></div><span class="checkbox-label">网费 — ¥100/月</span></div>
+    </div>
+  </div></div>
+
+  <div class="sub-page" id="sub-settle"><div class="nav-bar"><div class="nav-back" onclick="hideSub('settle')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><polyline points="15 18 9 12 15 6"/></svg></div><span>结算详情</span><span class="nav-right" onclick="showSub('poster')">海报</span></div><div class="page-content" style="padding:16px">
+    <div style="background:var(--color-bg-white);border-radius:12px;padding:16px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px"><div class="avatar">李</div><div><div style="font-size:16px;font-weight:600">A栋301 · 李明</div><div style="font-size:12px;color:var(--color-text-muted)">2026年2月账单</div></div><span class="badge badge-yellow" style="margin-left:auto">待结算</span></div>
+      <table class="settle-table"><thead><tr><th>费用项</th><th>标准</th><th>用量</th><th style="text-align:right">金额</th></tr></thead><tbody><tr><td>租金</td><td>¥1500/月</td><td>1月</td><td>¥1,500</td></tr><tr><td>电费</td><td>¥1.2/度</td><td>150度</td><td>¥180</td></tr><tr><td>水费</td><td>¥4.5/吨</td><td>8吨</td><td>¥36</td></tr><tr><td>物业费</td><td>¥200/月</td><td>1月</td><td>¥200</td></tr><tr><td>垃圾费</td><td>¥30/月</td><td>1月</td><td>¥30</td></tr><tr><td>网费</td><td>¥100/月</td><td>1月</td><td>¥100</td></tr></tbody></table>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px;background:linear-gradient(135deg,#07C160,#1AAD19);border-radius:12px;color:#fff;margin:16px 0"><span style="font-size:14px">合计应付</span><span style="font-size:24px;font-weight:700">¥2,046</span></div>
+    <div style="display:flex;gap:10px"><button class="btn btn-outline" style="flex:1" onclick="showSub('poster')">生成海报</button><button class="btn btn-primary" style="flex:1">标记已结算</button></div>
+  </div></div>
+
+  <div class="sub-page" id="sub-poster"><div class="nav-bar"><div class="nav-back" onclick="hideSub('poster')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><polyline points="15 18 9 12 15 6"/></svg></div><span>结算海报</span></div><div class="page-content" style="padding:16px">
+    <div class="poster-preview"><div style="font-size:12px;opacity:.8;margin-bottom:8px">物业出租管家</div><h3 style="font-size:18px;font-weight:700;margin-bottom:12px">2月租金结算单</h3><div style="font-size:13px;opacity:.9;margin-bottom:16px">A栋301 · 李明</div><div style="background:rgba(255,255,255,.15);border-radius:12px;padding:12px;text-align:left;font-size:12px;line-height:2">租金 ¥1,500 · 电费 ¥180 · 水费 ¥36<br>物业费 ¥200 · 垃圾费 ¥30 · 网费 ¥100</div><div style="font-size:36px;font-weight:700;margin:16px 0">¥2,046</div><div style="font-size:12px;opacity:.7">扫码查看详情</div><div class="poster-qr">二维码</div></div>
+    <div style="display:flex;gap:10px;margin-top:16px"><button class="btn btn-outline" style="flex:1;color:var(--color-text)">保存相册</button><button class="btn btn-primary" style="flex:1">分享租户</button></div>
+  </div></div>
+
+  <div class="sub-page" id="sub-mgr"><div class="nav-bar"><div class="nav-back" onclick="hideSub('mgr')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><polyline points="15 18 9 12 15 6"/></svg></div><span>代管理员管理</span></div><div class="page-content">
+    <div style="background:var(--color-bg-white);margin-top:12px">
+      <div class="manager-card" onclick="showSub('perm')"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#10AEFF,#576B95);width:32px;height:32px;font-size:13px">王</div><div style="flex:1;margin-left:0"><div style="font-size:15px;font-weight:500">小王</div><div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px"><span class="badge badge-green" style="font-size:10px">房产</span><span class="badge badge-blue" style="font-size:10px">费用</span></div></div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B2B2B2" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+      <div class="manager-card" onclick="showSub('perm')"><div class="avatar avatar-sm" style="background:linear-gradient(135deg,#FFC300,#FF9500);width:32px;height:32px;font-size:13px">刘</div><div style="flex:1;margin-left:0"><div style="font-size:15px;font-weight:500">刘姐</div><div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px"><span class="badge badge-green" style="font-size:10px">房产</span><span class="badge badge-blue" style="font-size:10px">费用</span><span class="badge badge-yellow" style="font-size:10px">租户</span><span class="badge badge-red" style="font-size:10px">账单</span></div></div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B2B2B2" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+    <div style="padding:16px"><button class="btn btn-primary btn-block" style="width:100%;justify-content:center">+ 邀请代管理员</button></div>
+  </div></div>
+
+  <div class="sub-page" id="sub-perm"><div class="nav-bar"><div class="nav-back" onclick="hideSub('perm')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><polyline points="15 18 9 12 15 6"/></svg></div><span>权限配置</span><span class="nav-right">保存</span></div><div class="page-content" style="padding:16px">
+    <div style="text-align:center;margin-bottom:20px"><div class="avatar" style="width:56px;height:56px;font-size:20px;margin:0 auto 8px;background:linear-gradient(135deg,#10AEFF,#576B95)">王</div><div style="font-size:16px;font-weight:600">小王</div></div>
+    <div style="background:var(--color-bg-white);border-radius:12px;padding:0 16px">
+      <div class="checkbox-item checked" onclick="this.classList.toggle('checked')"><div class="checkbox-box"></div><span class="checkbox-label">查看房产</span></div>
+      <div class="checkbox-item checked" onclick="this.classList.toggle('checked')"><div class="checkbox-box"></div><span class="checkbox-label">管理房产</span></div>
+      <div class="checkbox-item" onclick="this.classList.toggle('checked')"><div class="checkbox-box"></div><span class="checkbox-label">查看租户</span></div>
+      <div class="checkbox-item" onclick="this.classList.toggle('checked')"><div class="checkbox-box"></div><span class="checkbox-label">管理租户</span></div>
+      <div class="checkbox-item checked" onclick="this.classList.toggle('checked')"><div class="checkbox-box"></div><span class="checkbox-label">查看费用</span></div>
+      <div class="checkbox-item checked" onclick="this.classList.toggle('checked')"><div class="checkbox-box"></div><span class="checkbox-label">管理费用</span></div>
+      <div class="checkbox-item" onclick="this.classList.toggle('checked')"><div class="checkbox-box"></div><span class="checkbox-label">查看账单</span></div>
+      <div class="checkbox-item" onclick="this.classList.toggle('checked')"><div class="checkbox-box"></div><span class="checkbox-label">管理账单</span></div>
+      <div class="checkbox-item" onclick="this.classList.toggle('checked')"><div class="checkbox-box"></div><span class="checkbox-label">查看统计</span></div>
+      <div class="checkbox-item" onclick="this.classList.toggle('checked')"><div class="checkbox-box"></div><span class="checkbox-label">查看流水</span></div>
+    </div>
+    <div style="padding:20px 0;display:flex;gap:10px"><button class="btn btn-primary" style="flex:1">保存权限</button><button class="btn" style="flex:0 0 auto;background:rgba(250,81,81,.1);color:var(--color-danger)">移除</button></div>
+  </div></div>
+
+  <div class="sub-page" id="sub-tbill"><div class="nav-bar"><div class="nav-back" onclick="hideSub('tbill')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><polyline points="15 18 9 12 15 6"/></svg></div><span>账单详情</span></div><div class="page-content" style="padding:16px">
+    <div style="background:var(--color-bg-white);border-radius:12px;padding:16px">
+      <div style="text-align:center;margin-bottom:16px"><div style="font-size:14px;color:var(--color-text-muted)">2026年2月账单</div><div style="font-size:12px;color:var(--color-text-muted);margin-top:4px">B栋102 · 单间</div></div>
+      <table class="settle-table"><thead><tr><th>费用项</th><th>标准</th><th>用量</th><th style="text-align:right">金额</th></tr></thead><tbody><tr><td>租金</td><td>¥900/月</td><td>1月</td><td>¥900</td></tr><tr><td>电费</td><td>¥1.2/度</td><td>71度</td><td>¥85</td></tr><tr><td>水费</td><td>¥4.5/吨</td><td>4.4吨</td><td>¥20</td></tr></tbody></table>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px;background:linear-gradient(135deg,#FFC300,#FF9500);border-radius:12px;color:#fff;margin:16px 0"><span style="font-size:14px">合计</span><span style="font-size:24px;font-weight:700">¥1,005</span></div>
+    <div style="text-align:center;font-size:12px;color:var(--color-text-muted)">如有疑问请联系房东</div>
+  </div></div>
+
+  <!-- TABBAR -->
+  <div class="tab-bar" id="tabBar"></div>
+</div>
+
+<script>
+const P=new URLSearchParams(location.search),role=P.get('role')||'landlord';
+const IC={home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',property:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',bill:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',stats:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',mine:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>','tenant-bills':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>','tenant-mine':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'};
+const RC={landlord:{tabs:['home','property','bill','stats','mine'],labels:['首页','房产','账单','统计','我的'],def:'home',titles:{home:'首页',property:'房产管理',bill:'账单管理',stats:'数据统计',mine:'我的'}},manager:{tabs:['home','property','bill','stats','mine'],labels:['首页','房产','账单','统计','我的'],def:'home',titles:{home:'首页',property:'房产管理',bill:'账单管理',stats:'数据统计',mine:'我的'}},tenant:{tabs:['tenant-bills','tenant-mine'],labels:['账单','我的'],def:'tenant-bills',titles:{'tenant-bills':'我的账单','tenant-mine':'我的'}}};
+const C=RC[role];let cur=C.def;
+
+function initApp(){
+  const tb=document.getElementById('tabBar');tb.innerHTML='';
+  C.tabs.forEach((t,i)=>{const d=document.createElement('div');d.className='tab-item'+(t===C.def?' active':'');d.dataset.tab=t;d.onclick=()=>switchTab(t);d.innerHTML=IC[t]+'<span>'+C.labels[i]+'</span>';tb.appendChild(d)});
+  document.querySelectorAll('.page-view').forEach(p=>p.classList.remove('active'));
+  const dp=document.getElementById('page-'+C.def);if(dp)dp.classList.add('active');
+  document.getElementById('navTitle').textContent=C.titles[C.def]||'';
+  if(role==='manager'){document.querySelector('.welcome-banner').innerHTML='<div style="font-size:18px;font-weight:700">小王（管理员）</div><div style="font-size:12px;opacity:.8;margin-top:4px">代管理员 · 权限：房产+费用</div>';}
+}
+
+function switchTab(t){
+  cur=t;
+  document.querySelectorAll('.page-view').forEach(p=>p.classList.remove('active'));
+  const pg=document.getElementById('page-'+t);if(pg)pg.classList.add('active');
+  document.querySelectorAll('.tab-item').forEach(i=>{i.classList.toggle('active',i.dataset.tab===t)});
+  document.getElementById('navTitle').textContent=C.titles[t]||'';
+}
+
+function stTab(v){
+  const tabs=document.querySelectorAll('#page-stats .tab');
+  tabs.forEach(t=>t.classList.remove('active'));
+  if(v==='chart'){tabs[0].classList.add('active');document.getElementById('v-chart').style.display='';document.getElementById('v-log').style.display='none';}
+  else{tabs[1].classList.add('active');document.getElementById('v-chart').style.display='none';document.getElementById('v-log').style.display='';}
+}
+
+function showSub(n){document.getElementById('sub-'+n).classList.add('active');}
+function hideSub(n){document.getElementById('sub-'+n).classList.remove('active');}
+
+initApp();
+</script>
+</body>
+</html>
