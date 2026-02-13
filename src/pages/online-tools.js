@@ -37,7 +37,7 @@ import ImageEditor from '../components/ImageEditor';
 import Json2Struct from '../components/Json2Struct/Json2Struct';
 import QrCodeGenerator from '../components/QrCodeGenerator/QrCodeGenerator';
 import SnakeGame from '../components/SnakeGame/SnakeGame';
-import styles from './tools.module.css';
+import styles from './online-tools.module.css';
 
 // 常量定义
 const CONSTANTS = {

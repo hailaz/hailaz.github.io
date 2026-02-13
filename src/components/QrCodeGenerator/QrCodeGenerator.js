@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import styles from '../../pages/tools.module.css';
+import styles from '../../pages/online-tools.module.css';
 
 export default function QrCodeGenerator() {
   const [url, setUrl] = useState('www.hailaz.cn');

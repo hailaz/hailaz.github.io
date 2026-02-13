@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import styles from '../../pages/tools.module.css';
+import styles from '../../pages/online-tools.module.css';
 
 export default function CaseConverter() {
   const [input, setInput] = useState('HelloWorld,hello_world');

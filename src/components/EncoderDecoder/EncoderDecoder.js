@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import styles from '../../pages/tools.module.css';
+import styles from '../../pages/online-tools.module.css';
 
 // 编解码类型定义
 const ENCODE_TYPES = [

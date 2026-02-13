@@ -78,19 +78,25 @@ const config = {
           {
             type: 'docSidebar',
             position: 'left',
-            sidebarId: 'live',
+            sidebarId: 'tech',
+            label: '技术',
+          },
+          {
+            type: 'docSidebar',
+            position: 'left',
+            sidebarId: 'life',
             label: '生活',
           },
           {
             type: 'docSidebar',
             position: 'left',
-            sidebarId: 'learn',
-            label: '学习',
+            sidebarId: 'essay',
+            label: '随笔',
           },
           { to: '/blog', label: '博客', position: 'left' },
           {
-            to: '/tools',
-            label: '工具',
+            to: '/online-tools',
+            label: '在线工具',
             position: 'left',
           },
           {
