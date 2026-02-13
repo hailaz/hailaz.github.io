@@ -1,5 +1,6 @@
 ---
-title: JavaScript
+title: JavaScript 技巧
+sidebar_position: 1
 ---
 
 ## 取消请求，触发golang的context cancel

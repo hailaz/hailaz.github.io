@@ -1,5 +1,6 @@
 ---
-title: 浏览器插件商店
+title: 浏览器插件商店推荐
+sidebar_position: 4
 ---
 
 可以选择以下几个插件商店：

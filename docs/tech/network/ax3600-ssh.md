@@ -1,5 +1,6 @@
 ---
-title: 小米AX3600路由开启SSH+ipv6防火墙设置
+title: 小米AX3600 开启SSH与IPv6防火墙
+sidebar_position: 2
 ---
 ## 新方法
 

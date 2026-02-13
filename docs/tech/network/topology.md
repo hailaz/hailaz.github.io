@@ -1,5 +1,6 @@
 ---
-title: 网络拓扑
+title: 家庭网络拓扑
+sidebar_position: 1
 ---
 简单介绍家中搭建的网络情况
 

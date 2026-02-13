@@ -1,5 +1,6 @@
 ---
-title: openwrt
+title: OpenWrt 固件
+sidebar_position: 0
 ---
 
 # 固件

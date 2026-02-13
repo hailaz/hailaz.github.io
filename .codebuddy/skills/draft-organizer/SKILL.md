@@ -29,7 +29,7 @@ The website has three content sections under `docs/`:
 ### Existing Subdirectories
 
 ```
-docs/tech/: go/, mysql/, web/, network/, fix/, windows/, go/文章摘录/, go/示例/
+docs/tech/: go/, database/, web/, network/, devtools/, devtools/fix/, devtools/windows/
 docs/life/: music/, music/ukulele/, toy/
 docs/essay/: reading/
 ```

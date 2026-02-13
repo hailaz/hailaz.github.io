@@ -1,3 +1,8 @@
+---
+title: 影驰 SSD 修复记录
+sidebar_position: 8
+---
+
 ## 影驰 SSD 修复记录（其他 PS3110 主控的 SSD 也适用）
 
 之前刷错固件了，导致无法识别。

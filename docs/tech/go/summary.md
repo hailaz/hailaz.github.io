@@ -1,6 +1,6 @@
 ---
-layout: post
-title: 总结
+title: Go 知识总结
+sidebar_position: 2
 ---
 
 ## 基础

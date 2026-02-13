@@ -1,5 +1,6 @@
 ---
-title: windows
+title: Windows 技巧
+sidebar_position: 6
 ---
 
 ## windows 读取苹果格式硬盘

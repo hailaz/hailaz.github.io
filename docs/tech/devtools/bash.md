@@ -1,5 +1,6 @@
 ---
-title: bash技巧
+title: Bash 技巧
+sidebar_position: 1
 ---
 
 ## 字符变量截取

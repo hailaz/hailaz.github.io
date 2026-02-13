@@ -1,5 +1,6 @@
 ---
-title: 语言技巧
+title: Go 语言技巧
+sidebar_position: 1
 ---
 
 ## gofmt 格式化代码

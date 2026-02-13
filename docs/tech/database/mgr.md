@@ -1,7 +1,6 @@
 ---
-layout: post
-title: MGR
-tags: [mysql]
+title: MySQL MGR 多主模式搭建
+tags: [mysql, mgr]
 ---
 
 

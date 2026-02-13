@@ -1,9 +1,51 @@
 ---
 id: index
-title: 目录
+title: 技术目录
+sidebar_position: 0
 ---
 
-## [Golang](go/index)
+## 总目录
+
+### Go 语言
+
+- [Go 语言](./go/)
+- [Go 语言技巧](./go/tips)
+- [Go 知识总结](./go/summary)
+  - [文档团队 Golang 最佳实践 & CR 案例集](./go/文章摘录/文档团队GolangCR案例集&最佳实践)
+  - [gorun](./go/示例/gorun)
+  - [goset](./go/示例/goset)
+
+### 数据库
+
+- [MySQL MGR 多主模式搭建](./database/mgr)
+
+### 网络与路由
+
+- [OpenWrt 固件](./network/0-openwrt)
+- [家庭网络拓扑](./network/topology)
+- [小米AX3600 开启SSH与IPv6防火墙](./network/ax3600-ssh)
+- [外网访问家庭内网服务](./network/remote-access)
+- [TrueNAS](./network/truenas)
+- [IP 地址查询工具](./network/ip-lookup)
+
+### Web 开发
+
+- [WebSocket 协议](./web/websocket)
+- [JavaScript 技巧](./web/javascript)
+
+### 开发工具与环境
+
+- [问题排查方法论](./devtools/troubleshooting)
+- [Bash 技巧](./devtools/bash)
+- [Git 使用技巧](./devtools/git)
+- [Docusaurus 搭建与部署](./devtools/docusaurus)
+- [浏览器插件商店推荐](./devtools/browser-plugins)
+- [常见电子文档格式](./devtools/ebook-formats)
+- [Windows 技巧](./devtools/windows/)
+- [硬盘测试经验](./devtools/disk)
+- [影驰 SSD 修复记录](./devtools/fix/readme)
+- [FinalShell SSH](./devtools/finalshell)
+- [VSCode Copilot 使用 GitHub MCP Server](./devtools/vscode-mcp)
 
 ## 技术文章
 
@@ -17,96 +59,4 @@ title: 目录
 - [Golang 高质量单元测试之 Table-Driven：从入门到真香](https://mp.weixin.qq.com/s/OX2we6WvIgXE_zTOijTs_g)
 - [go 哪些情况会造成内存逃逸和内存泄露？ - 知乎 (zhihu.com)](https://www.zhihu.com/question/440402836)
 
-## temp
 
-下面两个网站，可以查询某个 IP 地址的地域归属。
-1、[ipinfo.io](https://ipinfo.io/)
-![image](https://cdn.beekka.com/blogimg/asset/202309/bg2023091501.webp)
-2、[ipapi.is](https://ipapi.is/)
-![image](https://cdn.beekka.com/blogimg/asset/202309/bg2023091502.webp)下面两个网站，可以查询某个 IP 地址的地域归属。
-
-这两个网站还都提供免费的数据库下载（[ipinfo 下载](https://ipinfo.io/developers/ip-to-country-asn-database)， [ipapi 下载](https://ipapi.is/geolocation.html)）。
-
-## FinalShell SSH
-
-FinalShell 是一体化的服务器远程管理工具，支持 SSH 终端、SFTP 文件传输、文本编辑等功能。它具有以下特点：
-
-- 全功能 SSH 客户端
-- SFTP 文件传输
-- 系统监控
-- 内置文本编辑器
-- 多标签和分屏支持
-- 支持 Windows/Linux/Mac 系统
-
-### 下载地址
-
-- Windows 版本：http://www.hostbuf.com/downloads/finalshell_install.exe
-- Mac 版本：http://www.hostbuf.com/downloads/finalshell_install.pkg
-- Linux 版本安装命令：
-
-```bash
-wget www.hostbuf.com/downloads/finalshell_install_linux.sh
-chmod +x finalshell_install_linux.sh
-./finalshell_install_linux.sh
-```
-
-## truenas
-
-### 修改 pool 的名称
-
-相关的地址依赖记得修改，例如共享文件夹的地址等。
-
-1. 在 UI 中导出需要修改名字的 pool
-2. 在 shell 中执行以下命令
-
-```bash
-zpool import oldpoolname newpoolname
-zpool status newpoolname
-zpool export newpoolname
-```
-
-3. 在 UI 中导入新的 pool
-
-## vscode copilot 使用 GitHub MCP Server （本地启动）
-
-https://github.com/github/github-mcp-server
-
-> 目前只有 vscode insiders 版本支持
-
-1. 创建一个 Personal access tokens，https://github.com/settings/tokens
-2. 安装 github-mcp-server
-   本地启动，需要将 GOPATH/bin 设置到 PATH 中 或者 指定 github-mcp-server 路径（command）
-
-   ```bash
-   # 安装github-mcp-server
-   go install github.com/github/github-mcp-server/cmd/github-mcp-server@latest
-   ```
-
-3. vscode 设置，添加这个设置到 settings.json 中，会提示输入 token 的
-
-   ```json
-   "mcp": {
-       "servers": {
-       "github": {
-           "command": "github-mcp-server",
-           "args": [
-           "stdio",
-           ],
-           "env": {
-           "GITHUB_PERSONAL_ACCESS_TOKEN": "${input:github_token}"
-           }
-       }
-       },
-       "inputs": [
-       {
-           "id": "github_token",
-           "type": "promptString",
-           "description": "GitHub Personal Access Token",
-           "password": true
-       }
-       ]
-   }
-   ```
-
-4. 使用，在 vscode 中使用 copilot agent 模式，提问：请搜索 Go GUI 相关的热门仓库
-   ![alt text](image.png)

@@ -1,6 +1,6 @@
 ---
-id: docusaurus-github-pages
-title: Docusaurus文档系统搭建与部署指南
+title: Docusaurus 搭建与部署
+sidebar_position: 3
 ---
 
 # Docusaurus文档系统搭建与部署指南

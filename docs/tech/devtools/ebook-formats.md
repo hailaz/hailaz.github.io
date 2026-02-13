@@ -1,5 +1,6 @@
 ---
-title: 常见的电子文档
+title: 常见电子文档格式
+sidebar_position: 5
 ---
 
 常见的文档格式

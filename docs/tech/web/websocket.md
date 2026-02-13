@@ -1,8 +1,7 @@
 ---
-layout: post
-title: WebSocket
-tags: [WebSocket, HTML5]
-categories: 协议
+title: WebSocket 协议
+tags: [websocket, html5]
+sidebar_position: 0
 ---
 
 > [摘自菜鸟教程](https://www.runoob.com/html/html5-websocket.html)

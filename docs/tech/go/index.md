@@ -1,8 +1,8 @@
 ---
-id: index
-title: 学习资料
+title: Go 语言
+sidebar_position: 0
 tags:
-  - learn
+  - go
 ---
 
 ## 开发环境搭建
