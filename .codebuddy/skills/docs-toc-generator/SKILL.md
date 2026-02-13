@@ -84,6 +84,9 @@ sidebar_position: 0
 Link format rules:
 - Use relative paths from the TOC file location
 - For `index.md` files, link to the directory (e.g., `./go/` instead of `./go/index.md`)
+- For `readme.md` files, treat them the same as `index.md` — link to the directory (e.g., `./devtools/fix/` instead of `./devtools/fix/readme`), because Docusaurus treats `readme.md` as a directory index page
+- For filenames with numeric prefixes used for sorting (e.g., `0-openwrt.md`, `1-intro.md`), the link path must **omit the numeric prefix** (e.g., `./network/openwrt` instead of `./network/0-openwrt`), because Docusaurus strips `numberPrefix` from the generated route by default
+- Exception: The TOC file itself (e.g., `0-learn.md`) is excluded from scanning, so this rule does not apply to it
 - For `.mdx` files, include the extension in the path
 - Nested categories use indented sub-lists
 
@@ -105,5 +108,7 @@ Update the target file with the generated content, preserving:
 - Always sort categories and documents by their position/sidebar_position values
 - Use Chinese display names from `_category_.json` label fields when available
 - Generate relative links that work with Docusaurus routing
+- **Docusaurus strips numeric prefixes** (e.g., `0-`, `1-`) from filenames when generating routes. Links must use the path **without** the numeric prefix (e.g., `./network/openwrt` not `./network/0-openwrt`)
+- **`readme.md` is treated as a directory index** by Docusaurus, so link to the directory path (e.g., `./devtools/fix/`) instead of `./devtools/fix/readme`
 - The skill works for any docs section (tech, life, essay), not just tech
 - If a category has an `index.md`, link the category heading to it

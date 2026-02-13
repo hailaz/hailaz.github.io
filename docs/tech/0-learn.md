@@ -21,7 +21,7 @@ sidebar_position: 0
 
 ### 网络与路由
 
-- [OpenWrt 固件](./network/0-openwrt)
+- [OpenWrt 固件](./network/openwrt)
 - [家庭网络拓扑](./network/topology)
 - [小米AX3600 开启SSH与IPv6防火墙](./network/ax3600-ssh)
 - [外网访问家庭内网服务](./network/remote-access)
@@ -43,7 +43,7 @@ sidebar_position: 0
 - [常见电子文档格式](./devtools/ebook-formats)
 - [Windows 技巧](./devtools/windows/)
 - [硬盘测试经验](./devtools/disk)
-- [影驰 SSD 修复记录](./devtools/fix/readme)
+- [影驰 SSD 修复记录](./devtools/fix/)
 - [FinalShell SSH](./devtools/finalshell)
 - [VSCode Copilot 使用 GitHub MCP Server](./devtools/vscode-mcp)
 
