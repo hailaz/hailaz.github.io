@@ -81,6 +81,7 @@
 │   │   └── 新增/编辑房产表单
 │   ├── 账单管理
 │   │   ├── 账单列表（按月份）
+│   │   ├── 水电读数录入
 │   │   ├── 结算详情页
 │   │   ├── 海报预览/分享
 │   │   └── 费用配置
@@ -201,6 +202,32 @@
   - 垃圾费：按月
   - 网费：按月
 - 每项可设置单价、计费周期、是否启用
+
+**水电读数录入页：**
+- 入口：房间详情页 → "录入读数" 按钮，或账单管理 → 生成账单前引导录入
+- 房间信息卡片：楼栋名、房间号、租户名
+- 读数录入表单（按费用类型分区）：
+  - 电表读数区：
+    - 上次读数（自动回填，灰色不可编辑）
+    - 本次读数（手动输入，支持拍照识别电表）
+    - 本期用量（自动计算：本次读数 - 上次读数，实时显示）
+    - 单价（自动从费用配置读取）
+    - 本期费用（自动计算：用量 × 单价，实时显示）
+  - 水表读数区：
+    - 上次读数（自动回填）
+    - 本次读数（手动输入，支持拍照识别水表）
+    - 本期用量（自动计算）
+    - 单价（自动从费用配置读取）
+    - 本期费用（自动计算）
+- 抄表日期选择（默认当天）
+- 历史读数记录（可展开查看近6期读数变化趋势）
+- 底部操作：保存读数、保存并生成账单
+
+**交互说明：**
+- 输入本次读数时实时计算用量和费用，若本次读数小于上次读数则提示"读数异常，请确认"
+- 首次录入无上次读数时，上次读数栏显示为0且可手动修改（作为初始底数）
+- 拍照识别：调用微信OCR能力识别表盘数字，用户确认后自动填入
+- 保存读数后自动更新到对应账单费用项
 
 #### 3.2.4 统计
 
@@ -438,6 +465,30 @@
 
 **索引：** landlordId、roomId、tenantId、period、status
 
+#### meter_readings（抄表读数表）
+
+```json
+{
+  "_id": "自动生成",
+  "roomId": "房间ID",
+  "buildingId": "楼栋ID",
+  "landlordId": "出租方ID",
+  "feeType": "electricity | water",
+  "period": "账单周期（如 2026-01）",
+  "previousReading": "上次读数",
+  "currentReading": "本次读数",
+  "usage": "本期用量（currentReading - previousReading）",
+  "unitPrice": "录入时的单价（快照）",
+  "amount": "本期费用（usage × unitPrice）",
+  "readingDate": "抄表日期",
+  "photoUrl": "表盘照片URL（可选）",
+  "operatorId": "操作人ID",
+  "createdAt": "创建时间"
+}
+```
+
+**索引：** roomId + feeType + period（联合唯一）、landlordId、roomId
+
 #### managers（代管理员表）
 
 ```json
@@ -567,7 +618,19 @@
 |------|------|------|------|------|
 | updateFeeConfig | POST | 更新房间费用配置 | `{ roomId, feeConfig[] }` | `{ success }` |
 | getFeeConfig | GET | 获取费用配置 | `{ roomId }` | `{ feeConfig[] }` |
-| recordUsage | POST | 录入水电用量 | `{ roomId, feeType, currentReading, period }` | `{ usage, amount }` |
+| recordReading | POST | 录入水电读数 | `{ roomId, feeType, currentReading, period, readingDate?, photoUrl? }` | `{ reading, previousReading, usage, unitPrice, amount }` |
+| getLastReading | GET | 获取上次读数 | `{ roomId, feeType }` | `{ lastReading, lastPeriod }` |
+| getReadingHistory | GET | 读数历史记录 | `{ roomId, feeType, limit? }` | `{ list[] }` |
+| batchRecordReadings | POST | 批量录入读数 | `{ readings: [{ roomId, feeType, currentReading }], period, readingDate? }` | `{ results[] }` |
+
+**recordReading 计算逻辑：**
+1. 查询 `meter_readings` 集合中该房间+费用类型的最近一条记录，获取 `previousReading`（上次读数）
+2. 若无历史记录（首次录入），`previousReading` 默认为 0，可由前端传入 `previousReading` 覆盖
+3. 计算 `usage = currentReading - previousReading`
+4. 从房间费用配置中读取对应费用类型的 `unitPrice`
+5. 计算 `amount = usage × unitPrice`
+6. 写入 `meter_readings` 集合
+7. 返回完整计算结果供前端展示和确认
 
 #### 5.2.5 bill-service（账单服务）
 
@@ -580,6 +643,12 @@
 | getBillDetail | GET | 账单详情 | `{ id }` | `{ bill, room, tenant }` |
 | getMyBills | GET | 租户查看自己的账单 | `{ page, pageSize }` | `{ list, total }` |
 | generatePoster | POST | 生成结算海报 | `{ billId }` | `{ posterUrl }` |
+
+**generateBill / batchGenerateBills 水电费自动填充逻辑：**
+1. 生成账单时，自动从 `meter_readings` 集合查询该房间对应周期的读数记录
+2. 若已有读数记录，自动将水/电费的 `usage`、`amount` 填入账单 `items[]`
+3. 若无读数记录，水电费项的 `usage` 和 `amount` 留空，提示出租方先录入读数
+4. 批量生成时，逐房间检查读数，未录入读数的房间标记为"待补录"状态
 
 #### 5.2.6 manager-service（代管理员服务）
 
@@ -649,11 +718,15 @@
 
 2. **bill-service → fee-service**：生成账单时需要读取房间的费用配置。
 
-3. **bill-service → tenant-service**：生成账单时需要关联租户信息。
+3. **bill-service → meter_readings**：生成账单时自动查询该房间对应周期的水电读数记录，将已计算的用量和费用填入账单。
 
-4. **stats-service → bills + rooms**：统计服务从账单和房间集合聚合数据。
+4. **bill-service → tenant-service**：生成账单时需要关联租户信息。
 
-5. **manager-service → user-service**：邀请管理员时关联用户身份。
+5. **fee-service → meter_readings**：录入读数时查询上次读数，自动计算用量和费用，写入抄表记录。
+
+6. **stats-service → bills + rooms**：统计服务从账单和房间集合聚合数据。
+
+7. **manager-service → user-service**：邀请管理员时关联用户身份。
 
 ### 5.4 权限校验流程
 
@@ -697,14 +770,29 @@
 ### 6.3 账单结算流程
 
 ```
-出租方录入水电用量 → 系统计算费用
-  → 生成账单（单间或批量）→ 确认费用明细
+出租方进入房间 → 点击"录入读数" → 输入水表/电表本次读数
+  → 系统自动回填上次读数，实时计算用量和费用
+  → 确认保存读数 → 生成账单（单间或批量）
+  → 确认费用明细（水电费已自动计算填入）
   → 生成结算海报 → 分享给租户
   → 租户查看账单 → 线下缴费
   → 出租方标记已结算
 ```
 
-### 6.4 代管理员邀请流程
+### 6.4 水电读数录入流程
+
+```
+出租方选择房间 → 进入读数录入页
+  → 系统自动查询并回填上次读数（首次为0）
+  → 输入本次读数（或拍照识别表盘数字）
+  → 系统实时计算：用量 = 本次读数 - 上次读数
+  → 系统实时计算：费用 = 用量 × 单价
+  → 若读数异常（本次 < 上次）弹出提示确认
+  → 点击保存 → 写入 meter_readings 集合
+  → 可选：直接生成包含该费用的账单
+```
+
+### 6.5 代管理员邀请流程
 
 ```
 出租方进入管理员管理 → 勾选授予权限 → 生成邀请码/链接
