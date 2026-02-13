@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="zh-Hans" dir="ltr" class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-essay/reading/6" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.7.0">
+<title data-rh="true">软技能：代码之外的生存指南 - John Sonmez | 哩度</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://hailaz.github.io/docs/essay/reading/6"><meta data-rh="true" property="og:locale" content="zh_Hans"><meta data-rh="true" name="docusaurus_locale" content="zh-Hans"><meta data-rh="true" name="docsearch:language" content="zh-Hans"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="软技能：代码之外的生存指南 - John Sonmez | 哩度"><meta data-rh="true" name="description" content="第1章　为何这本书与你先前读过的任何书籍都迥然不同"><meta data-rh="true" property="og:description" content="第1章　为何这本书与你先前读过的任何书籍都迥然不同"><link data-rh="true" rel="icon" href="/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://hailaz.github.io/docs/essay/reading/6"><link data-rh="true" rel="alternate" href="https://hailaz.github.io/docs/essay/reading/6" hreflang="zh-Hans"><link data-rh="true" rel="alternate" href="https://hailaz.github.io/docs/essay/reading/6" hreflang="x-default"><link rel="alternate" type="application/rss+xml" href="/blog/rss.xml" title="哩度 RSS Feed">
+<link rel="alternate" type="application/atom+xml" href="/blog/atom.xml" title="哩度 Atom Feed">
+
+
+
+
+
+
+<script src="https://hm.baidu.com/hm.js?e87ca5e773373ad269ebd9ffcc09e213" async></script><link rel="stylesheet" href="/assets/css/styles.bd8058eb.css">
+<script src="/assets/js/runtime~main.4062b1a1.js" defer="defer"></script>
+<script src="/assets/js/main.8d491cdc.js" defer="defer"></script>
+</head>
+<body class="navigation-with-keyboard">
+<script>!function(){function t(t){document.documentElement.setAttribute("data-theme",t)}var e=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();t(null!==e?e:"light")}(),function(){try{const n=new URLSearchParams(window.location.search).entries();for(var[t,e]of n)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><div role="region" aria-label="跳到主要内容"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">跳到主要内容</a></div><nav aria-label="主导航" class="navbar navbar--fixed-top"><div class="navbar__inner"><div class="navbar__items"><button aria-label="切换导航栏" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/"><div class="navbar__logo"><img src="/img/favicon.ico" alt="My Site Logo" class="themedComponent_mlkZ themedComponent--light_NVdE"><img src="/img/favicon.ico" alt="My Site Logo" class="themedComponent_mlkZ themedComponent--dark_xIcU"></div><b class="navbar__title text--truncate">哩度</b></a><a class="navbar__item navbar__link" href="/docs/tech/index">技术</a><a class="navbar__item navbar__link" href="/docs/life/">生活</a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/docs/essay/reading/">随笔</a><a class="navbar__item navbar__link" href="/blog">博客</a><a class="navbar__item navbar__link" href="/online-tools">在线工具</a><a href="https://www.hailaz.cn/gflearn/docs/index" target="_self" rel="noopener noreferrer" class="navbar__item navbar__link">GFLearn<svg width="13.5" height="13.5" aria-hidden="true" viewBox="0 0 24 24" class="iconExternalLink_nPIU"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"></path></svg></a></div><div class="navbar__items navbar__items--right"><a href="https://github.com/hailaz" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width="13.5" height="13.5" aria-hidden="true" viewBox="0 0 24 24" class="iconExternalLink_nPIU"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"></path></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="切换浅色/暗黑模式（当前为浅色模式）" aria-label="切换浅色/暗黑模式（当前为浅色模式）" aria-live="polite" aria-pressed="false"><svg viewBox="0 0 24 24" width="24" height="24" class="lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" class="darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"><div class="navbar__search searchBarContainer_NW3z" dir="ltr"><input placeholder="搜索" aria-label="Search" class="navbar__search-input searchInput_YFbd" value=""><div class="loadingRing_RJI3 searchBarLoadingRing_YnHq"><div></div><div></div><div></div><div></div></div></div></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="main-wrapper mainWrapper_z2l0"><div class="docsWrapper_hBAB"><button aria-label="回到顶部" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type="button"></button><div class="docRoot_UBD9"><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class="sidebarViewport_aRkj"><div class="sidebar_njMd"><nav aria-label="文档侧边栏" class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--active" href="/docs/essay/reading/">读书摘录</a><button aria-label="折叠侧边栏分类 &#x27;读书摘录&#x27;" aria-expanded="true" type="button" class="clean-btn menu__caret"></button></div><ul style="display:block;overflow:visible;height:auto" class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/essay/reading/1">人性的弱 点</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/essay/reading/2">做完你的项目</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/essay/reading/3">不要写 clean code, 要写 CRISP code</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" tabindex="0" href="/docs/essay/reading/6">软技能：代码之外的生存指南 - John Sonmez</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/essay/reading/7">视频学习胜过读书吗？</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/essay/reading/8">程序员的酒后真言</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/essay/reading/friends">一个人可以有多少个朋友？</a></li></ul></li></ul></nav></div></div></aside><main class="docMainContainer_TBSr"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label="页面路径"><ul class="breadcrumbs" itemscope="" itemtype="https://schema.org/BreadcrumbList"><li class="breadcrumbs__item"><a aria-label="主页面" class="breadcrumbs__link" href="/"><svg viewBox="0 0 24 24" class="breadcrumbHomeIcon_YNFT"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill="currentColor"></path></svg></a></li><li itemscope="" itemprop="itemListElement" itemtype="https://schema.org/ListItem" class="breadcrumbs__item"><a class="breadcrumbs__link" itemprop="item" href="/docs/essay/reading/"><span itemprop="name">读书摘录</span></a><meta itemprop="position" content="1"></li><li itemscope="" itemprop="itemListElement" itemtype="https://schema.org/ListItem" class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link" itemprop="name">软技能：代码之外的生存指南 - John Sonmez</span><meta itemprop="position" content="2"></li></ul></nav><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">本页总览</button></div><div class="theme-doc-markdown markdown"><header><h1>软技能：代码之外的生存指南 - John Sonmez</h1></header><h3 class="anchor anchorWithStickyNavbar_LWe7" id="第1章为何这本书与你先前读过的任何书籍都迥然不同">第1章　为何这本书与你先前读过的任何书籍都迥然不同<a href="#第1章为何这本书与你先前读过的任何书籍都迥然不同" class="hash-link" aria-label="第1章　为何这本书与你先前读过的任何书籍都迥然不同的直接链接" title="第1章　为何这本书与你先前读过的任何书籍都迥然不同的直接链接">​</a></h3>
+<p>因为成为一个优秀的软件开发人员，不应该只有代码。</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="第一篇职业">第一篇：职业<a href="#第一篇职业" class="hash-link" aria-label="第一篇：职业的直接链接" title="第一篇：职业的直接链接">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第2章从非同凡响开始绝不要做他人都在做的事">第2章　从非同凡响开始：绝不要做他人都在做的事<a href="#第2章从非同凡响开始绝不要做他人都在做的事" class="hash-link" aria-label="第2章　从非同凡响开始：绝不要做他人都在做的事的直接链接" title="第2章　从非同凡响 开始：绝不要做他人都在做的事的直接链接">​</a></h3>
+<p>转变工作心态，公司只是其中一个客户，想清楚自己能提供什么样的服务。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第3章思考未来你的目标是什么">第3章　思考未来：你的目标是什么<a href="#第3章思考未来你的目标是什么" class="hash-link" aria-label="第3章　思考未来：你的目标是什么的直接链接" title="第3章　思考未来：你的目标是什么的直接链接">​</a></h3>
+<p><a href="https://wiki.goframe.org/pages/viewpage.action?pageId=7302528" target="_blank" rel="noopener noreferrer">计划</a></p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第4章人际交往能力远比你想象的重要">第4章　人际交往能力：远比你想象的重要<a href="#第4章人际交往能力远比你想象的重要" class="hash-link" aria-label="第4章　人际交往能力：远比你想象的重要的直接链接" title="第4章　人际交往能力：远比你想象的重要的直接链接">​</a></h3>
+<p>每个人都有自己的中心，尝试进到别人的中心思考；既要避免争吵，也要远离泥潭。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第5章破解面试之道">第5章　破解面试之道<a href="#第5章破解面试之道" class="hash-link" aria-label="第5章　破解面试之道的直接链接" title="第5章　破解面试之道的直接链接">​</a></h3>
+<p>刷存在感，建立声望，从敌人内部突破（内推）。当然这一切都要在技术达标的基础上进行，在相同的硬实力下，软实力会成为加分项，主观能动性也是加分项。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第6章就业选择列出你的选择">第6章　就业选择：列出你的选择<a href="#第6章就业选择列出你的选择" class="hash-link" aria-label="第6章　就业选择：列出你的选择的直接链接" title="第6章　就业选择：列出你的选择的直接链 接">​</a></h3>
+<p>雇员</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第7章你是哪类软件开发人员">第7章　你是哪类软件开发人员<a href="#第7章你是哪类软件开发人员" class="hash-link" aria-label="第7章　你是哪类软件开发人员的直接链接" title="第7章　你是哪类软件开发人员的直接链接">​</a></h3>
+<p>专业：后端开发，主要是web api，
+其它广泛：前端开发、NAS、嵌入式，还有很多零散知识网络、硬件、电脑安装、电脑系统重装、手机刷机
+TODO：自我认识，专业选择</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第8章公司与公司是不一样的">第8章　公司与公司是不一样的<a href="#第8章公司与公司是不一样的" class="hash-link" aria-label="第8章　公司与公司是不一样的的直接链接" title="第8章　公司与公司是不一样的的直接链接">​</a></h3>
+<p>|公司规模 |优点 |缺点 |
+|:--|
+|小公司 |承担多种职责，灵活的角色转换 对工作的影响较大 回报潜力大 |没法安静地坐下来写代码 工作在众目睽睽之下 稳定性差 |
+|中等规模公司 |工作稳定 加班较少 |变化很慢低下 没有机会使用前沿技术 |
+|大公司 |完备的流程和规范 培训机会多 大型有影响力的项目 |充斥着官僚主义作风 可能只负责代码库的一小部分 很难获得关注 |</p>
+<p>希望的环境：富有挑战性，并有人能并肩前进。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第9章攀登晋升阶梯">第9章　攀登晋升阶梯<a href="#第9章攀登晋升阶梯" class="hash-link" aria-label="第9章　攀登晋升阶梯的直接链接" title="第9章　攀登晋升阶梯的直接链接">​</a></h3>
+<ul>
+<li>承担责任，别人都不肯接手的东西会是一个机会</li>
+<li>引人注目，勤总结，让别人知道你在做什么</li>
+<li>保持学习，并分享</li>
+<li>解决问题，而不只是提出问题</li>
+<li>没有机会，离开  是更好的选择</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第10章成为专业人士">第10章　成为专业人士<a href="#第10章成为专业人士" class="hash-link" aria-label="第10章　成为专业人士的直接链接" title="第10章　成为专业人士的直接链接">​</a></h3>
+<p>把专业当成一种习惯，习惯是不容易增减的。
+保持专业底线，否则越来越没有底线。
+要为专业说不，而不是不断妥协。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第11章赢得自由如何辞职">第11章　赢得自由——如何辞职<a href="#第11章赢得自由如何辞职" class="hash-link" aria-label="第11章　赢得自由——如何辞职的直接链接" title="第11章　赢得自由——如何辞职的直接链接">​</a></h3>
+<p>已读，以后复读</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第12章成为自由职业者开启自己的一片天地">第12章　成为自由职业者：开启自己的一片天地<a href="#第12章成为自由职业者开启自己的一片天地" class="hash-link" aria-label="第12章　成为自由职业者：开启自己的一片天地的直接链接" title="第12章　成为自由职业者：开启自己的一片天地的直接链接">​</a></h3>
+<p>最好的情形是工作任务已经提前安排妥当，或者处于工作太多不得不推掉一些的状态。
+“吸引式营销”基本上就是让潜在的客户主动送上门，而不是你去找他们。你要做的事情就是免费提供有价值的东西。
+表12-1 全职雇员与自由职业者对比</p>
+<p>|全职雇员的薪酬 |自由职业者的薪酬 |
+|:--|
+|每小时50美元 －无 |每小时100美元 － 自主就业税 － 办公设备 － 会计或者记账员 － 非计费时间 |
+|实际收入=每小时50美元 |实际收入=每小时50美元 |</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第13章创建你的第一个产品">第13章　创建你的第一个产品<a href="#第13章创建你的第 一个产品" class="hash-link" aria-label="第13章　创建你的第一个产品的直接链接" title="第13章　创建你的第一个产品的直接链接">​</a></h3>
+<p>通常的误区，做一个产品再找用户。
+更好的方法是，针对特定用户的需求开发产品。
+测试市场，讲解产品，之后看是否有人原因为此提前买单（可随时退款）。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第14章你打算开始创业吗">第14章　你打算开始创业吗<a href="#第14章你打算开始创业吗" class="hash-link" aria-label="第14章　你打算开始创业吗的直接链接" title="第14章　你打算开始创业吗的直接链接">​</a></h3>
+<ul>
+<li>外部投资创业</li>
+<li>自力更生创业</li>
+</ul>
+<p>无论你的整体退出策略是什么，了解这一点非常重要——获得外部投资的创业公司通常都抱有希望未来有一天可以获得巨额回报的目的。所以，如果你为人保守，你并不适合创立这类公司。创业型公司通常就是为了等待“全垒打[1]**”的机会。
+<img decoding="async" loading="lazy" alt="alt text" src="/assets/images/image-278fd487f2ba79856fdca5f9e1be7c92.png" width="771" height="605" class="img_ev3q"></p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第15章远程工作的生存策略">第15章　远程工作的生存策略<a href="#第15章远程工作的生存策略" class="hash-link" aria-label="第15章　远程工作的生存策略的直接链接" title="第15章　远程工作的生存策略的直接链接">​</a></h3>
+<ul>
+<li>时间管理，规划时间工作，并在该时间内保持专注，而不是认为自己可以利用零散时间</li>
+<li>自我激励，培养工作习惯，并远离所有诱惑，不要相信自己能抵御诱惑，尝试15分钟专注模式</li>
+<li>孤独感，如果你不喜欢孤独感，走出去，与他人交流，能避免疯掉</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第16章假装自己能成功">第16章　假装自己能成功<a href="#第16章假装自己能成功" class="hash-link" aria-label="第16章　假装自己能成功的直接链接" title="第16章　假装自己能成功的直接链接">​</a></h3>
+<p>遇到困难时，相信自己有能力解决，即使当前不具备解决的能力，但慢慢地肯定能解决。注意不是不懂装懂！
+想想曾经遇到的困难，最终也是一一被解决</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第17章单调乏味的简历如何修改">第17章　单调乏味的简历——如何修改<a href="#第17章单调乏味的简历如何修改" class="hash-link" aria-label="第17章　单调乏味的简历——如何修改的直接链接" title="第17章　单调乏味的简历——如何修改的直接链接">​</a></h3>
+<ul>
+<li>A：专业的事情，交给专业的人（还必须熟悉你的行业的人）去做，提供足够的资料展现自己。</li>
+<li>B：自己写，看下方提示</li>
+</ul>
+<p>改善简历的提示</p>
+<p>|提示 |好处 |
+|:--|
+|把简历放到网上 |确保雇主能够很容易访问你的简历。如果你申请Web开发的职位，这一点尤其重要 |
+|简历要有创意 |简历样式不落俗套，别人一眼扫过去就会被深深吸引 |
+|使用“行动-结果”的描述 |你的简历应该展现你都做了哪些工作及相应的结果。这样你的潜在雇主既能了解你会干什么，还能了解你能取得的成果，以及雇用你会给他们带来的收益 |
+|校对 |即使是聘请专业的简历写手，你也要通篇校对。简历里有错别字或拼写错误会让人觉得你粗心大意 |</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第18章请勿陷入对技术的狂热之中">第18章　请勿陷入对技术的狂热之中<a href="#第18章请勿陷入对技术的狂热之中" class="hash-link" aria-label="第18章　请勿陷入对技术的狂热之中的直接链接" title="第18章　请勿陷入对技术的狂热之中的直接链接">​</a></h3>
+<p>技术具有时间局限性，没有最好只有更好。
+保持对技术的开放心态，不要轻视。</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="第二篇自我营销">第二篇：自我营销<a href="#第二篇自我营销" class="hash-link" aria-label="第二篇：自我营销的直接链接" title="第二篇：自我营销的直接链接">​</a></h2>
+<p>重新理解营销
+营销追求的是“实现价值在先，要求回报在后”。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第19章针对码农的营销基础课">第19章　针对“码农”的营销基础课<a href="#第19章针对码农的营销基础课" class="hash-link" aria-label="第19章　针对“码农”的营销基础课的直接链接" title="第19章　针对“码农”的营销基础课的直接链接">​</a></h3>
+<p>|方式 |描述 |
+|:--|
+|博客 播客 视频 给杂志投稿 书籍 代码营 技术会议 |你自己的博客，以及你在别人的博客上发表的特邀文章 创建自己的播客频道，同时接受其他播客频道的访谈 在YouTube这样的视频网站上上传自己的分享内容和课程主题视频 给软件开发相关的杂志写文章 著书或者自出版 大多数代码营都允许参加者自由发言 拓展社交网络的好方法，如果能在研讨会上发言尤佳 |</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第20章打造引人注目的品牌">第20章　打造引人注目的品牌<a href="#第20章打造引人注目的品牌" class="hash-link" aria-label="第20章　打造引人注目的品牌的直接链接" title="第20章　打造引人注目的品牌的直接链接">​</a></h3>
+<p>品牌是对产品或服务的一整套预期。商标仅仅是品牌的视觉符号而已。
+“电梯内销售概要”是指用两到三句话概括一个产品、一个提案或一个项目，向潜在的买家或赞助人做介绍。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第21章创建大获成功的博客">第21章　创建大获成功的博客<a href="#第21章创建大获成功的博客" class="hash-link" aria-label="第21章　创建大获成功的博客的直接链接" title="第21章　创建大获成功的博客的直接链接">​</a></h3>
+<p>即使不看其它优点，有一点也很重要，写博客能提升表达能力。
+写博客的效果在于频率高低，在于是否能够持之以恒，以较好的质量输出。
+内容，有价值的内容。
+不要太担心你的文笔如何，不要太在意别人的想法。
+创建一个流动的博客文章主题列表。每当有新想法，就把它添加到这个列表中。在需要写新博文的时候，文章主题就能够信手拈来。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第22章你的主要目标为他人增加价值">第22章　你的主要目标：为他人增加价值<a href="#第22章你的主要目标为他人增加价值" class="hash-link" aria-label="第22章　你的主要目标：为他人增加价值的直接链接" title="第22章　你的主要目标：为他人增加价值的直接链接">​</a></h3>
+<blockquote>
+<p><strong>不要努力成为一个成功的人，而要努力成为一个有价值的人。</strong>
+——阿尔伯特·爱因斯坦</p>
+</blockquote>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="把你工作成果的90都做成免费的">把你工作成果的90%都做成免费的<a href="#把你工作成果的90都做成免费的" class="hash-link" aria-label="把你工作成果的90%都做成免费的的直接链接" title="把你工作成果的90%都做成免费的的直接链接">​</a></h4>
+<p>帮助别人越多，面对的问题和情况越多，就能结交的人也越多。总是帮助他人解决问题的人，在解决他们自己的问题的时候会是更加轻松自如，而当他们真遇到障碍的时候，总是会有好多人伸出援手。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第23章善于运用社交媒体">第23章　善于运用社交媒体<a href="#第23章善于运用社交媒体" class="hash-link" aria-label="第23章　善于运用社交媒体的直接链接" title="第23章　善于运用社交媒体的直接链接">​</a></h3>
+<p>|方式 |内容 |
+|:--|
+|博客文章 |转帖一些博客文章，或者自己的博客 |
+|新闻报道 |转载一些有趣的文章，尽量与你的细分领域有关，或者与软件开发相关 |
+|励志名言 |名人名言，特别是鼓舞人心、非常流行的名言警句 |
+|技巧、小窍门 |任何你所了解的特殊技巧或者知识，别人会很欣赏 |
+|幽默故事 |发一点儿幽默故事挺不错的，但是一定要确保确实好笑，另外千万别冒犯别人 |
+|吸引人的问题 |这是一个很棒的吸引你的听众并和他们互动的方法 |
+|自己的一些推广活动 |别太多，并且跟其他内容混合在一起 |</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第24章演讲报告和培训做说话的极客">第24章　演讲、报告和培训：做“说话的极客”<a href="#第24章演讲报告和培训做说话的极客" class="hash-link" aria-label="第24章　演讲、报告和培训：做“说话的极客”的直接链接" title="第24章　演讲、报告和培训：做“说话的极客”的直接链接">​</a></h3>
+<p>先从小群体开始，循序渐进。
+你要记住，作为人类，我们拥有良好的适应能力。只要你把一件事情重复足够多次，你自然就会接纳它。伞兵们第一次跳出机舱的时候都很害怕，但是经过多次成功跳伞之后，恐惧最终都会消失。如果你一直坚持在公共场合发表演说，你一定会应对自如，恐惧感终将消散。
+TODO</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第25章著书立说吸引追随者">第25章　著书立说，吸引追随者<a href="#第25章著书立说吸引追随者" class="hash-link" aria-label="第25章　著书立说，吸引追随者的直接链接" title="第25章　著书立说，吸引追随者的直接链接">​</a></h3>
+<p>TODO</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第26章百折不挠越挫越勇">第26章　百折不挠，越挫越勇<a href="#第26章百折不挠越挫越勇" class="hash-link" aria-label="第26章　百折不挠，越挫越勇的直接链接" title="第26章　百折不挠，越挫越勇的直接链接">​</a></h3>
+<p>人们在第一次时，总会觉得不适，但次数多了，就会适应，人的适应能力是很强的。
+在我的职业生涯中，我一共错失了9 000多次投篮，输掉了近300场比赛。我本来有26次绝杀的机会却投球不进。我失败了一次又一次。这就是我能够成功的原因。
+——迈克尔·乔丹</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="第三篇学习">第三篇：学习<a href="#第三篇学习" class="hash-link" aria-label="第三篇：学习的直接链接" title="第三篇：学习的直接链接">​</a></h2>
+<p><strong>教育就是当一个人把在学校所学全部忘光之后剩下的东西。</strong>
+——阿尔伯特•爱因斯坦</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第27章学习怎样学习如何自我教育">第27章　学习怎样学习：如何自我教育<a href="#第27章学习怎样学习如何自我教育" class="hash-link" aria-label="第27章　学习怎样学习：如何自我教育的直接链接" title="第27章　学习怎样学习：如何自我教育的直接链接">​</a></h3>
+<p>纸上得来终觉浅,绝知此事要躬行
+捷径：学习，实践，教育。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第28章我的十步学习法">第28章　我的“十步学习法”<a href="#第28章我的十步学习法" class="hash-link" aria-label="第28章　我的“十步学习法”的直接链接" title="第28章　我的“十步学习法”的直接链接">​</a></h3>
+<p>用20%内容，达80%效果
+<img decoding="async" loading="lazy" alt="alt text" src="/assets/images/image-1-0a90e1aa0d9adc356c52d5f04a93a95f.png" width="527" height="725" class="img_ev3q"></p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第29章第-1-步到第-6-步这些步骤只做一次">第29章　第 1 步到第 6 步：这些步骤只做一次<a href="#第29章第-1-步到第-6-步这些步骤只做一次" class="hash-link" aria-label="第29章　第 1 步到第 6 步：这些步骤只做一次的直接链接" title="第29章　第 1 步到第 6 步：这些步骤只做一次的直接链接">​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="第1步了解全局">第1步：了解全局<a href="#第1步了解全局" class="hash-link" aria-label="第1步：了解全局的直接链接" title="第1步：了解全局的直接链接">​</a></h4>
+<p>搞清楚，学的是什么，有什么，整体的轮廓。</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="第2步确定范围">第2步：确定范围<a href="#第2步确定范围" class="hash-link" aria-label="第2步：确定范围的直接链接" title="第2步：确定范围的直接链接">​</a></h4>
+<p>选择一个范围，一个你能掌握的范围，需要具体的。还要考虑使用的时间，需要与时间匹配。</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="第3步定义目标">第3步：定义目标<a href="#第3步定义目标" class="hash-link" aria-label="第3步：定义目标的直接链接" title="第3步：定义目标的直接链接">​</a></h4>
+<p>一个检验学习效果的目标，这个目标是具体的，标准的，能判断的。</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="第4步寻找资源">第4步：寻找资源<a href="#第4步寻找资源" class="hash-link" aria-label="第4步：寻找资源的直接链接" title="第4步：寻找资源的直接链接">​</a></h4>
+<p>通过各种途径，找到学习所需的资源。尽可能多，而不是单一的，可以避免产生偏见。</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="第5步创建学习计划">第5步：创建学习计划<a href="#第5步创建学习计划" class="hash-link" aria-label="第5步：创建学习计 划的直接链接" title="第5步：创建学习计划的直接链接">​</a></h4>
+<p>学习路径（大纲），可参考书籍目录（多种对比）。</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="第6步筛选资源">第6步：筛选资源<a href="#第6步筛选资源" class="hash-link" aria-label="第6步：筛选资源的直接链接" title="第6步：筛选资源的直接链接">​</a></h4>
+<p>过滤出比较有用的资源，可通过评价等进行筛选。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第30章第7步到第10步循环往复">第30章　第7步到第10步：循环往复<a href="#第30章第7步到第10步循环往复" class="hash-link" aria-label="第30章　第7步到第10步：循环往复的直接链接" title="第30章　第7步到第10步：循环往复的直接链接">​</a></h3>
+<p>步骤7到步骤10的目标是通过“学习—实践—掌握—教授”（LDLT）的方式真正领会知识。</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="第7步开始学习浅尝辄止">第7步：开始学习，浅尝辄止<a href="#第7步开始学习浅尝辄止" class="hash-link" aria-label="第7步：开始学习，浅尝辄止的直接链接" title="第7步：开始学习，浅尝辄止的直接链接">​</a></h4>
+<p>掌握基本知识即可动手，通读反而使行动过晚。
+想象你买了一台游戏机，我想也不会把说明书全看一遍。一般都是遇到问题才看对应章节。</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="第8步动手操作边玩边学">第8步：动手操作，边玩边学<a href="#第8步动手操作边玩边学" class="hash-link" aria-label="第8步：动手操作，边玩边学的直接链接" title="第8步：动手操作，边玩边学的直接链接">​</a></h4>
+<p>一般学习，人们总会预设条件进行。可以尝试跳出这些既有的路径，自己进行探索，遇到问题，记录问题，解决问题，回过头时，会发现掌握得更多。就像那句，知其然，知其所以  然。</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="第9步全面掌握学以致用">第9步：全面掌握，学以致用<a href="#第9步全面掌握学以致用" class="hash-link" aria-label="第9步：全面掌握，学以致用的直接链接" title="第9步：全面掌握，学以致用的直接链接">​</a></h4>
+<p>解决记录的问题。</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="第10步乐为人师融会贯通">第10步：乐为人师，融会贯通<a href="#第10步乐为人师融会贯通" class="hash-link" aria-label="第10步：乐为人师，融会贯通的直接链接" title="第10步：乐为人师，融会贯通的直接链接">​</a></h4>
+<p>你告诉我的，我都忘了。你教会我的，我都记得。让我乐在其中，我就一定能学会。
+——本杰明·富兰克林
+尝试将你学会的知识传授给他人，你会发现，其实你并不是完全掌握，直至你把他人教会。</p>
+<h5 class="anchor anchorWithStickyNavbar_LWe7" id="教授知识的途径">教授知识的途径<a href="#教授知识的途径" class="hash-link" aria-label="教授知识的途径的直接链接" title="教授知识的途径的直接链接">​</a></h5>
+<ul>
+<li>撰写博客文章</li>
+<li>创建YouTube视频教程</li>
+<li>发表演讲</li>
+<li>与朋友或爱人进行对话探讨</li>
+<li>在在线论坛上回答问题</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="最后的思考">最后的思考<a href="#最后的思考" class="hash-link" aria-label="最后的思考的直接链接" title="最后的思考的直接链接">​</a></h4>
+<p>上面的步骤不一定时候你，但是关键是步骤背后的理念。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第31章寻找导师找到你的尤达">第31章　寻找导师：找到你的尤达<a href="#第31章寻找导师找到你的尤达" class="hash-link" aria-label="第31章　寻找导师：找到你的尤达的直接链接" title="第31章　寻找导师：找到你的尤达的直接链  接">​</a></h3>
+<h5 class="anchor anchorWithStickyNavbar_LWe7" id="寻找导师时的检查单">寻找导师时的检查单<a href="#寻找导师时的检查单" class="hash-link" aria-label="寻找导师时的检查单的直接链接" title="寻找导师时的检查单的直接链接">​</a></h5>
+<ul>
+<li>他们做到了我想要去做的？</li>
+<li>他们曾经帮助他人做到了我想做的？</li>
+<li>他们现在取得了什么可以展示的成就？</li>
+<li>你能和这个人和睦相处？他充满智慧吗？</li>
+</ul>
+<p>TODO有需要再复读</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第32章开山收徒成为尤达一样的大师">第32章　开山收徒：成为尤达一样的大师<a href="#第32章开山收徒成为尤达一样的大师" class="hash-link" aria-label="第32章　开山收徒：成为尤达一样的大师的直接链接" title="第32章　开山收徒：成为尤达一样的大师的直接链接">​</a></h3>
+<p>我们在生活中都需要别人的帮助以看到自己看不到的东西，因为当遇到涉及自身的问题和麻烦的时候，我们都会有些目光短浅。
+你指导的每一个人，就好比是你埋下的种子。种下的种子足够多，终有一粒会长成参天大树，为你遮风挡雨。</p>
+<h5 class="anchor anchorWithStickyNavbar_LWe7" id="做导师的好处">做导师的好处<a href="#做导师的好处" class="hash-link" aria-label="做导师的好处的直接链接" title="做导师的好处的直接链接">​</a></h5>
+<ul>
+<li>帮助他人时的成就感。</li>
+<li>深入学习和领悟知识的途径。</li>
+<li>你的徒弟有朝一日会帮到你。</li>
+<li>自身的成长。帮助别人成长的过程也就是自己成长的过程。</li>
+</ul>
+<p>那些因为懒惰不愿意付出而向你寻求帮助的人，不配做你的门徒。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第34章你需要一个学位吗还是可以对此忽略不计">第34章　你需要一个学位吗，还是可以对此忽略不 计<a href="#第34章你需要一个学位吗还是可以对此忽略不计" class="hash-link" aria-label="第34章　你需要一个学位吗，还是可以对此忽略不计的直接链接" title="第34章　你需要一个学位吗，还是可以对此忽略不计的直接链接">​</a></h3>
+<p>我不想在这里过分强调学位的重要性，但我希望你能明白，没有学位会限制你的选择。在这个大前提下，我确信，学位并不是成功的必备条件。
+在软件开发领域，能力最为重要。与一纸学历证明相比，如果你能写好代码，能解决问题，能证明自己有此能力，你就能走得更远。
+自学的时候，注意知识体系，避免产生漏洞。
+表34-1 学位的好处和缺点</p>
+<p>|学位的好处 |学位的缺点 |
+|:--|
+|接受有关软件开发方面的全面的系统教育 |花费原本可以赚钱的时间去学习 |
+|无需经验就可以入行 |可能会受困于思维定势，难以打破 |
+|有更多选择，更容易转到行政或管理岗位 | |</p>
+<p>当年选择了一个低一级的学历，那就注定需要更努力。相信时间会证明一切。</p>
+<p>如果学历不够，就使用工作经验，作品，代码贡献。</p>
+<p>另外，可以选择认证证书。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第35章发现自己的知识短板">第35章　发现自己的知识短板<a href="#第35章发现自己的知识短板" class="hash-link" aria-label="第35章　发现自己的知识短板的直接链接" title="第35章　发现自己的知识短板的直接链接">​</a></h3>
+<p>我们能发现并消除的知识短板越多，长久来看我们从中受益越多。
+有时候，我们并不是不知道自己的短板，只是选择了无视或者掩饰。
+但也有的短板是我们自己无法清楚意识到的。</p>
+<p>通常，短板会使你的工作效率降低，每次遇到都需要花费时间去重新摸索。这样就会产生很多重复性的劳动。</p>
+<p>另一种识别知识短板的方法就是，时刻都要试图了解自己不理解或不清楚的事物。你可以维护一份清单，列出自己需要去研究或者自己不清楚的所有事物，追踪有哪些主题总是不断出现在这个清单上。</p>
+<p>剩下就是好好学习，解决短板。</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="第四篇生产力">第四篇：生产力<a href="#第四篇生产力" class="hash-link" aria-label="第四篇：生产力的直接链接" title="第四篇：生产力的直接链接">​</a></h2>
+<p>做该做的工作</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第36章一切始于专注">第36章　一切始于专注<a href="#第36章一切始于专注" class="hash-link" aria-label="第36章　一切始于专注的直接链接" title="第36章　一切始于专注的直接链接">​</a></h3>
+<p>产量多只表明生产效率高，只有完成正确的工作才会成为高效的人。
+就像CPU执行前的上下文切换一样，人脑切换任务也需要进行环境切换。
+专注会使思考更加高效。</p>
+<p>拿开那些能使你分心的因数</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第37章我的私房生产力提升计划">第37章　我的私房“生产力提升计划”<a href="#第37章我的私房生产力提升计划" class="hash-link" aria-label="第37章　我的私房“生产力提升计划”的直接链接" title="第37章　我的私房“生产力提升计划”的直接链接">​</a></h3>
+<p>TODO
+劳逸结合</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第38章番茄工作法">第38章　番茄工作法<a href="#第38章番茄工作法" class="hash-link" aria-label="第38章　番茄工作法的直接链接" title="第38章　番茄工作法的直接链接">​</a></h3>
+<p>TODO</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第39章我的定额工作法我是如何做到超额完成工作的">第39章　我的“定额工作法”：我是如何做到超额完成工作的<a href="#第39章我  的定额工作法我是如何做到超额完成工作的" class="hash-link" aria-label="第39章　我的“定额工作法”：我是如何做到超额完成工作的的直接链接" title="第39章　我的“定额工作法”：我是如何做到超额完成工作的的直接链接">​</a></h3>
+<h5 class="anchor anchorWithStickyNavbar_LWe7" id="定额工作法的规则">定额工作法的规则<a href="#定额工作法的规则" class="hash-link" aria-label="定额工作法的规则的直接链接" title="定额工作法的规则的直接链接">​</a></h5>
+<ul>
+<li>挑选一项重复性任务。</li>
+<li>明确有效时限，在此期间该任务被重复执行。</li>
+<li>明确在给定的有效时限内该任务应该完成的次数的定额。</li>
+<li>给自己承诺：一定要达成定额。</li>
+<li>调整。调高或者调低定额，但是不能在有效时间段之内调整。</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第40章对自己负责">第40章　对自己负责<a href="#第40章对自己负责" class="hash-link" aria-label="第40章　对自己负责的直接链接" title="第40章　对自己负责的直接链接">​</a></h3>
+<p>如果你想不再依赖别人的影响，获得稳定、可预测的结果，你就要学会对自己负责。
+要培养“对自己负责”的精神，首先要让自己的生活井然有序。如果不知道应该做的事情是什么，就不能真正为自己所做的任何事情承担责任。
+请别人来监督自己履行责任，完成自己的承诺，并没有坏处。找到责任监督伙伴——理想情况下，最好是跟你有类似目标的人，这样会很有帮助。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第41章要不要多任务并行">第41章　要不要多任务并行<a href="#第41章要不要多任务并行" class="hash-link" aria-label="第41章　要不要多任务并行的直接链接" title="第41章　要不要多任务并行的直接链接">​</a></h3>
+<p>多任务导致效率低下  的根本原因似乎在于，我们根本没有能力真正去践行多任务并行。
+如果你每天都因为有多个任务要完成就深陷多任务并行的泥潭，最好学会如何批量处理这些任务，一次性完成一系列互相关联的任务，而不是将它们拆分完成。
+将一项不费脑筋的任务和一项一定程度上需要精神专注才能完成的任务组合起来。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第42章职业倦怠我已找到解药">第42章　职业倦怠：我已找到解药<a href="#第42章职业倦怠我已找到解药" class="hash-link" aria-label="第42章　职业倦怠：我已找到解药的直接链接" title="第42章　职业倦怠：我已找到解药的直接链接">​</a></h3>
+<p>作为人类，我们往往会对刚出现的新鲜事物激动不已。但是之后，因为对它们习以为常了，我们要么把这它们看作是理所当然的，要么会心生厌烦。</p>
+<p>采取行动</p>
+<blockquote>
+<ul>
+<li>想一想以前都有哪些项目是你付出努力却没有最终完成而半途而废了。是什么原因让你放弃的？你现在对这件事儿有什么感受？</li>
+</ul>
+</blockquote>
+<ul>
+<li>下次开始新项目的时候，下定决心：你一定会完成，或者完全掌握。设定规则和约束条件，强迫自己穿过那堵不可避免的墙。</li>
+<li>如果你正面临职业生涯或者个人生活中的一堵墙，试着去穿越它。想想在墙的另一侧会有怎样的收获等着你。想象自己的动机和兴趣终将获得回报。</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第43章时间是怎样被浪费掉的">第43章　时间是怎样被浪费掉的<a href="#第43章时间是怎样被浪费掉的" class="hash-link" aria-label="第43章　时间是怎样被浪费掉的的直接链接" title="第43章　时间是怎样被浪费掉的的直接链接">​</a></h3>
+<h5 class="anchor anchorWithStickyNavbar_LWe7" id="一些常见的时间杀手">一些常见的时 间杀手<a href="#一些常见的时间杀手" class="hash-link" aria-label="一些常见的时间杀手的直接链接" title="一些常见的时间杀手的直接链接">​</a></h5>
+<ul>
+<li>看电视。</li>
+<li>社交媒体。</li>
+<li>新闻网站。</li>
+<li>不必要的会议。</li>
+<li>烹饪。</li>
+<li>玩电子游戏（尤其是网络游戏）。</li>
+<li>工间喝咖啡休息。</li>
+</ul>
+<p>为了享受快乐有意识地做这些事情，就不是浪费时间，只要你是因为喜欢才特意做这些事情，而不是为了逃避自己应该完成的实际工作。</p>
+<p>尝试跟踪时间花费</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第44章形成惯例的重要性">第44章　形成惯例的重要性<a href="#第44章形成惯例的重要性" class="hash-link" aria-label="第44章　形成惯例的重要性的直接链接" title="第44章　形成惯例的重要性的直接链接">​</a></h3>
+<p>生产力的真正秘诀在于：长期坚持做一些小事。</p>
+<p>地雷：注意不要过于沉迷于惯例</p>
+<blockquote>
+<p>你应该有自己遵循的惯例，但是也要有一定的灵活性。你可能会打乱一天的日程安排。不要忘记会有像车坏了这种不可预测的事件发生，车坏了可能会打乱你的例行安排。你需要学会从容应对这些事情。</p>
+</blockquote>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第45章培养习惯刷新你的代码">第45章　培养习惯：刷新你的代码<a href="#第45章培养习惯刷新你的代码" class="hash-link" aria-label="第45章　培养习惯：刷新你的代码的直接链接" title="第45章　培养习惯：刷新你的代码的直接链接">​</a></h3>
+<p><strong>成就我们的恰恰就是那些不断重复做的事情。因此，优秀不是一种行为，而是一种习惯。</strong>
+——亚里士多德
+然而，奇怪的是，可变化的奖励要比已知的标准奖励更让人着迷。
+要找出坏习惯，最好的办法就是设法找到日常生活中  令你感到内疚的事情或惯例。什么事情你想停下来却又总是推迟到另一天？
+有时候，你甚至会发现，所谓的“奖励”不过是个幻象——一个你期望能够实现却从未兑现的承诺。例如，许多人都有买彩票的习惯，因为他们认为自己会中奖，尽管他们从未中过奖。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第46章分解任务如何吃掉一头大象">第46章　分解任务：如何吃掉一头大象<a href="#第46章分解任务如何吃掉一头大象" class="hash-link" aria-label="第46章　分解任务：如何吃掉一头大象的直接链接" title="第46章　分解任务：如何吃掉一头大象的直接链接">​</a></h3>
+<p>要吃掉一头大象，每次吃一口。
+——克雷顿·艾布拉姆斯（Creighton Abrams）
+分解任务，使每个任务都有明确的目标。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第47章努力工作的价值以及为什么你总是逃避努力工作">第47章　努力工作的价值，以及为什么你总是逃避努力工作<a href="#第47章努力工作的价值以及为什么你总是逃避努力工作" class="hash-link" aria-label="第47章　努力工作的价值，以及为什么你总是逃避努力工作的直接链接" title="第47章　努力工作的价值，以及为什么你总是逃避努力工作的直接链接">​</a></h3>
+<p><strong>赛跑比的是谁耐力更长久，而不是看谁冲刺更有力。</strong>
+——约翰·杰克斯，《北与南》（North and South）</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第48章任何行动都比不采取行动好">第48章　任何行动都比不采取行动好<a href="#第48章任何行动都比不采取行动好" class="hash-link" aria-label="第48章　任何行动都比不采取行动好的直接链接" title="第48章　任何行动都比不采取行动好的直接链接">​</a></h3>
+<p>但是，为什么还有那么多人选择不采取行动呢？
+我知道，对我来说原因很简单——恐惧。我斗胆猜测你的原因也一样。恐惧出错，恐惧把事情搞砸了，恐惧后果不可估量或失败，恐惧改变，恐惧做不一样的事情。
+也许你想学弹吉他，也许你现在工作不开心想找个新工作，也许你的财务状况需要进行大的调整。无论你在逃避什么，无论是什么在困扰着你，都不要拒绝采取行动。当下就是行动的时刻。当下就是决策的时刻。
+通常，无所作为就像坐在一辆停着的汽车上转动方向盘。你有转过停着的汽车的方向盘吗？这并不容易。但是，当车子开起来的时候再去转方向盘就容易多了。</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="第五篇理财">第五篇：理财<a href="#第五篇理财" class="hash-link" aria-label="第五篇：理财的直接链接" title="第五篇：理财的直接链接">​</a></h2>
+<p><strong>金钱只是一种工具。它会带你去往任何你想去的地方，但不会取代你成为司机。</strong>
+——爱思•然德（Ayn Rand）</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第49章怎样支配你的薪水">第49章　怎样支配你的薪水<a href="#第49章怎样支配你的薪水" class="hash-link" aria-label="第49章　怎样支配你的薪水的直接链接" title="第49章　怎样支配你的薪水的直接链接">​</a></h3>
+<p>事实证明，赚钱多并不能让一个人在财务上更精明。
+所谓资产，是指实用价值高于维护成本的东西。也就意味着，一样东西如果有资格被定义为“资产”，必须能够带来比自身成本更高的价值。
+如果你用自己工作赚来的钱去购买不需要辛苦工作就能够增值的资产，那么你最终只需要做相同或更少的工作就能赚到更多的钱。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第50章怎样进行薪酬谈判">第50章　怎样进行薪酬谈判<a href="#第50章怎样进行薪酬谈判" class="hash-link" aria-label="第50章　怎样进行薪酬谈判的直接链接" title="第50章　怎样进行薪酬谈判的直接链接">​</a></h3>
+<p>薪资结构包含福利。
+不轻易透露自己的预期。
+清楚自己的价值。
+保持自信，不要傲慢。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第51章期权所有乐趣之所在">第51章　期权：所有乐趣之所在<a href="#第51章期权所有乐趣之所在" class="hash-link" aria-label="第51章　期权：所有乐趣之所在的直接链接" title="第51章　期权：所有乐趣之所在的直接链接">​</a></h3>
+<p>还是很难理解</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第52章房地产投资面面观">第52章　房地产投资面面观<a href="#第52章房地产投资面面观" class="hash-link" aria-label="第52章　房地产投资面面观的直接链接" title="第52章　房地产投资面面观的直接链接">​</a></h3>
+<p>要考虑的事情太多，需要复读</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第53章你真的了解自己的退休计划吗">第53章　你真的了解自己的退休计划吗<a href="#第53章你真的了解自己的退休计划吗" class="hash-link" aria-label="第53章　你真的了解自己的退休计划吗的直接链接" title="第53章　你真的了解自己的退休计划吗的直接链接">​</a></h3>
+<p>现在先存钱，再慢慢研究投资。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第54章债务的危害社保债务1代价昂贵">第54章　债务的危害：社保债务[1]代价昂贵<a href="#第54章债务的危害社保债务1代价昂贵" class="hash-link" aria-label="第54章　债务的危害：社保债务[1]代价昂贵的直接链接" title="第54章　债务的危害：社保债务[1]代价昂贵的直接链接">​</a></h3>
+<p>认清债务的利率，以及和存款的利差。
+如果有债务，利率高的优先还清。
+避免所有不必要的债务，不要为买而买，即使利率为0。先存钱再买。
+当然也有例外 的债务，利用债务赚钱，可以理解为投资，但这种机会极少。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第55章额外馈赠我是如何做到33岁退休的">第55章　额外馈赠：我是如何做到33岁退休的<a href="#第55章额外馈赠我是如何做到33岁退休的" class="hash-link" aria-label="第55章　额外馈赠：我是如何做到33岁退休的的直接链接" title="第55章　额外馈赠：我是如何做到33岁退休的的直接链接">​</a></h3>
+<p>他的故事。</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="第六篇健身">第六篇：健身<a href="#第六篇健身" class="hash-link" aria-label="第六篇：健身的直接链接" title="第六篇：健身的直接链接">​</a></h2>
+<p><strong>人的身体就是人的灵魂的最好写照。</strong>
+——路德维希•维特根斯坦
+身体是革命的本钱。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第56章为什么需要破解自己的健康密码">第56章　为什么需要破解自己的健康密码<a href="#第56章为什么需要破解自己的健康密码" class="hash-link" aria-label="第56章　为什么需要破解自己的健康密码的直接链接" title="第56章　为什么需要破解自己的健康密码的直接链接">​</a></h3>
+<p><strong>健身不仅是保持健康体魄的关键要素之一，也是灵活的、具有创造性的脑力活动的基础。</strong>
+——约翰·肯尼迪
+不要让自己醒悟得太晚，从现在起就认真对待。不要等到出了健康问题才开始关心自己的健康。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第57章设定你的健身标准">第57章　设定你的健身标准<a href="#第57章设定你的健身标准" class="hash-link" aria-label="第57章　设定你的健身标准的直接链接" title="第57章　设定你的健身标准的直接链接">​</a></h3>
+<p>没有目标，那努力也是徒劳。
+一个明确的目标才能至于与自己扯皮。</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="采取行动">采取行动<a href="#采取行动" class="hash-link" aria-label="采取行动的直接链接" title="采取行动的直接链接">​</a></h4>
+<ul>
+<li>确定一个大的健身目标，写下来。</li>
+<li>接着，列出一系列切合实际的里程碑来实现这一目标。</li>
+<li>确定自己实现第一个里程碑要采取的行动。</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第58章热力学热量和你">第58章　热力学、热量和你<a href="#第58章热力学热量和你" class="hash-link" aria-label="第58章　热力学、热量和你的直接链接" title="第58章　热力学、热量和你的直接链接">​</a></h3>
+<p>采取行动</p>
+<blockquote>
+<ul>
+<li>跟踪至少3天你摄入的卡路里总量，这会让你正确了解自己的热量摄入。在进行跟踪记录之前，做一个估算，然后看看是否与实际结果接近。</li>
+</ul>
+</blockquote>
+<ul>
+<li>计算一下你的新陈代谢率，并使用哈里斯-本尼迪克特公式近似计算每天燃烧的热量的近似值。将这一数值与每天摄入的卡路里数量进行比较。看看自己的重量是在增加还是在减少。</li>
+<li>不论是要减肥还是要增重，利用这些信息制订一个基础计划，要同时考虑热量和运动量两个方面。</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第59章动力让你的屁股离开椅子">第59章　动力：让你的屁股离开椅子<a href="#第59章动力让你的屁股离开椅子" class="hash-link" aria-label="第59章　动力：让你的屁股离开椅子的直接链接" title="第59章　动力：让你的屁股离开椅子的直接链接">​</a></h3>
+<p>激励，适合自己的激励。
+不要先激励在行动，要先行动再激励。
+不知道能不能利用沉没成本？
+找个伴或许是个好方法。</p>
+<h5 class="anchor anchorWithStickyNavbar_LWe7" id="人生格言">人生格言<a href="#人生格言" class="hash-link" aria-label="人生 格言的直接链接" title="人生格言的直接链接">​</a></h5>
+<ul>
+<li>善始善终。</li>
+<li>成功者决不放弃，而放弃者永远不会成功。</li>
+<li>一分耕耘，一分收获。</li>
+<li>时间短暂，如果想在生命中做某件事，现在就去做。</li>
+<li>一切都会过去。</li>
+<li>坚持到底就是胜利。</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第60章如何增长肌肉书呆子也能拥有强健的肌肉">第60章　如何增长肌肉：书呆子也能拥有强健的肌肉<a href="#第60章如何增长肌肉书呆子也能拥有强健的肌肉" class="hash-link" aria-label="第60章　如何增长肌肉：书呆子也能拥有强健的肌肉的直接链接" title="第60章　如何增长肌肉：书呆子也能拥有强健的肌肉的直接链接">​</a></h3>
+<p>还记得我说过肌肉在各个方面具有适应性吗？肌肉如何适应主要由举重方式决定。现在你已经知道什么是重复次数、什么是组，我们可以谈谈你如何利用重复次数和组通过举重训练来实现不同的目标。</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="力量">力量<a href="#力量" class="hash-link" aria-label="力量的直接链接" title="力量的直接链接">​</a></h4>
+<p>如果你的重复次数较少，而每组之间的休息时间较长，你基本上是在增强力量。随着肌肉增强，力量也会自然而然地增强，但是同样大小的肌肉在力量上的差别是很悬殊的。所以，肌肉的力量增强并不一定意味着肌肉一定会增大，或者至少不会和其他令肌肉增大的锻炼方法的效果一样。
+通常情况下，如果你的目标是增强力量，那么每次练习的重复次数是1～6。但是只限制重复次数还是不够的，每次重复练习中你都要举起自己能举起的最大重量。判断的方法是，如果你的目标是重复4次，那你的身体无法支撑你在第五次重复的时候举起这个重量。</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="规模">规模<a href="#规模" class="hash-link" aria-label="规模的直接链接" title="规模的直接链接">​</a></h4>
+<p>你想实现的下一个目标，也许也是最常见的目标，就是增大肌肉。肌肉增大也被称为肌肉膨胀。肌肉增大主要是通过中等的重复次数和适量的休息间隔实现的。为了最大程度地增大肌肉，你应该试着重复8～12次。同样，在这几次重复中，你也要举起自己能举起的最大重量。如果重复次数更多，在精疲力竭之前肌肉就会有酸痛感。俗语说“一分耕耘，一分收获”。</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="耐力">耐力<a href="#耐力" class="hash-link" aria-label="耐力的直接链接" title="耐力的直接链接">​</a></h4>
+<p>最后，你可能会对提升肌肉的耐力感兴趣。我敢肯定你已经猜到了该如何做到这一点——进一步增加重复次数。如果每次练习你的重复次数很高而休息的时间相当短，你就会最大程度地提升肌肉的耐力。这就意味着，你的身体在负重的情况不容易产生疲劳。
+为了提升肌肉的耐力，你需要将重复次数提高到12次以上。你可能会重复20次或者更多次以提升肌肉耐力。但是请注意，如果专注于提升肌肉耐力，你可能看不到肌肉增加，甚至可能看到肌肉缩小。想一想短跑运动员和长跑运动员在身体上的差异，你就知道为什么了。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第61章如何获得完美腹肌">第61章　如何获得完美腹肌<a href="#第61章如何获得完美腹肌" class="hash-link" aria-label="第61章　如何获得完美腹肌的直接链接" title="第61章　如何获得完美腹肌的直接链接">​</a></h3>
+<p>需要整体减脂，身体会积极阻止你减脂。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第62章启动跑步程序">第62章　启动跑步程序<a href="#第62章启动跑步程序" class="hash-link" aria-label="第62章　启动跑步程序的直接链接" title="第62章　启动跑步程序的直接链接">​</a></h3>
+<p>跑步很简单，每个人都可以。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第63章站立式办公及其他窍门">第63章　站立式办公及其他窍门<a href="#第63章站立式办公及其他窍门" class="hash-link" aria-label="第63章　站立式办公及其他窍门的直接链接" title="第63章　站立式办公及其他窍门的直接链接">​</a></h3>
+<p>略过。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第64章高科技健身装备极客现身">第64章　高科技健身装备：极客现身<a href="#第64章高科技健身装备极客现身" class="hash-link" aria-label="第64章　高科技健身装备：极客现身的直接链接" title="第64章　高科技健身装备：极客现身的直接链接">​</a></h3>
+<p>一些数据记录工具，如计步，体重，体脂。
+无线耳机，智能手表等</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="第七篇精神">第七篇：精神<a href="#第七篇精神" class="hash-link" aria-label="第七篇：精神的直接链接" title="第七篇：精神的直接链接">​</a></h2>
+<p><strong>如果你不征服自己，你就会被自己征服。</strong>
+——拿破仑•希尔</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第65章心灵是如何影响身体的">第65章　心灵是如何影响身体的<a href="#第65章心灵是如何影响身体的" class="hash-link" aria-label="第65章　心灵是如何影响身体的的直接链接" title="第65章　心灵是如何影响身体的的直接链接">​</a></h3>
+<p>有信心不一定会赢，但没信心一定会输。
+<strong>信念决定思想，</strong>
+<strong>思想决定言语，</strong>
+<strong>言语决定行动，</strong>
+<strong>行动决定习惯，</strong>
+<strong>习惯决定价值，</strong>
+<strong>价值决定命运。</strong>
+——圣雄甘地</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第66章拥有正确的心态重新启动">第66章　拥有正确的心态：重新启动<a href="#第66章拥有正确的心态重新启动" class="hash-link" aria-label="第66章　拥有正确的心态：重新启动的直接链接" title="第66章　拥有正确的心态：重新启动的直接链接">​</a></h3>
+<p>生活中遇到的每种状况本身并没有好与坏，好与坏取决于你怎么去理解。
+尝试拥有积极的想法。
+记录你的想法，判断他是积极的还是消极的。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第67章构建一个积极的自我形象规划你的大脑">第67章　构建一个积极的自我形象——规划你的大脑<a href="#第67章构建一个积极的自我形象规划你的大脑" class="hash-link" aria-label="第67章　构建一个积极的自我形象——规划你的大脑的直接链接" title="第67章　构建一个积极的自我形象——规划你的大脑的直接链接">​</a></h3>
+<p><strong>那些不能激励自己的人一定是甘于平庸的人，无论他们的其他才能有多么令人印象深刻。</strong>
+——Andrew Carnegie
+自我形象有可能是假的。
+潜意识的能量如此强大，它让你如此坚守自己的自我形象。
+你可以决定自己能成为怎样的人，虽然这很难。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第68章爱情与恋爱计算机无法牵着你的手">第68章　爱情与恋爱：计算机无法牵着你的手<a href="#第68章爱情与恋爱计算机无法牵着你的手" class="hash-link" aria-label="第68章　爱情与恋爱：计算机无法牵着你的手的直接链接" title="第68章　爱情与恋爱：计算机无法牵着你的手的直接链接">​</a></h3>
+<p>这是一个关于人类如何追求爱情和伴侣的不可思议的问题。这其实就是一场猫捉老鼠的游戏。在任何给定的时间，都是一方在追另一方在跑。只要双方偶尔切换一下角色其实就没问题了 。但是，如果一个人总是在追，另一个人就会跑得越来越远。
+你要有一定的自信，做到相互吸引，而不是死缠烂打。
+不要还怕失败，想想那些销售人员，如果失败一次就放弃了，早就饿死了。
+所有那些拒绝最终都会把你带到一个想和你在一起的人那里，这总比和不想和你在一起的人在一起要好很多。无论如何，这不就是最重要的吗？</p>
+<p>采取行动</p>
+<blockquote>
+<ul>
+<li>回想一下你都是怎样流露出“绝望”这种情感的。看看你和别人在你的社交媒体上的沟通内容，你是如何与朋友互动的，你的言语和表达是自信的还是空虚的？什么样的无形特质对你最有吸引力？你又厌烦什么无形特质？</li>
+</ul>
+</blockquote>
+<ul>
+<li>你的交际圈有多宽？你给自己足够的机会寻找“真爱”了吗？走出去，去和别人接触，花点儿时间感受一下这是一种怎样的感觉。一旦你意识到这种感觉不错，接近他人时就会更加自信，因为你不害怕后果。</li>
+<li>切实做一些事来提升自信心，比如，开始执行一个健身计划或者涉及一些会让你对自己感觉更好的其他活动。</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第69章我的私房成功书单">第69章　我的私房成功书单<a href="#第69章我的私房成功书单" class="hash-link" aria-label="第69章　我的私房成功书单的直接链接" title="第69章　我的私房成功书单的直接链接">​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="自我提升和励志类图书">自我提升和励志类图书<a href="#自我提升和励志类图书" class="hash-link" aria-label="自我提升和励志类图书的直接链接" title="自我提升和励志类图书的直接链接">​</a></h4>
+<h5 class="anchor anchorWithStickyNavbar_LWe7" id="steven-pressfield的the-war-of-artblack-irish-books2002">Steven Pressfield的The War of Art［Black Irish Books，2002］<a href="#steven-pressfield的the-war-of-artblack-irish-books2002" class="hash-link" aria-label="Steven Pressfield的The War of Art［Black Irish Books，2002］的直接链接" title="Steven Pressfield的The War of Art［Black Irish Books，2002］的直接链接">​</a></h5>
+<p>我总是会从我最喜欢的一本书开始介绍。这本书解决了我工作以来长时间困扰着我的一个问题：为什么让自己坐下来开始做事是如此困难。
+在这本书里，Pressfield提到，当我们坐下来打算做一些有意义的事时，我们都会面对一股神秘的力量。他说这股力量就是阻碍我们尝试从低使命感向高使命感转变的神秘的、矛盾的破坏者。
+只要确定了我们面对的这个共同敌人，我们就能开始获得力量去克服它。如果你有拖延症，或者你需要寻找向前的动力去做你觉得自己应该做的事情，你会发现这本书非常有用。</p>
+<h5 class="anchor anchorWithStickyNavbar_LWe7" id="dale-carnegie的人性的弱点how-to-win-friends-and-influence-peoplegallery-books1998再版">Dale Carnegie的《人性的弱点》（How to Win Friends and Influence People）［Gallery Books，1998再版］<a href="#dale-carnegie的人性的弱点how-to-win-friends-and-influence-peoplegallery-books1998再版" class="hash-link" aria-label="Dale Carnegie的《人性的弱点》（How to Win Friends and Influence People）［Gallery Books，1998再版］的直接链接" title="Dale Carnegie的《人性的弱点》（How to Win Friends and Influence People）［Gallery Books，1998再版］的直接链接">​</a></h5>
+<p>这本书是我读过的对我影响最大的另一本书。这本书在许多方面改变了我的个人观点，帮我在与人接触方面获得了成功——在阅读这本书之前这些对我而言是不可想象的。
+读这本书之前，我坚信通过负强化<a href="https://wiki.goframe.org/part0086_split_003.html#anchor691" target="_blank" rel="noopener noreferrer">^[1]^</a>可以改变他人的行为。我迫使自己将自己的严格的纪律标准强加给别人。我相信，当别人出错时，告诉他们错在哪里是很重要的。惩罚的威胁是激励人的最好办法。
+读完这本书之后，我的看法发生了180°的改变。我认为负强化几乎是完全无用的——让别人做你想做的事情的唯一方法就是让他们自己也想做这件事。
+如果你必须在这个书单中选出一本书去阅读，那么就是这本书了。我坚信每个人都应该读这本书。我至少读了十几遍，每次重读都会令我获得新的见解。</p>
+<h5 class="anchor anchorWithStickyNavbar_LWe7" id="napoleon-hill的-思考致富-think-and-grow-rich-wilder-publications2007">Napoleon Hill的 《思考致富》 （Think and Grow Rich） ［Wilder Publications，2007］<a href="#napoleon-hill的-思考致富-think-and-grow-rich-wilder-publications2007" class="hash-link" aria-label="Napoleon Hill的 《思考致富》 （Think and Grow Rich） ［Wilder Publications，2007］的直接链接" title="Napoleon Hill的 《思考致富》 （Think and Grow Rich） ［Wilder Publications，2007］的直接链接">​</a></h5>
+<p>在我第一次试着读这本书的时候，我倍感沮丧。第二次读的时候，稍微进步了一点，但还是觉得它和我个人的喜好相去甚远。最终，在和推荐这本书的很多成功人士交谈之后，在得知有些人将他们的成功完全归功于这本书之后，我决定再读一遍。
+这本书有点儿奇怪。从根本上讲，它声称，如果你相信一件事能成功，只要坚持并强化这个信念，最终它就会变成现实。我提醒你，这种方法没有太多的科学依据。这本书甚至没打算尝试用科学来作解释，不过，无论这种方法的原理是什么，我已经在自己的生活中见证了这种方法是有效的，而且很多其他人也发誓说这种方法是有效的。
+“策划小组”这个概念就出自于这本书。这本书还有很多其他重要的概 念，能帮你学习怎样改变自己的信念，这对你的生活会有巨大的影响。</p>
+<h5 class="anchor anchorWithStickyNavbar_LWe7" id="maxwell-maltz的心理控制方法psycho-cyberneticspocket-books1989再版">Maxwell Maltz的《心理控制方法》（Psycho-Cybernetics）［Pocket Books，1989再版］<a href="#maxwell-maltz的心理控制方法psycho-cyberneticspocket-books1989再版" class="hash-link" aria-label="Maxwell Maltz的《心理控制方法》（Psycho-Cybernetics）［Pocket Books，1989再版］的直接链接" title="Maxwell Maltz的《心理控制方法》（Psycho-Cybernetics）［Pocket Books，1989再版］的直接链接">​</a></h5>
+<p>这本书在很多方面让我联想到《思考致富》，但它是《思考致富》的科学版。这本书是由整形外科医生写的，他发现，人们整容之后，其性格实际上也会发生变化。这促使他去研究自我形象，并有了一些重大发现，他发现自我形象有将我们的生活向好的方面或者不好的方面发生彻底改变的能力。
+我发现，这本书对于描述思维是如何运作的，以及思维是如何影响我们身体的，有一些非常好的洞察力。这本书提供了各种方法的实际应用来让你的态度、你的自我形象和你的信念向积极的方向转变。</p>
+<h5 class="anchor anchorWithStickyNavbar_LWe7" id="norman-vincent-peale的积极思考就是力量the-power-of-positive-thinkingtouchstone2003再版">Norman Vincent Peale的《积极思考就是力量》（The Power of Positive Thinking）［Touchstone，2003再版］<a href="#norman-vincent-peale的积极思考就是力量the-power-of-positive-thinkingtouchstone2003再版" class="hash-link" aria-label="Norman Vincent Peale的《积极思考就是力量》（The Power of Positive Thinking）［Touchstone，2003再版］的直接链接" title="Norman Vincent Peale的《积极思考就是力量》（The Power of Positive Thinking）［Touchstone，2003再版］的直接链接">​</a></h5>
+<p>这 是一本带有宗教色彩的书，所以要事先提醒一下，但是这本书的全部内容都非常强大。积极思考的观念对你的生活会产生深远的影响，这一点我坚决赞成。如果你想养成更加积极的态度，这本书肯定能帮到你。</p>
+<h5 class="anchor anchorWithStickyNavbar_LWe7" id="ayn-rand的阿特拉斯耸耸肩atlas-shruggedsignet2005再版">Ayn Rand的《阿特拉斯耸耸肩》（Atlas Shrugged）［Signet，2005再版］<a href="#ayn-rand的阿特拉斯耸耸肩atlas-shruggedsignet2005再版" class="hash-link" aria-label="Ayn Rand的《阿特拉斯耸耸肩》（Atlas Shrugged）［Signet，2005再版］的直接链接" title="Ayn Rand的《阿特拉斯耸耸肩》（Atlas Shrugged）［Signet，2005再版］的直接链接">​</a></h5>
+<p>你会对这本书又爱又恨，但无论哪一种，它都会给你带来思考。这本书是虚构的，约1 200页，但是对生活、经济、工作都提出了非常严肃的疑问。</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="软件开发类图书">软件开发类图书<a href="#软件开发类图书" class="hash-link" aria-label="软件开发类图书的直接链接" title="软件开发类图书的直接链接">​</a></h4>
+<h5 class="anchor anchorWithStickyNavbar_LWe7" id="steve-mcconnell的-代码大全-code-complete-microsoft-press2004">Steve McConnell的 《代码大全》 （Code Complete） ［Microsoft Press，2004］<a href="#steve-mcconnell的-代码大全-code-complete-microsoft-press2004" class="hash-link" aria-label="Steve McConnell的 《代码大全》 （Code Complete） ［Microsoft Press，2004］的直接链接" title="Steve McConnell的 《代码大全》 （Code Complete） ［Microsoft Press，2004］的直接链接">​</a></h5>
+<p>这本书完全改变了我写代码的方式。在我第一次读完这本书之后，我感觉我完全理解了什么是好的代码。书中所有例子是用C++写的，但是编码概念可以应用到任何一种编程语言上。
+这本书是 编写好的代码和构建代码结构的入门级指导大全。尽管有很多软件开发类图书都在关注高层设计，但这本书是我能找到的唯一一本关注细节的书，例如，如何命名一个变量，如何构建算法里面的代码结构。
+如果我有一家软件开发公司，这本书将会成为我雇用的所有软件开发人员的必读书。这绝对是我读过的最有影响力的软件开发书。</p>
+<h5 class="anchor anchorWithStickyNavbar_LWe7" id="robert-martin的代码整洁之道clean-code-a-handbook-of-agile-software-craftmanshipprentice-hall2008">Robert Martin的《代码整洁之道》（Clean Code: A Handbook of Agile Software Craftmanship）［Prentice Hall，2008］<a href="#robert-martin的代码整洁之道clean-code-a-handbook-of-agile-software-craftmanshipprentice-hall2008" class="hash-link" aria-label="Robert Martin的《代码整洁之道》（Clean Code: A Handbook of Agile Software Craftmanship）［Prentice Hall，2008］的直接链接" title="Robert Martin的《代码整洁之道》（Clean Code: A Handbook of Agile Software Craftmanship）［Prentice Hall，2008］的直接链接">​</a></h5>
+<p>读这本书绝对是一种享受。《代码大全》教我如何编写好的代码，《代码整洁之道》提炼了知识并帮助我理解如何把这些知识用到完整的代码库和程序设计上。
+这是我认为任何软件开发人员都需要读的另一本书。这本书中的概念将帮你成为一名更好的开发人员，同时还能帮你理解为什么简单和易于理解比整洁的代码更重要。</p>
+<h5 class="anchor anchorWithStickyNavbar_LWe7" id="eric-freemanelisabeth-robsonbert-bates和kathy-sierra的-head-first设计模式head-first-design-patternsoreilly-media2004">Eric Freeman、Elisabeth Robson、Bert Bates和Kathy Sierra的 《Head First设计模式》（Head First Design Patterns）［O’Reilly Media，2004］<a href="#eric-freemanelisabeth-robsonbert-bates和kathy-sierra的-head-first设计模式head-first-design-patternsoreilly-media2004" class="hash-link" aria-label="Eric Freeman、Elisabeth Robson、Bert Bates和Kathy Sierra的 《Head First设计模式》（Head First Design Patterns）［O’Reilly Media，2004］的直接链接" title="Eric Freeman、Elisabeth Robson、Bert Bates和Kathy Sierra的 《Head First设计模式》（Head First Design Patterns）［O’Reilly Media，2004］的直接链接">​</a></h5>
+<p>我推荐这本书而不是推荐经典的《设计模式》（Design Patterns），这会让人觉得有点儿奇怪，但这本书比《设计模式》更容易让人理解。
+不要误会我，《设计模式》是一本很好的书，它介绍了软件开发领域经典的设计模式思想，但是《Head First设计模式》对这些经典的设计模式思想做了更好的解释。如果你只想读一本设计模式的书，就读这本吧。</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="投资类图书">投资类图书<a href="#投资类图书" class="hash-link" aria-label="投资类图书的直接链接" title="投资类图书的直接链接">​</a></h4>
+<h5 class="anchor anchorWithStickyNavbar_LWe7" id="gary-keller的the-millionaire-real-estate-investormcgraw-hill2005">Gary Keller的The Millionaire Real Estate Investor［McGraw-Hill，2005］<a href="#gary-keller的the-millionaire-real-estate-investormcgraw-hill2005" class="hash-link" aria-label="Gary Keller的The Millionaire Real Estate Investor［McGraw-Hill，2005］的直接链接" title="Gary Keller的The Millionaire Real Estate Investor［McGraw-Hill，2005］的直接链接">​</a></h5>
+<p>如果我只能推荐一本关于房地产投资的书，那么就是这本了。这本书解释了为什么房地产投资是一个好主意，以及如何从中获得丰厚的收益，它给你提供了一个切实可行的计划。
+这本书包含了很多图表，展示了房地产是如何通过长期投资来盈利的，同时书中绝对没有“夸夸其谈”的内容。</p>
+<h5 class="anchor anchorWithStickyNavbar_LWe7" id="robert-kiyosaki的富爸爸穷爸爸rich-dadpoor-daddemco-media2000">Robert Kiyosaki的《富爸爸，穷爸爸》（Rich Dad,Poor Dad）［Demco Media，2000］<a href="#robert-kiyosaki的富爸爸穷爸爸rich-dadpoor-daddemco-media2000" class="hash-link" aria-label="Robert Kiyosaki的《富爸爸，穷爸爸》（Rich Dad,Poor Dad）［Demco Media，2000］的直接链接" title="Robert Kiyosaki的《富爸爸，穷爸爸》（Rich Dad,Poor Dad）［Demco Media，2000］的直接链接">​</a></h5>
+<p>这是另外一本改变我生活的书，它改变了我对金钱和财富的看法。这本书改变了我对钱是如何运作的认识，改变了我对“拥有一份工作”以及“为别人工作意味着什么”的看法。读完这本书之后，我清楚地理解了建立资产和减少自己的开销有多么重要。
+我对这本书唯一不满意的地方就是，它没有明确告诉你要“如何做”。同时，这本书里有不少有价值的建议——我强烈推荐Kiyosaki的整个“富爸爸”系列。</p>
+<h5 class="anchor anchorWithStickyNavbar_LWe7" id="kerry-given的no-hype-options-trading-myths-realities-and-strategies-that-really__workwiley2011">Kerry Given的No-Hype Options Trading: Myths, Realities, and Strategies That Really__Work［Wiley，2011］<a href="#kerry-given的no-hype-options-trading-myths-realities-and-strategies-that-really__workwiley2011" class="hash-link" aria-label="Kerry Given的No-Hype Options Trading: Myths, Realities, and Strategies That Really__Work［Wiley，2011］的直接链接" title="Kerry Given的No-Hype Options Trading: Myths, Realities, and Strategies That Really__Work［Wiley，2011］的直接链接">​</a></h5>
+<p>很多理财方面的书里承诺的回报和主张的观点既荒谬又无耻，但是这本书不是。相反，它道出了事实，并帮助你切实了解期权交易是如何运作的，提供了可用来赚钱的实用策略，以及这些策略将引发的固有风险。如果想学习期权交易或者只是想更好地了解期权交易，强烈推荐这本书。</p>
+<hr>
+<p><a href="https://wiki.goframe.org/part0086_split_001.html#ac691" target="_blank" rel="noopener noreferrer">[1]</a>　 负强化又叫消极强化，即利用强化物抑制不良行为重复出现的管理手段，负强化包括批评、惩罚、处分、降职、降薪等。通过负强化可以使人感到物质利益的损失和精神上的痛苦，从而主动放弃不良行为。——译者注</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第70章积极面对失败">第70章　积极面对失败<a href="#第70章积极面对失败" class="hash-link" aria-label="第70章　积极面对失败的直接链接" title="第70章　积极面对失败的直接链接">​</a></h3>
+<p><strong>跌倒七次，爬起来八次。</strong>
+——日本谚语
+我们都被告之，并且倾向于认为，失败是一件不好的事情。我们没有看到，失败的阴影中暗含着一线曙光，我们只把失败看作是终点—— 失败这个词本身暗示着死胡同、绝望的终点，而不是通往成功之路上的一个暂时壁垒。
+不要把失败看得太重。
+如果成功太容易，那成功的成就感就不高。
+将失败换成试错，理解起来就简单得多了。
+学会拥抱失败，对于程序员来说，也很好理解，单元测试就是一个方式。设定各种失败的条件去对程序进行测试，提高程序的鲁棒性。人也一样，把自己放到一个不舒服的环境下，当你适应了，就成长了。
+走出去，有目的地去把自己放在那些不可避免地会导致某种失败的困境中。但关键是不要放弃——让失败点亮通往成功的道路。去经历尽可能多的失败吧，畏惧失败本身才会让你失去克服困难的能力。
+我要留给你最后一句关于失败的话，摘自Napoleon Hill的《思考致富》一书：
+“大多数伟大的人取得的最大成功与他们所经历的最大失败只有一步之遥。”</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="第71章结束语">第71章　结束语<a href="#第71章结束语" class="hash-link" aria-label="第71章　结束语的直接链接" title="第71章　结束语的直接链接">​</a></h3>
+<p>没有人可以垄断真理。现实中，很大程度上，正是你自己发现了真理。这并不意味着你可以忽视这世界上的公认真理、只管自行其是，但这意味着你可以决定你想要过怎样的生活，你该怎样去生活。</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="附录">附录<a href="#附录" class="hash-link" aria-label="附录的直接链接" title="附录的直接链接">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="附录a如果你能写代码你就能理解金融">附录A　如果你能写代码，你就能理解金融<a href="#附录a如果你能写代码你就能理解金融" class="hash-link" aria-label="附录A　如果你能写代码，你就能理解金融的直接链接" title="附录A　如果你能写代码，你就能理解金融的直接链接">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="附录b股市是如何运作的系统的游戏规则">附录B　股市是如何运作的：系统的游戏规则<a href="#附录b股市是如何运作的系统的游戏规则" class="hash-link" aria-label="附录B　股市是如何运作的：系统的游戏规则的直接链接" title="附录B　股市是如何运作的：系统的游戏规则的直接链接">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="附录c垃圾进来垃圾出去饮食和营养基础知识">附录C　垃圾进来，垃圾出去：饮食和营养基础知识<a href="#附录c垃圾进来垃圾出去饮食和营养基础知识" class="hash-link" aria-label="附录C　垃圾进来，垃圾出去：饮食和营养基础知识的直接链接" title="附录C　垃圾进来，垃圾出去：饮食和营养基础知识的直接链接">​</a></h3>
+<p>没有所谓的垃圾食品，身体会吸收自己需要的营养。
+之  所以会得病，是因为缺少某种营养，而你没有吃进去。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="附录d如何吃出健康来比萨并不是一个食物组">附录D　如何吃出健康来：比萨并不是一个食物组<a href="#附录d如何吃出健康来比萨并不是一个食物组" class="hash-link" aria-label="附录D　如何吃出健康来：比萨并不是一个食物组的直接链接" title="附录D　如何吃出健康来：比萨并不是一个食物组的直接链接">​</a></h3>
+<p>抛开剂量讲毒性都是耍流氓，按照需求摄入营养才能见效，例如增肌则多摄入蛋白质。</p></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col"><a href="https://github.com/hailaz/hailaz.github.io/blob/master/docs/essay/reading/6.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>编辑此页</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="pagination-nav docusaurus-mt-lg" aria-label="文件选项卡"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/essay/reading/3"><div class="pagination-nav__sublabel">上一页</div><div class="pagination-nav__label">不要写 clean code, 要写 CRISP code</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/essay/reading/7"><div class="pagination-nav__sublabel">下一页</div><div class="pagination-nav__label">视频学习胜过读书吗？</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#第1章为何这本书与  你先前读过的任何书籍都迥然不同" class="table-of-contents__link toc-highlight">第1章　为何这本书与你先前读过的任何书籍都迥然不同</a></li><li><a href="#第一篇职业" class="table-of-contents__link toc-highlight">第一篇：职业</a><ul><li><a href="#第2章从非同凡响开始绝不要做他人都在做的事" class="table-of-contents__link toc-highlight">第2章　从非同凡响开始：绝不要做他人都在做的事</a></li><li><a href="#第3章思考未来你的目标是什么" class="table-of-contents__link toc-highlight">第3章　思考未来：你的目标是什么</a></li><li><a href="#第4章人际交往能力远比你想象的重要" class="table-of-contents__link toc-highlight">第4章　人际交往能力：远比你想象的重要</a></li><li><a href="#第5章破解面试之道" class="table-of-contents__link toc-highlight">第5章　破解面试之道</a></li><li><a href="#第6章就业选择列出你的选择" class="table-of-contents__link toc-highlight">第6章　就业选择：列出你的选择</a></li><li><a href="#第7章你是哪类软件开发人员" class="table-of-contents__link toc-highlight">第7章　你是哪类软件开发人员</a></li><li><a href="#第8章公司与公司是不一样的" class="table-of-contents__link toc-highlight">第8章　公司与公司是不一样的</a></li><li><a href="#第9章攀登晋升阶梯" class="table-of-contents__link toc-highlight">第9章　攀登晋升阶梯</a></li><li><a href="#第10章成为专业人士" class="table-of-contents__link toc-highlight">第10章　成为专业人士</a></li><li><a href="#第11章赢得自由如何辞职" class="table-of-contents__link toc-highlight">第11章　赢得自由——如何辞职</a></li><li><a href="#第12章成为自由职业者开启自己的一片天地" class="table-of-contents__link toc-highlight">第12章　成为自由职业者：开启自己的一片天地</a></li><li><a href="#第13章创建你的第一个产品" class="table-of-contents__link toc-highlight">第13章　创建你的第一个产品</a></li><li><a href="#第14章你打算开始创业吗" class="table-of-contents__link toc-highlight">第14章　你打算开始创业吗</a></li><li><a href="#第15章远程工作的生存策略" class="table-of-contents__link toc-highlight">第15章　远程工作的生存策略</a></li><li><a href="#第16章假装自己能成功" class="table-of-contents__link toc-highlight">第16章　假装自己能成功</a></li><li><a href="#第17章单调乏味的简历如何修改" class="table-of-contents__link toc-highlight">第17章　单调乏味的简历——如何修改</a></li><li><a href="#第18章请勿陷入对技术的狂热之中" class="table-of-contents__link toc-highlight">第18章　请勿陷入对技术的狂热之中</a></li></ul></li><li><a href="#第二篇自我营销" class="table-of-contents__link toc-highlight">第二篇：自我营销</a><ul><li><a href="#第19章针对码农的营销基础课" class="table-of-contents__link toc-highlight">第19章　针对“码农”的营销基础课</a></li><li><a href="#第20章打造引人注目的品牌" class="table-of-contents__link toc-highlight">第20章　打造引人注目的品牌</a></li><li><a href="#第21章创建大获成功的博客" class="table-of-contents__link toc-highlight">第21章　创建大获成功的博客</a></li><li><a href="#第22章你的主要目标为他人增加价值" class="table-of-contents__link toc-highlight">第22章　你的主要目标：为他人增加价值</a></li><li><a href="#第23章善于运用社交媒体" class="table-of-contents__link toc-highlight">第23章　善于运用社交媒体</a></li><li><a href="#第24章演讲报告和培训做说话的极客" class="table-of-contents__link toc-highlight">第24章　演讲、报告和培训：做“说话的极客”</a></li><li><a href="#第25章著书立说吸引追随者" class="table-of-contents__link toc-highlight">第25章　著书立说，吸引追随者</a></li><li><a href="#第26章百折不挠越挫越勇" class="table-of-contents__link toc-highlight">第26章　百折不挠，越挫越勇</a></li></ul></li><li><a href="#第三篇学习" class="table-of-contents__link toc-highlight">第三篇：学习</a><ul><li><a href="#第27章学习怎样学习如何自我教育" class="table-of-contents__link toc-highlight">第27章　学习怎样学习：如何自我教育</a></li><li><a href="#第28章我的十步学习法" class="table-of-contents__link toc-highlight">第28章　我的“十步学习法”</a></li><li><a href="#第29章第-1-步到第-6-步这些步骤只做一次" class="table-of-contents__link toc-highlight">第29章　第 1 步到第 6 步：这些步骤只做一次</a></li><li><a href="#第30章第7步到第10步循环往复" class="table-of-contents__link toc-highlight">第30章　第7步到第10步：循环往复</a></li><li><a href="#第31章寻找导师找到你的尤达" class="table-of-contents__link toc-highlight">第31章　寻找导师：找到你的尤达</a></li><li><a href="#第32章开山收徒成为尤达一样的大师" class="table-of-contents__link toc-highlight">第32章　开山收徒：成为尤达一样的大师</a></li><li><a href="#第34章你需要一个学位吗还是可以对此忽略不计" class="table-of-contents__link toc-highlight">第34章　你需要一个学位吗，还是可以对此忽略不计</a></li><li><a href="#第35章发现自己的知识短板" class="table-of-contents__link toc-highlight">第35章　发现自己的知识短板</a></li></ul></li><li><a href="#第四篇生产力" class="table-of-contents__link toc-highlight">第四篇：生产力</a><ul><li><a href="#第36章一切始于专注" class="table-of-contents__link toc-highlight">第36章　一切始于专注</a></li><li><a href="#第37章我的私房生产力提升计划" class="table-of-contents__link toc-highlight">第37章　我的私房“生产力提升计划”</a></li><li><a href="#第38章番茄工作法" class="table-of-contents__link toc-highlight">第38章　番茄工作法</a></li><li><a href="#第39章我的定额工作法我是如何做到超额完成工作的" class="table-of-contents__link toc-highlight">第39章　我的“定额工作法”：我是如何做到超额完成工作的</a></li><li><a href="#第40章对自己负责" class="table-of-contents__link toc-highlight">第40章　对自己负责</a></li><li><a href="#第41章要不要多任务并行" class="table-of-contents__link toc-highlight">第41章　要不要多任务并行</a></li><li><a href="#第42章职业倦怠我已找到解药" class="table-of-contents__link toc-highlight">第42章　职业倦怠：我已找到解药</a></li><li><a href="#第43章时间是怎样被浪费掉的" class="table-of-contents__link toc-highlight">第43章　时间是怎样被浪费掉的</a></li><li><a href="#第44章形成惯例的重要性" class="table-of-contents__link toc-highlight">第44章　形成惯例的重要性</a></li><li><a href="#第45章培养习惯刷新你的代码" class="table-of-contents__link toc-highlight">第45章　培养习惯：刷新你的代码</a></li><li><a href="#第46章分解任务如何吃掉一头大象" class="table-of-contents__link toc-highlight">第46章　分解任务：如何吃掉一头大象</a></li><li><a href="#第47章努力工作的价值以及为什么你总是逃避努力工作" class="table-of-contents__link toc-highlight">第47章　努力工作的价值，以及为什么你总是逃避努力工作</a></li><li><a href="#第48章任何行动都比不采取行动好" class="table-of-contents__link toc-highlight">第48章　任何行动都比不采取行动好</a></li></ul></li><li><a href="#第五篇理财" class="table-of-contents__link toc-highlight">第五篇：理财</a><ul><li><a href="#第49章怎样支配你的薪水" class="table-of-contents__link toc-highlight">第49章　怎样支配你的薪水</a></li><li><a href="#第50章怎样进行薪酬谈判" class="table-of-contents__link toc-highlight">第50章　怎样进行薪酬谈判</a></li><li><a href="#第51章期权所有乐趣之所 在" class="table-of-contents__link toc-highlight">第51章　期权：所有乐趣之所在</a></li><li><a href="#第52章房地产投资面面观" class="table-of-contents__link toc-highlight">第52章　房地产投资面面观</a></li><li><a href="#第53章你真的了解自己的退休计划吗" class="table-of-contents__link toc-highlight">第53章　你真的了解自己的退休计划吗</a></li><li><a href="#第54章债务的危害社保债务1代价昂贵" class="table-of-contents__link toc-highlight">第54章　债务的危害：社保债务[1]代价昂贵</a></li><li><a href="#第55章额外馈赠我是如何做到33岁退休的" class="table-of-contents__link toc-highlight">第55章　额外馈赠：我是如何做到33岁退休的</a></li></ul></li><li><a href="#第六篇健身" class="table-of-contents__link toc-highlight">第六篇：健身</a><ul><li><a href="#第56章为什么需要破解自己的健康密码" class="table-of-contents__link toc-highlight">第56章　为什么需要破解自己的健康密码</a></li><li><a href="#第57章设定你的健身标准" class="table-of-contents__link toc-highlight">第57章　设定你的健身标准</a></li><li><a href="#第58章热力学热量和你" class="table-of-contents__link toc-highlight">第58章　热力学、热量和你</a></li><li><a href="#第59章动力让你的屁股离开椅子" class="table-of-contents__link toc-highlight">第59章　动力：让你的屁股离开椅子</a></li><li><a href="#第60章如何增长肌肉书呆子也能拥有强健的肌肉" class="table-of-contents__link toc-highlight">第60章　如何增长肌肉：书呆子也能拥有强健的肌肉</a></li><li><a href="#第61章如何获得完美腹肌" class="table-of-contents__link toc-highlight">第61章　如何获得完美腹肌</a></li><li><a href="#第62章启动跑步程序" class="table-of-contents__link toc-highlight">第62章　启动跑步程序</a></li><li><a href="#第63章站立式办公及其他窍门" class="table-of-contents__link toc-highlight"> 第63章　站立式办公及其他窍门</a></li><li><a href="#第64章高科技健身装备极客现身" class="table-of-contents__link toc-highlight">第64章　高科技健身装备：极客现身</a></li></ul></li><li><a href="#第七篇精神" class="table-of-contents__link toc-highlight">第七篇：精神</a><ul><li><a href="#第65章心灵是如何影响身体的" class="table-of-contents__link toc-highlight">第65章　心灵是如何影响身体的</a></li><li><a href="#第66章拥有正确的心态重新启动" class="table-of-contents__link toc-highlight">第66章　拥有正确的心态：重新启动</a></li><li><a href="#第67章构建一个积极的自我形象规划你的大脑" class="table-of-contents__link toc-highlight">第67章　构建一个积极的自我形象——规划你的大脑</a></li><li><a href="#第68章爱情与恋爱计算机无法牵着你的手" class="table-of-contents__link toc-highlight">第68章　爱情与恋爱：计算机无法牵着你的手</a></li><li><a href="#第69章我的私房成功书单" class="table-of-contents__link toc-highlight">第69章　我的私房成功书单</a></li><li><a href="#第70章积极面对失败" class="table-of-contents__link toc-highlight">第70章　积极面对失败</a></li><li><a href="#第71章结束语" class="table-of-contents__link toc-highlight">第71章　结束语</a></li></ul></li><li><a href="#附录" class="table-of-contents__link toc-highlight">附录</a><ul><li><a href="#附录a如果你能写代码你就能理解金融" class="table-of-contents__link toc-highlight">附录A　如果你能写代码，你就能理解金融</a></li><li><a href="#附录b股市是如何运作的系统的游戏规则" class="table-of-contents__link toc-highlight">附录B　股市是如何运作的：系统的游戏规则</a></li><li><a href="#附录c垃圾进来垃圾出去饮食和营养基础知识" class="table-of-contents__link toc-highlight">附录C　垃圾进来，垃圾出去：饮食和营养基础知识</a></li><li><a href="#附录d如何吃出健康来比萨并不是一个食物组" class="table-of-contents__link toc-highlight">附录D　如何吃出健康来：比萨并不是一个食物组</a></li></ul></li></ul></div></div></div></div></main></div></div></div><footer class="footer"><div class="container container-fluid"><div class="footer__bottom text--center"><div class="footer__copyright">Fri Feb 13 2026 07:56:08 GMT+0000 (Coordinated Universal Time)</div></div></div></footer></div>
+</body>
+</html>
