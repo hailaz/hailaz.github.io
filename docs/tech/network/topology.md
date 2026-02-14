@@ -41,6 +41,8 @@ iptables -I FORWARD -i br0 -o ztklhqrale -j ACCEPT
 # 添加 NAT 规则以允许流量转发
 iptables -t nat -A POSTROUTING -o br0 -s 192.168.192.0/24 -d 192.168.30.0/24 -j MASQUERADE
 
+# 一行命令完成上述三步
+iptables -I FORWARD -i ztklhqrale -o br0 -j ACCEPT && iptables -I FORWARD -i br0 -o ztklhqrale -j ACCEPT && iptables -t nat -A POSTROUTING -o br0 -s 192.168.192.0/24 -d 192.168.30.0/24 -j MASQUERADE
 
 # 删除上述规则（如果需要）
 iptables -D FORWARD -i ztklhqrale -o br0 -j ACCEPT
