@@ -74,10 +74,118 @@ go get golang.org/x/text@342b2e
 go get github.com/smartwalle/alipay/v3
 ```
 
-## 清理 go mod 缓存
+## go install 安装工具
+
+`go install` 用于编译并安装 Go 包到 `$GOPATH/bin`（或 `$GOBIN`）目录下。
+
+### 安装最新版本
+
+```shell
+go install github.com/gogf/gf/cmd/gf/v2@latest
+```
+
+### 安装指定版本
+
+```shell
+go install github.com/gogf/gf/cmd/gf/v2@v2.5.0
+```
+
+### 安装指定分支
+
+```shell
+go install github.com/gogf/gf/cmd/gf/v2@master
+# 分支带斜杠需要设置直连
+GOPROXY=direct GOSUMDB=off go install github.com/gogf/gf/cmd/gf/v2@feat/docrun
+```
+
+### 安装指定 commit
+
+```shell
+go install github.com/gogf/gf/cmd/gf/v2@342b2e
+```
+
+### go install 与 go get 的区别
+
+从 Go 1.17 开始，`go get` 已弃用安装二进制的功能，仅用于管理 `go.mod` 依赖；安装可执行工具应统一使用 `go install`。
+
+|   | `go install` | `go get` |
+| --- | --- | --- |
+| 用途 | 编译并安装二进制到 `$GOBIN` | 管理 `go.mod` 中的依赖版本 |
+| 是否修改 go.mod | 不修改 | 会修改 |
+| 推荐场景 | 安装 CLI 工具 | 添加/更新/降级项目依赖 |
+
+### 查看安装路径
+
+```shell
+# 查看 GOBIN 目录
+go env GOBIN
+# 如果 GOBIN 为空，则安装到 GOPATH/bin
+go env GOPATH
+```
+
+确保 `$GOPATH/bin` 或 `$GOBIN` 已加入系统 `PATH`，否则安装的工具无法直接执行。
+
+## go clean 清理缓存
+
+### 清理构建缓存
+
+清理 `go build` 产生的缓存文件（存储在 `$GOCACHE` 目录下）：
+
+```shell
+go clean -cache
+# 查看缓存目录位置
+go env GOCACHE
+```
+
+### 清理模块下载缓存
+
+清理 `go mod download` 下载的模块缓存（存储在 `$GOPATH/pkg/mod` 下）：
 
 ```shell
 go clean -modcache
+```
+
+### 清理测试缓存
+
+清理测试结果缓存，下次运行测试时将重新执行而非使用缓存结果：
+
+```shell
+go clean -testcache
+```
+
+也可以在运行测试时通过 `-count=1` 跳过缓存：
+
+```shell
+go test -count=1 ./...
+```
+
+### 清理 fuzzing 缓存
+
+清理 fuzz 测试产生的缓存文件：
+
+```shell
+go clean -fuzzcache
+```
+
+### 全部清理
+
+同时清理构建缓存、模块缓存、测试缓存和 fuzzing 缓存：
+
+```shell
+go clean -cache -modcache -testcache -fuzzcache
+```
+
+### 其他参数
+
+```shell
+# -n 仅打印将要执行的删除命令，不实际执行（dry run）
+go clean -n -cache
+
+# -x 打印并执行删除命令，用于查看实际清理了哪些内容
+go clean -x -cache
+
+# -i 删除 go install 安装的二进制文件
+go clean -i github.com/xxx/xxx
 ```
 
 ## 查看模块有哪些版本
@@ -125,7 +233,7 @@ https://jmeubank.github.io/tdm-gcc/download/
 
 https://golang.google.cn/doc/install/source
 
-```
+```text
 darwin    amd64
 darwin    arm64
 ios       amd64
