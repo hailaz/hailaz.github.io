@@ -1,6 +1,9 @@
 ---
-name: draft-organizer
-description: "自动整理 docs/draft/ 草稿目录。This skill should be used when the user wants to organize drafts from docs/draft/readme.md into the appropriate website section (tech/life/essay). It reads keywords/URLs/text from readme.md, researches and analyzes each topic, generates complete articles with proper frontmatter, and places them in the target directory."
+description: 
+alwaysApply: false
+enabled: true
+updatedAt: 2026-03-04T06:41:15.708Z
+provider: 
 ---
 
 # Draft Organizer - 草稿自动整理
