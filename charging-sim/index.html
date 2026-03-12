@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>⚡ 兆瓦闪充站充电模拟器</title>
+<style>
+/* ==================== 全局样式 ==================== */
+* { box-sizing: border-box; }
+body { margin: 0; background: #0a0e1a; font-family: 'DIN Next', 'Helvetica Neue', Arial, sans-serif; }
+
+.charging-sim-page {
+  min-height: 100vh;
+  background: #0a0e1a;
+  color: #f1f5f9;
+  padding: 16px 20px;
+}
+
+/* ==================== Header ==================== */
+.sim-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0, 229, 160, 0.15);
+}
+.header-left .page-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(135deg, #00e5a0, #00b8d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.header-left .title-icon {
+  -webkit-text-fill-color: initial;
+  font-size: 28px;
+}
+.header-left .page-subtitle {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #64748b;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.speed-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.speed-group .speed-label {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-right: 4px;
+}
+.speed-btn {
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #94a3b8;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+.speed-btn:hover { border-color: #00b8d4; color: #00b8d4; }
+.speed-btn.active {
+  background: rgba(0, 184, 212, 0.15);
+  border-color: #00b8d4;
+  color: #00e5a0;
+}
+.control-group { display: flex; gap: 8px; }
+.ctrl-btn {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.play-btn {
+  background: linear-gradient(135deg, #00e5a0, #00b8d4);
+  color: #0a0e1a;
+}
+.play-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(0, 229, 160, 0.3); }
+.reset-btn {
+  background: #1e293b;
+  color: #94a3b8;
+  border: 1px solid #334155;
+}
+.reset-btn:hover:not(:disabled) { border-color: #f59e0b; color: #f59e0b; }
+.reset-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ==================== Metrics Bar ==================== */
+.metrics-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(17, 24, 39, 0.8);
+  border: 1px solid rgba(0, 229, 160, 0.1);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 12px;
+  border-right: 1px solid rgba(100, 116, 139, 0.2);
+}
+.metric-item:last-child { border-right: none; }
+.metric-label { font-size: 11px; color: #64748b; margin-bottom: 2px; }
+.metric-value { font-size: 20px; font-weight: 700; }
+.metric-value small { font-size: 12px; font-weight: 400; opacity: 0.6; }
+.time-value { color: #f1f5f9; }
+.power-value { color: #00e5a0; }
+.grid-value { color: #3b82f6; }
+.storage-value { color: #f59e0b; }
+.done-value { color: #22c55e; }
+.soc-good { color: #22c55e; }
+.soc-warn { color: #f59e0b; }
+.soc-danger { color: #ef4444; }
+.degrade-alert {
+  flex-direction: row;
+  gap: 4px;
+  background: rgba(239, 68, 68, 0.15);
+  border-radius: 6px;
+  padding: 6px 14px;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  animation: pulse-alert 1.5s ease-in-out infinite;
+}
+.alert-icon { font-size: 16px; }
+.alert-text { color: #ef4444; font-weight: 600; font-size: 14px; }
+@keyframes pulse-alert { 0%,100%{ opacity:1; } 50%{ opacity:0.6; } }
+
+/* ==================== Main Content Grid ==================== */
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+@media (max-width: 1200px) { .main-content { grid-template-columns: 1fr; } }
+
+/* ==================== Config Panel ==================== */
+.config-panel {
+  background: rgba(17, 24, 39, 0.8);
+  border: 1px solid rgba(0, 229, 160, 0.12);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  cursor: pointer;
+  user-select: none;
+}
+.panel-header:hover { background: rgba(0, 229, 160, 0.05); }
+.panel-title { font-size: 14px; font-weight: 600; color: #94a3b8; }
+.toggle-icon { font-size: 12px; color: #64748b; }
+.panel-body { padding: 0 16px 16px; }
+.config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+@media (max-width: 900px) { .config-grid { grid-template-columns: 1fr; } }
+.config-section .section-title {
+  font-size: 13px; color: #00e5a0; margin: 0 0 12px;
+  padding-bottom: 6px; border-bottom: 1px solid rgba(0, 229, 160, 0.1);
+}
+.form-row { margin-bottom: 14px; }
+.form-row label { display: block; font-size: 12px; color: #94a3b8; margin-bottom: 6px; }
+.val-badge {
+  display: inline-block; background: rgba(0, 184, 212, 0.15);
+  color: #00b8d4; padding: 1px 6px; border-radius: 3px; font-size: 11px; margin-left: 4px;
+}
+.input-group { display: flex; gap: 6px; }
+.option-btn {
+  flex: 1; padding: 6px 0; background: #1e293b; border: 1px solid #334155;
+  color: #94a3b8; border-radius: 4px; cursor: pointer; font-size: 12px; transition: all 0.2s;
+}
+.option-btn:hover { border-color: #00b8d4; }
+.option-btn.active { background: rgba(0, 184, 212, 0.15); border-color: #00b8d4; color: #00e5a0; }
+.car-models { flex-wrap: wrap; }
+.car-btn {
+  flex: 1; min-width: 100px; display: flex; flex-direction: column; align-items: center;
+  gap: 2px; padding: 8px 6px; background: #1e293b; border: 1px solid #334155;
+  color: #94a3b8; border-radius: 6px; cursor: pointer; transition: all 0.2s;
+}
+.car-btn:hover { border-color: #00b8d4; }
+.car-btn.active { background: rgba(0, 184, 212, 0.15); border-color: #00b8d4; color: #f1f5f9; }
+.car-btn .car-icon { font-size: 20px; }
+.car-btn .car-name { font-size: 12px; font-weight: 600; }
+.car-btn .car-cap { font-size: 10px; color: #64748b; }
+.slider {
+  width: 100%; height: 4px; appearance: none; -webkit-appearance: none;
+  background: #1e293b; border-radius: 2px; outline: none; cursor: pointer;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
+  background: #00e5a0; cursor: pointer; box-shadow: 0 0 6px rgba(0, 229, 160, 0.4);
+}
+.range-hint { display: flex; justify-content: space-between; margin-top: 2px; font-size: 10px; color: #475569; }
+.panel-footer { margin-top: 12px; text-align: center; }
+.apply-btn {
+  padding: 8px 32px; background: linear-gradient(135deg, #00e5a0, #00b8d4);
+  color: #0a0e1a; border: none; border-radius: 6px; font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.3s;
+}
+.apply-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(0, 229, 160, 0.3); }
+
+/* ==================== Station View ==================== */
+.station-view {
+  background: rgba(17, 24, 39, 0.8);
+  border: 1px solid rgba(0, 229, 160, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+}
+.station-view .section-title { font-size: 14px; font-weight: 600; color: #94a3b8; margin: 0 0 12px; }
+.station-layout { display: grid; grid-template-columns: 140px 1fr 150px; gap: 12px; align-items: start; }
+@media (max-width: 800px) { .station-layout { grid-template-columns: 1fr; } }
+.storage-area { display: flex; flex-direction: column; align-items: center; }
+.storage-label { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+.storage-gauge { position: relative; width: 120px; height: 120px; }
+.gauge-svg { width: 100%; height: 100%; }
+.soc-ring { transition: stroke-dasharray 0.5s ease, stroke 0.5s ease; }
+.gauge-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+.gauge-value { display: block; font-size: 22px; font-weight: 700; }
+.gauge-unit { display: block; font-size: 9px; color: #64748b; margin-top: 2px; }
+.storage-power-info { margin-top: 8px; }
+.discharge-tag { font-size: 11px; color: #f59e0b; background: rgba(245, 158, 11, 0.1); padding: 2px 8px; border-radius: 4px; }
+.recharge-tag { font-size: 11px; color: #22c55e; background: rgba(34, 197, 94, 0.1); padding: 2px 8px; border-radius: 4px; }
+.idle-tag { font-size: 11px; color: #64748b; }
+.pile-area { display: flex; flex-direction: column; align-items: center; }
+.pile-icon-wrapper { position: relative; margin-bottom: 12px; }
+.pile-icon {
+  display: flex; flex-direction: column; align-items: center;
+  background: linear-gradient(135deg, rgba(0, 229, 160, 0.15), rgba(0, 184, 212, 0.15));
+  border: 2px solid rgba(0, 229, 160, 0.3); border-radius: 10px; padding: 10px 24px; transition: all 0.3s;
+}
+.pile-icon.degraded { border-color: rgba(239, 68, 68, 0.6); background: rgba(239, 68, 68, 0.1); animation: pile-pulse 1s infinite; }
+.pile-emoji { font-size: 28px; }
+.pile-text { font-size: 12px; color: #00e5a0; font-weight: 600; }
+@keyframes pile-pulse { 0%,100%{ box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.3); } 50%{ box-shadow: 0 0 20px 4px rgba(239, 68, 68, 0.2); } }
+.grid-line { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; }
+.grid-line .grid-label { font-size: 10px; color: #3b82f6; white-space: nowrap; }
+.flow-dots { display: flex; gap: 3px; margin-top: 2px; }
+.flow-dots .dot { width: 4px; height: 4px; border-radius: 50%; background: #3b82f6; animation: flow-down 1s infinite; }
+@keyframes flow-down { 0%{ opacity:0.2; transform:translateY(-3px); } 50%{ opacity:1; transform:translateY(0); } 100%{ opacity:0.2; transform:translateY(3px); } }
+.guns-row { display: flex; gap: 10px; width: 100%; }
+.gun-slot {
+  flex: 1; background: #0f172a; border: 1px solid #1e293b; border-radius: 8px;
+  padding: 10px; transition: all 0.3s;
+}
+.gun-slot.charging { border-color: rgba(0, 229, 160, 0.3); }
+.gun-slot.degraded { border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.05); }
+.gun-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.gun-label { font-size: 12px; font-weight: 600; color: #94a3b8; }
+.gun-status-tag { font-size: 10px; padding: 2px 6px; border-radius: 3px; }
+.gun-status-tag.idle { color: #64748b; background: rgba(100, 116, 139, 0.15); }
+.gun-status-tag.charging { color: #00e5a0; background: rgba(0, 229, 160, 0.12); }
+.gun-status-tag.degraded { color: #ef4444; background: rgba(239, 68, 68, 0.15); }
+.vehicle-card { min-height: 60px; display: flex; flex-direction: column; gap: 4px; }
+.vehicle-card.empty { align-items: center; justify-content: center; }
+.vehicle-info { display: flex; align-items: center; gap: 4px; }
+.vehicle-icon { font-size: 14px; }
+.vehicle-name { font-size: 12px; color: #f1f5f9; font-weight: 500; }
+.soc-bar-wrapper { width: 100%; height: 6px; background: #1e293b; border-radius: 3px; overflow: hidden; }
+.soc-bar { height: 100%; background: linear-gradient(90deg, #00e5a0, #00b8d4); border-radius: 3px; transition: width 0.3s; }
+.soc-bar.bar-degraded { background: linear-gradient(90deg, #ef4444, #f59e0b); }
+.vehicle-stats { display: flex; justify-content: space-between; font-size: 10px; color: #64748b; }
+.empty-text { font-size: 11px; color: #475569; }
+.queue-area .queue-label { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+.queue-list { display: flex; flex-direction: column; gap: 4px; max-height: 260px; overflow-y: auto; }
+.queue-car {
+  display: flex; align-items: center; gap: 4px; padding: 4px 8px;
+  background: #0f172a; border: 1px solid #1e293b; border-radius: 4px; font-size: 11px; color: #64748b;
+}
+.queue-car.arrived { border-color: rgba(245, 158, 11, 0.3); color: #f59e0b; }
+.q-icon { font-size: 12px; }
+.q-id { font-weight: 600; }
+.q-wait { margin-left: auto; font-size: 10px; }
+.arrived-text { color: #f59e0b; }
+.queue-empty { font-size: 11px; color: #475569; text-align: center; padding: 12px 0; }
+.done-area {
+  margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(34, 197, 94, 0.1);
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+}
+.done-label { font-size: 12px; color: #22c55e; }
+.done-car {
+  font-size: 11px; color: #94a3b8; background: rgba(34, 197, 94, 0.08);
+  padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(34, 197, 94, 0.15);
+}
+.done-car.was-degraded { border-color: rgba(239, 68, 68, 0.2); background: rgba(239, 68, 68, 0.08); }
+.done-car small { color: #64748b; }
+
+/* ==================== Charts Panel ==================== */
+.charts-panel {
+  background: rgba(17, 24, 39, 0.8);
+  border: 1px solid rgba(0, 229, 160, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.charts-panel .section-title { font-size: 14px; font-weight: 600; color: #94a3b8; margin: 0; }
+.chart-block { flex: 1; }
+.chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.chart-title { font-size: 12px; color: #94a3b8; }
+.chart-legend { display: flex; gap: 10px; }
+.legend-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: #64748b; }
+.legend-item .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.chart-container { width: 100%; height: 180px; border-radius: 4px; overflow: hidden; }
+.chart-container canvas { display: block; width: 100%; height: 100%; }
+
+/* ==================== Result Summary ==================== */
+.result-summary {
+  background: rgba(17, 24, 39, 0.8);
+  border: 1px solid rgba(0, 229, 160, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+}
+.result-summary .section-title { font-size: 14px; font-weight: 600; color: #94a3b8; margin: 0 0 12px; }
+.result-grid { display: grid; grid-template-columns: 300px 1fr; gap: 16px; }
+@media (max-width: 900px) { .result-grid { grid-template-columns: 1fr; } }
+.area-title { font-size: 12px; color: #64748b; margin: 0 0 10px; }
+.timeline-area { max-height: 300px; overflow-y: auto; }
+.no-events { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #22c55e; padding: 20px 0; }
+.ok-icon { font-size: 20px; }
+.timeline { position: relative; padding-left: 16px; }
+.timeline-item { position: relative; padding-bottom: 16px; padding-left: 16px; }
+.timeline-dot {
+  position: absolute; left: -8px; top: 4px; width: 10px; height: 10px;
+  border-radius: 50%; background: #ef4444; box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+}
+.timeline-line { position: absolute; left: -4px; top: 14px; bottom: 0; width: 2px; background: rgba(239, 68, 68, 0.2); }
+.timeline-content { display: flex; flex-direction: column; gap: 2px; }
+.event-time { font-size: 12px; font-weight: 700; color: #ef4444; }
+.event-desc { font-size: 11px; color: #f1f5f9; }
+.event-detail { font-size: 10px; color: #64748b; }
+.stats-area { overflow-x: auto; }
+.stats-table-wrapper { max-height: 300px; overflow-y: auto; }
+.stats-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.stats-table th {
+  padding: 6px 10px; text-align: left; color: #64748b;
+  border-bottom: 1px solid rgba(100, 116, 139, 0.2); font-weight: 600;
+  white-space: nowrap; position: sticky; top: 0; background: rgba(17, 24, 39, 0.95);
+}
+.stats-table td { padding: 6px 10px; color: #94a3b8; border-bottom: 1px solid rgba(100, 116, 139, 0.08); white-space: nowrap; }
+.stats-table .row-degraded td { color: #f1f5f9; background: rgba(239, 68, 68, 0.05); }
+.cell-id { font-weight: 700; color: #f1f5f9 !important; }
+.status-tag { font-size: 10px; padding: 2px 6px; border-radius: 3px; }
+.status-tag.normal { color: #22c55e; background: rgba(34, 197, 94, 0.12); }
+.status-tag.degraded { color: #ef4444; background: rgba(239, 68, 68, 0.12); }
+.conclusion {
+  margin-top: 14px; padding: 12px 16px;
+  background: linear-gradient(135deg, rgba(0, 229, 160, 0.06), rgba(0, 184, 212, 0.06));
+  border: 1px solid rgba(0, 229, 160, 0.15); border-radius: 8px;
+  display: flex; align-items: flex-start; gap: 8px;
+}
+.conclusion-icon { font-size: 18px; flex-shrink: 0; }
+.conclusion-text { font-size: 13px; color: #f1f5f9; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="charging-sim-page">
+    <!-- 顶部标题栏 -->
+    <div class="sim-header">
+      <div class="header-left">
+        <h1 class="page-title">
+          <span class="title-icon">⚡</span>
+          兆瓦闪充站充电模拟器
+        </h1>
+        <p class="page-subtitle">
+          基于比亚迪第二代刀片电池 + 兆瓦闪充桩真实参数建模 · 储能降级临界分析
+        </p>
+      </div>
+      <div class="header-right">
+        <div class="speed-group">
+          <span class="speed-label">速度</span>
+          <button v-for="s in speedOptions" :key="s"
+            class="speed-btn" :class="{ active: store.simSpeed === s }"
+            @click="setSpeed(s)">×{{s}}</button>
+        </div>
+        <div class="control-group">
+          <button class="ctrl-btn play-btn" @click="togglePlay">{{ playBtnText }}</button>
+          <button class="ctrl-btn reset-btn" :disabled="store.simStatus === 'idle'" @click="handleReset">重置</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 配置面板 -->
+    <div class="config-panel">
+      <div class="panel-header" @click="configCollapsed = !configCollapsed">
+        <span class="panel-title">⚙ 参数配置</span>
+        <span class="toggle-icon">{{ configCollapsed ? '▼' : '▲' }}</span>
+      </div>
+      <div class="panel-body" v-show="!configCollapsed">
+        <div class="config-grid">
+          <div class="config-section">
+            <h3 class="section-title">闪充站配置</h3>
+            <div class="form-row">
+              <label>储能柜数量</label>
+              <div class="input-group">
+                <button v-for="n in [1,2,3,4]" :key="n" class="option-btn"
+                  :class="{ active: localStation.storageCount === n }"
+                  @click="localStation.storageCount = n">{{ n }} 台</button>
+              </div>
+            </div>
+            <div class="form-row">
+              <label>单柜容量 <span class="val-badge">{{ localStation.storageCapacityPerUnit }} kWh</span></label>
+              <input v-model.number="localStation.storageCapacityPerUnit" type="range" min="100" max="300" step="10" class="slider" />
+              <div class="range-hint"><span>100</span><span>总计 {{ localStation.storageCount * localStation.storageCapacityPerUnit }} kWh</span><span>300</span></div>
+            </div>
+            <div class="form-row">
+              <label>电网输入功率 <span class="val-badge">{{ localStation.gridPower }} kW</span></label>
+              <input v-model.number="localStation.gridPower" type="range" min="100" max="800" step="20" class="slider" />
+              <div class="range-hint"><span>100 kW</span><span>800 kW</span></div>
+            </div>
+            <div class="form-row">
+              <label>单柜最大放电功率 <span class="val-badge">{{ localStation.maxDischargePowerPerUnit }} kW</span></label>
+              <input v-model.number="localStation.maxDischargePowerPerUnit" type="range" min="200" max="1000" step="50" class="slider" />
+              <div class="range-hint"><span>200 kW</span><span>1000 kW</span></div>
+            </div>
+            <div class="form-row">
+              <label>充电枪数量</label>
+              <div class="input-group">
+                <button v-for="n in [1,2]" :key="n" class="option-btn"
+                  :class="{ active: localStation.gunCount === n }"
+                  @click="localStation.gunCount = n">{{ n }} 枪</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="config-section">
+            <h3 class="section-title">车辆队列配置</h3>
+            <div class="form-row">
+              <label>车型选择</label>
+              <div class="input-group car-models">
+                <button v-for="(cfg, key) in CAR_MODEL_CONFIGS" :key="key"
+                  class="car-btn" :class="{ active: localQueue.carModel === key }"
+                  @click="localQueue.carModel = key">
+                  <span class="car-icon">🚗</span>
+                  <span class="car-name">{{ cfg.label }}</span>
+                  <span class="car-cap">{{ cfg.batteryCapacity }}kWh</span>
+                </button>
+              </div>
+            </div>
+            <div class="form-row">
+              <label>排队车辆数 <span class="val-badge">{{ localQueue.vehicleCount }} 辆</span></label>
+              <input v-model.number="localQueue.vehicleCount" type="range" min="3" max="20" step="1" class="slider" />
+              <div class="range-hint"><span>3 辆</span><span>20 辆</span></div>
+            </div>
+            <div class="form-row">
+              <label>初始 SOC <span class="val-badge">{{ Math.round(localQueue.initialSoc * 100) }}%</span></label>
+              <input v-model.number="localQueue.initialSoc" type="range" min="0.05" max="0.5" step="0.05" class="slider" />
+              <div class="range-hint"><span>5%</span><span>50%</span></div>
+            </div>
+            <div class="form-row">
+              <label>到达间隔 <span class="val-badge">{{ localQueue.arrivalInterval }} 秒</span></label>
+              <input v-model.number="localQueue.arrivalInterval" type="range" min="0" max="600" step="10" class="slider" />
+              <div class="range-hint"><span>0秒(同时)</span><span>{{ Math.round((localQueue.arrivalInterval / 60) * 10) / 10 }}分钟</span><span>600秒</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer">
+          <button class="apply-btn" @click="applyConfig">✓ 应用配置并重置模拟</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 模拟时间与关键指标 -->
+    <div class="metrics-bar">
+      <div class="metric-item">
+        <span class="metric-label">模拟时间</span>
+        <span class="metric-value time-value">{{ formatTime(store.simTime) }}</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-label">总输出功率</span>
+        <span class="metric-value power-value">{{ Math.round(store.currentTotalPower) }} <small>kW</small></span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-label">电网功率</span>
+        <span class="metric-value grid-value">{{ Math.round(store.currentGridPower) }} <small>kW</small></span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-label">储能放电</span>
+        <span class="metric-value storage-value">{{ Math.round(store.currentStoragePower) }} <small>kW</small></span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-label">储能SOC</span>
+        <span class="metric-value" :class="socColorClass">{{ Math.round(store.storageSoc * 100) }}%</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-label">已完成</span>
+        <span class="metric-value done-value">{{ store.completedVehicles }} / {{ store.vehicles.length }}</span>
+      </div>
+      <div v-if="store.isDegraded" class="metric-item degrade-alert">
+        <span class="alert-icon">⚠️</span>
+        <span class="alert-text">闪充降级中</span>
+      </div>
+    </div>
+
+    <!-- 核心可视化区 -->
+    <div class="main-content">
+      <!-- StationView -->
+      <div class="station-view">
+        <h3 class="section-title">充电站实时状态</h3>
+        <div class="station-layout">
+          <div class="storage-area">
+            <div class="storage-label">储能柜</div>
+            <div class="storage-gauge">
+              <svg viewBox="0 0 120 120" class="gauge-svg">
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#1E293B" stroke-width="10"/>
+                <circle cx="60" cy="60" r="50" fill="none" :stroke="socColor" stroke-width="10"
+                  stroke-linecap="round" :stroke-dasharray="socDash" stroke-dashoffset="0"
+                  transform="rotate(-90 60 60)" class="soc-ring"/>
+              </svg>
+              <div class="gauge-center">
+                <span class="gauge-value" :style="{ color: socColor }">{{ Math.round(store.storageSoc * 100) }}%</span>
+                <span class="gauge-unit">{{ Math.round(store.energyStorage.currentEnergy) }}/{{ Math.round(store.energyStorage.totalCapacity) }} kWh</span>
+              </div>
+            </div>
+            <div class="storage-power-info">
+              <span v-if="store.energyStorage.currentPower > 0" class="discharge-tag">放电 {{ Math.round(store.energyStorage.currentPower) }} kW</span>
+              <span v-else-if="store.energyStorage.currentPower < 0" class="recharge-tag">回充 {{ Math.round(Math.abs(store.energyStorage.currentPower)) }} kW</span>
+              <span v-else class="idle-tag">待机</span>
+            </div>
+          </div>
+
+          <div class="pile-area">
+            <div class="pile-icon-wrapper">
+              <div class="pile-icon" :class="{ degraded: store.isDegraded }">
+                <span class="pile-emoji">⚡</span>
+                <span class="pile-text">闪充桩</span>
+              </div>
+              <div class="grid-line">
+                <span class="grid-label">电网 {{ Math.round(store.currentGridPower) }}kW</span>
+                <div class="flow-dots grid-dots">
+                  <span v-for="i in 4" :key="i" class="dot" :style="{ animationDelay: i * 0.2 + 's' }"></span>
+                </div>
+              </div>
+            </div>
+            <div class="guns-row">
+              <div v-for="gun in store.chargingGuns" :key="gun.index" class="gun-slot" :class="gun.status">
+                <div class="gun-header">
+                  <span class="gun-label">枪{{ gun.index + 1 }}</span>
+                  <span class="gun-status-tag" :class="gun.status">{{ gunStatusText(gun.status) }}</span>
+                </div>
+                <div v-if="gun.vehicleId > 0" class="vehicle-card charging">
+                  <div class="vehicle-info">
+                    <span class="vehicle-icon">🚗</span>
+                    <span class="vehicle-name">#{{ gun.vehicleId }} {{ getVehicleLabel(gun.vehicleId) }}</span>
+                  </div>
+                  <div class="soc-bar-wrapper">
+                    <div class="soc-bar" :style="{ width: getVehicleSoc(gun.vehicleId) * 100 + '%' }" :class="{ 'bar-degraded': gun.status === 'degraded' }"></div>
+                  </div>
+                  <div class="vehicle-stats">
+                    <span>SOC {{ Math.round(getVehicleSoc(gun.vehicleId) * 100) }}%</span>
+                    <span>{{ Math.round(gun.currentPower) }} kW</span>
+                  </div>
+                </div>
+                <div v-else class="vehicle-card empty"><span class="empty-text">等待车辆</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="queue-area">
+            <div class="queue-label">排队等候 ({{ queuingVehicles.length }})</div>
+            <div class="queue-list">
+              <div v-for="v in displayQueue" :key="v.id" class="queue-car" :class="{ arrived: v.arrivalTime <= store.simTime }">
+                <span class="q-icon">🚗</span>
+                <span class="q-id">#{{ v.id }}</span>
+                <span v-if="v.arrivalTime > store.simTime" class="q-wait">{{ Math.ceil((v.arrivalTime - store.simTime) / 60) }}分后到</span>
+                <span v-else class="q-wait arrived-text">已到达</span>
+              </div>
+              <div v-if="queuingVehicles.length === 0" class="queue-empty">无排队车辆</div>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="store.completedVehicles > 0" class="done-area">
+          <span class="done-label">✅ 已完成充电：</span>
+          <span v-for="v in doneVehicles" :key="v.id" class="done-car" :class="{ 'was-degraded': v.degraded }">
+            #{{ v.id }} {{ CAR_MODEL_CONFIGS[v.model].label }}
+            <small>({{ Math.round(v.energyCharged) }}kWh)</small>
+          </span>
+        </div>
+      </div>
+
+      <!-- ChartsPanel -->
+      <div class="charts-panel">
+        <h3 class="section-title">实时图表</h3>
+        <div class="chart-block">
+          <div class="chart-header">
+            <span class="chart-title">充电功率曲线</span>
+            <div class="chart-legend">
+              <span class="legend-item"><span class="dot" style="background:#00e5a0"></span>总功率</span>
+              <span class="legend-item"><span class="dot" style="background:#3b82f6"></span>电网</span>
+              <span class="legend-item"><span class="dot" style="background:#f59e0b"></span>储能放电</span>
+            </div>
+          </div>
+          <div ref="powerChartRef" class="chart-container"><canvas ref="powerCanvas"></canvas></div>
+        </div>
+        <div class="chart-block">
+          <div class="chart-header">
+            <span class="chart-title">储能 SOC 变化</span>
+            <div class="chart-legend">
+              <span class="legend-item"><span class="dot" style="background:#00e5a0"></span>SOC</span>
+              <span class="legend-item"><span class="dot" style="background:rgba(239,68,68,0.3)"></span>降级区间</span>
+            </div>
+          </div>
+          <div ref="socChartRef" class="chart-container"><canvas ref="socCanvas"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 结果分析区 -->
+    <div v-if="store.simStatus === 'finished' || store.degradeEvents.length > 0" class="result-summary">
+      <h3 class="section-title">📊 模拟结果分析</h3>
+      <div class="result-grid">
+        <div class="timeline-area">
+          <h4 class="area-title">降级事件时间线</h4>
+          <div v-if="store.degradeEvents.length === 0" class="no-events">
+            <span class="ok-icon">✅</span><span>全程未发生闪充降级</span>
+          </div>
+          <div v-else class="timeline">
+            <div v-for="(evt, idx) in store.degradeEvents" :key="idx" class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div v-if="idx < store.degradeEvents.length - 1" class="timeline-line"></div>
+              <div class="timeline-content">
+                <span class="event-time">{{ formatTime(evt.time) }}</span>
+                <span class="event-desc">{{ evt.description }}</span>
+                <span class="event-detail">储能 SOC {{ Math.round(evt.storageSoc * 100) }}% · 需求 {{ evt.demandPower }}kW → 实际 {{ evt.actualPower }}kW</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="stats-area">
+          <h4 class="area-title">车辆充电统计</h4>
+          <div class="stats-table-wrapper">
+            <table class="stats-table">
+              <thead><tr><th>车辆</th><th>车型</th><th>初始SOC</th><th>最终SOC</th><th>耗时</th><th>充电量</th><th>状态</th></tr></thead>
+              <tbody>
+                <tr v-for="s in vehicleStats" :key="s.id" :class="{ 'row-degraded': s.degraded }">
+                  <td class="cell-id">#{{ s.id }}</td>
+                  <td>{{ s.modelLabel }}</td>
+                  <td>{{ Math.round(s.initialSoc * 100) }}%</td>
+                  <td>{{ Math.round(s.finalSoc * 100) }}%</td>
+                  <td>{{ formatDuration(s.chargeTime) }}</td>
+                  <td>{{ s.energyCharged }} kWh</td>
+                  <td>
+                    <span v-if="s.degraded" class="status-tag degraded">⚠ 降级</span>
+                    <span v-else class="status-tag normal">✓ 正常</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div v-if="conclusionText" class="conclusion">
+        <span class="conclusion-icon">💡</span>
+        <span class="conclusion-text">{{ conclusionText }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script>
+// ==================== 常量与配置 ====================
+const CAR_MODEL_CONFIGS = {
+  'han-l': { name: 'han-l', label: '汉L', batteryCapacity: 80, maxChargePower: 800, color: '#3B82F6' },
+  'z9gt':  { name: 'z9gt',  label: '腾势Z9GT', batteryCapacity: 100, maxChargePower: 1000, color: '#8B5CF6' },
+  'u7':    { name: 'u7',    label: '仰望U7', batteryCapacity: 150, maxChargePower: 1000, color: '#F59E0B' },
+};
+
+const DEFAULT_STATION_CONFIG = {
+  storageCount: 2, storageCapacityPerUnit: 169, gridPower: 360,
+  maxDischargePowerPerUnit: 800, maxChargePowerPerUnit: 200, gunCount: 2,
+};
+
+const DEFAULT_QUEUE_CONFIG = {
+  vehicleCount: 8, carModel: 'z9gt', initialSoc: 0.1, arrivalInterval: 30,
+};
+
+// ==================== 充电曲线引擎 ====================
+const CHARGE_CURVE_POINTS = [
+  [0.05,0.3],[0.1,0.6],[0.15,0.85],[0.2,0.95],[0.25,1.0],[0.35,1.0],
+  [0.45,0.95],[0.55,0.85],[0.65,0.7],[0.7,0.6],[0.75,0.45],[0.8,0.35],
+  [0.85,0.25],[0.9,0.15],[0.95,0.08],[0.97,0.04],[1.0,0.0],
+];
+
+function interpolate(soc) {
+  if (soc <= CHARGE_CURVE_POINTS[0][0]) return CHARGE_CURVE_POINTS[0][1];
+  if (soc >= CHARGE_CURVE_POINTS[CHARGE_CURVE_POINTS.length - 1][0]) return 0;
+  for (let i = 1; i < CHARGE_CURVE_POINTS.length; i++) {
+    const [x0, y0] = CHARGE_CURVE_POINTS[i - 1];
+    const [x1, y1] = CHARGE_CURVE_POINTS[i];
+    if (soc <= x1) { const t = (soc - x0) / (x1 - x0); return y0 + t * (y1 - y0); }
+  }
+  return 0;
+}
+
+function getMaxChargePower(soc, carModel) {
+  return CAR_MODEL_CONFIGS[carModel].maxChargePower * interpolate(soc);
+}
+
+function calcChargeIncrement(power, batteryCapacity, deltaTime) {
+  const energyDelta = (power * deltaTime) / 3600;
+  return { energyDelta, socDelta: energyDelta / batteryCapacity };
+}
+
+// ==================== 功率分配器 ====================
+function allocatePower(chargingVehicles, energyStorage, gridMaxPower, simTime, deltaTime, existingDegradeVehicleIds) {
+  const vehiclePowers = new Map();
+  const newDegradeEvents = [];
+
+  if (chargingVehicles.length === 0) {
+    const rechargeRoom = energyStorage.totalCapacity - energyStorage.currentEnergy;
+    if (rechargeRoom > 0) {
+      const maxEnergyPerTick = (rechargeRoom * 3600) / deltaTime;
+      const rechargePower = Math.min(gridMaxPower, energyStorage.maxChargePower, maxEnergyPerTick);
+      return { gridPowerUsed: rechargePower, storagePowerUsed: -rechargePower, totalPower: 0, isDegraded: false, vehiclePowers, newDegradeEvents };
+    }
+    return { gridPowerUsed: 0, storagePowerUsed: 0, totalPower: 0, isDegraded: false, vehiclePowers, newDegradeEvents };
+  }
+
+  const demands = [];
+  let totalDemand = 0;
+  for (const v of chargingVehicles) {
+    const demand = getMaxChargePower(v.soc, v.model);
+    demands.push({ vehicle: v, demand });
+    totalDemand += demand;
+  }
+
+  const gridUsed = Math.min(gridMaxPower, totalDemand);
+  let deficit = totalDemand - gridUsed;
+  let storageUsed = 0;
+  if (deficit > 0) {
+    const maxStorageEnergy = (energyStorage.currentEnergy * 3600) / deltaTime;
+    const maxStoragePower = Math.min(energyStorage.maxDischargePower, maxStorageEnergy);
+    storageUsed = Math.min(deficit, maxStoragePower);
+    deficit = deficit - storageUsed;
+  }
+
+  const totalAvailable = gridUsed + storageUsed;
+  const isDegraded = deficit > 1;
+
+  if (totalDemand <= totalAvailable + 1) {
+    for (const { vehicle, demand } of demands) vehiclePowers.set(vehicle.id, demand);
+  } else {
+    for (const { vehicle, demand } of demands) {
+      const ratio = totalDemand > 0 ? demand / totalDemand : 0;
+      const allocated = totalAvailable * ratio;
+      vehiclePowers.set(vehicle.id, allocated);
+      if (!existingDegradeVehicleIds.has(vehicle.id)) {
+        newDegradeEvents.push({
+          time: simTime, vehicleId: vehicle.id, vehicleModel: vehicle.model,
+          demandPower: Math.round(demand), actualPower: Math.round(allocated),
+          storageSoc: energyStorage.currentEnergy / energyStorage.totalCapacity,
+          description: `车辆 #${vehicle.id}(${CAR_MODEL_CONFIGS[vehicle.model].label}) 闪充降级：需求 ${Math.round(demand)}kW，实际 ${Math.round(allocated)}kW`,
+        });
+      }
+    }
+  }
+
+  let actualStoragePower = storageUsed;
+  if (totalDemand < gridMaxPower) {
+    const surplus = gridMaxPower - totalDemand;
+    const rechargeRoom = energyStorage.totalCapacity - energyStorage.currentEnergy;
+    if (rechargeRoom > 0 && storageUsed === 0) {
+      const rechargePower = Math.min(surplus, energyStorage.maxChargePower, (rechargeRoom * 3600) / deltaTime);
+      actualStoragePower = -rechargePower;
+    }
+  }
+
+  return { gridPowerUsed: gridUsed, storagePowerUsed: actualStoragePower, totalPower: totalAvailable, isDegraded, vehiclePowers, newDegradeEvents };
+}
+
+// ==================== Vue App ====================
+const { createApp, ref, reactive, computed, onMounted, onUnmounted, nextTick } = Vue;
+
+const app = createApp({
+  setup() {
+    // ---- Store (inline Pinia-equivalent) ----
+    const store = reactive({
+      stationConfig: { ...DEFAULT_STATION_CONFIG },
+      queueConfig: { ...DEFAULT_QUEUE_CONFIG },
+      simStatus: 'idle',
+      simTime: 0,
+      simSpeed: 1,
+      vehicles: [],
+      energyStorage: { totalCapacity: 0, currentEnergy: 0, maxDischargePower: 0, maxChargePower: 0, currentPower: 0 },
+      chargingGuns: [],
+      degradeEvents: [],
+      chartData: [],
+      currentTotalPower: 0,
+      currentGridPower: 0,
+      currentStoragePower: 0,
+      isDegraded: false,
+    });
+
+    const storageSoc = computed(() => {
+      if (store.energyStorage.totalCapacity === 0) return 0;
+      return store.energyStorage.currentEnergy / store.energyStorage.totalCapacity;
+    });
+    // Expose storageSoc via store
+    Object.defineProperty(store, 'storageSoc', { get: () => storageSoc.value, enumerable: true });
+
+    const completedVehicles = computed(() => store.vehicles.filter(v => v.status === 'done').length);
+    Object.defineProperty(store, 'completedVehicles', { get: () => completedVehicles.value, enumerable: true });
+
+    const chargingVehiclesComputed = computed(() => store.vehicles.filter(v => v.status === 'charging'));
+    const queuingVehicles = computed(() => store.vehicles.filter(v => v.status === 'queuing'));
+    const displayQueue = computed(() => store.vehicles.filter(v => v.status === 'queuing').slice(0, 10));
+    const doneVehicles = computed(() => store.vehicles.filter(v => v.status === 'done'));
+
+    const totalStorageCapacity = computed(() => store.stationConfig.storageCount * store.stationConfig.storageCapacityPerUnit);
+    const totalMaxDischargePower = computed(() => store.stationConfig.storageCount * store.stationConfig.maxDischargePowerPerUnit);
+
+    const vehicleStats = computed(() => {
+      return store.vehicles.filter(v => v.status === 'done' || v.status === 'charging').map(v => {
+        const config = CAR_MODEL_CONFIGS[v.model];
+        const chargeTime = v.status === 'done' ? v.endChargeTime - v.startChargeTime : store.simTime - v.startChargeTime;
+        return {
+          id: v.id, model: v.model, modelLabel: config.label,
+          initialSoc: v.initialSoc, finalSoc: v.soc,
+          chargeTime: Math.round(chargeTime),
+          energyCharged: Math.round(v.energyCharged * 10) / 10,
+          peakPower: Math.round(v.currentPower),
+          degraded: v.degraded, degradeTime: 0,
+        };
+      });
+    });
+
+    const conclusionText = computed(() => {
+      if (store.degradeEvents.length === 0 && store.simStatus === 'finished') {
+        return `在储能 ${totalStorageCapacity.value} kWh、电网 ${store.stationConfig.gridPower} kW 条件下，${store.queueConfig.vehicleCount} 辆车间隔 ${store.queueConfig.arrivalInterval} 秒充电，全程未发生闪充降级。`;
+      }
+      if (store.degradeEvents.length > 0) {
+        const fe = store.degradeEvents[0];
+        const minutes = Math.floor(fe.time / 60);
+        const seconds = Math.round(fe.time % 60);
+        return `在储能 ${totalStorageCapacity.value} kWh、电网 ${store.stationConfig.gridPower} kW 条件下，连续 ${store.queueConfig.vehicleCount} 辆车间隔 ${store.queueConfig.arrivalInterval} 秒充电，第 ${fe.vehicleId} 辆车在 ${minutes}分${seconds}秒 时开始出现闪充降级，储能 SOC 仅 ${Math.round(fe.storageSoc * 100)}%。`;
+      }
+      return '';
+    });
+
+    function initSimulation() {
+      const sc = store.stationConfig;
+      const qc = store.queueConfig;
+      store.simTime = 0; store.simStatus = 'idle'; store.isDegraded = false;
+      store.currentTotalPower = 0; store.currentGridPower = 0; store.currentStoragePower = 0;
+      store.degradeEvents = []; store.chartData = [];
+      const totalCap = sc.storageCount * sc.storageCapacityPerUnit;
+      store.energyStorage = {
+        totalCapacity: totalCap, currentEnergy: totalCap,
+        maxDischargePower: sc.storageCount * sc.maxDischargePowerPerUnit,
+        maxChargePower: sc.storageCount * sc.maxChargePowerPerUnit,
+        currentPower: 0,
+      };
+      store.chargingGuns = Array.from({ length: sc.gunCount }, (_, i) => ({
+        index: i, status: 'idle', vehicleId: -1, currentPower: 0,
+      }));
+      store.vehicles = Array.from({ length: qc.vehicleCount }, (_, i) => ({
+        id: i + 1, model: qc.carModel, soc: qc.initialSoc, initialSoc: qc.initialSoc,
+        status: 'queuing', arrivalTime: i * qc.arrivalInterval,
+        startChargeTime: 0, endChargeTime: 0, currentPower: 0,
+        energyCharged: 0, degraded: false, pileIndex: -1,
+      }));
+    }
+
+    function recordDataPoint() {
+      store.chartData.push({
+        time: store.simTime, totalPower: store.currentTotalPower,
+        gridPower: store.currentGridPower, storagePower: store.currentStoragePower,
+        storageSoc: storageSoc.value, isDegraded: store.isDegraded,
+      });
+      if (store.chartData.length > 1800) store.chartData.shift();
+    }
+
+    // ---- Simulation Engine ----
+    const TICK_INTERVAL = 1;
+    const TARGET_SOC = 0.97;
+    let animFrameId = null;
+    let lastRealTime = 0;
+    let accumulatedTime = 0;
+    const degradedVehicleIds = new Set();
+
+    function tick() {
+      for (const v of store.vehicles) {
+        if (v.status === 'queuing' && v.arrivalTime <= store.simTime) {
+          const freeGun = store.chargingGuns.find(g => g.status === 'idle');
+          if (freeGun) {
+            v.status = 'charging'; v.startChargeTime = store.simTime;
+            v.pileIndex = freeGun.index; freeGun.status = 'charging'; freeGun.vehicleId = v.id;
+          }
+        }
+      }
+      const chargingVehicles = store.vehicles.filter(v => v.status === 'charging');
+      const result = allocatePower(chargingVehicles, store.energyStorage, store.stationConfig.gridPower, store.simTime, TICK_INTERVAL, degradedVehicleIds);
+      store.currentTotalPower = result.totalPower;
+      store.currentGridPower = result.gridPowerUsed;
+      store.currentStoragePower = Math.max(0, result.storagePowerUsed);
+      store.isDegraded = result.isDegraded;
+      for (const evt of result.newDegradeEvents) { store.degradeEvents.push(evt); degradedVehicleIds.add(evt.vehicleId); }
+
+      for (const v of chargingVehicles) {
+        const power = result.vehiclePowers.get(v.id) || 0;
+        v.currentPower = power;
+        const config = CAR_MODEL_CONFIGS[v.model];
+        const { energyDelta, socDelta } = calcChargeIncrement(power, config.batteryCapacity, TICK_INTERVAL);
+        v.soc = Math.min(v.soc + socDelta, 1);
+        v.energyCharged += energyDelta;
+        if (result.isDegraded && !v.degraded) v.degraded = true;
+        const gun = store.chargingGuns.find(g => g.vehicleId === v.id);
+        if (gun) { gun.currentPower = power; gun.status = result.isDegraded ? 'degraded' : 'charging'; }
+        if (v.soc >= TARGET_SOC) {
+          v.soc = TARGET_SOC; v.status = 'done'; v.endChargeTime = store.simTime; v.currentPower = 0;
+          if (gun) { gun.status = 'idle'; gun.vehicleId = -1; gun.currentPower = 0; }
+        }
+      }
+
+      if (result.storagePowerUsed > 0) {
+        store.energyStorage.currentEnergy = Math.max(0, store.energyStorage.currentEnergy - (result.storagePowerUsed * TICK_INTERVAL) / 3600);
+      } else if (result.storagePowerUsed < 0) {
+        store.energyStorage.currentEnergy = Math.min(store.energyStorage.totalCapacity, store.energyStorage.currentEnergy + (Math.abs(result.storagePowerUsed) * TICK_INTERVAL) / 3600);
+      }
+      store.energyStorage.currentPower = result.storagePowerUsed;
+
+      if (Math.floor(store.simTime) % 2 === 0) recordDataPoint();
+      store.simTime += TICK_INTERVAL;
+
+      const allDone = store.vehicles.every(v => v.status === 'done');
+      const allArrived = store.vehicles.every(v => v.arrivalTime <= store.simTime);
+      const noCharging = chargingVehicles.length === 0;
+      if (allDone || (allArrived && noCharging && completedVehicles.value === store.vehicles.length)) {
+        store.simStatus = 'finished'; stopSim();
+      }
+    }
+
+    function simLoop(realTime) {
+      if (store.simStatus !== 'running') return;
+      if (lastRealTime === 0) lastRealTime = realTime;
+      const deltaReal = (realTime - lastRealTime) / 1000;
+      lastRealTime = realTime;
+      const simDelta = deltaReal * 60 * store.simSpeed;
+      accumulatedTime += simDelta;
+      while (accumulatedTime >= TICK_INTERVAL) {
+        tick(); accumulatedTime -= TICK_INTERVAL;
+        if (store.simStatus !== 'running') break;
+      }
+      if (store.simStatus === 'running') animFrameId = requestAnimationFrame(simLoop);
+    }
+
+    function startSim() {
+      if (store.simStatus === 'idle') initSimulation();
+      store.simStatus = 'running'; lastRealTime = 0; accumulatedTime = 0;
+      degradedVehicleIds.clear();
+      store.degradeEvents.forEach(e => degradedVehicleIds.add(e.vehicleId));
+      animFrameId = requestAnimationFrame(simLoop);
+    }
+    function pauseSim() { store.simStatus = 'paused'; if (animFrameId !== null) { cancelAnimationFrame(animFrameId); animFrameId = null; } }
+    function stopSim() { if (animFrameId !== null) { cancelAnimationFrame(animFrameId); animFrameId = null; } }
+    function resetSim() { stopSim(); degradedVehicleIds.clear(); initSimulation(); }
+
+    function togglePlay() {
+      if (store.simStatus === 'running') pauseSim();
+      else if (store.simStatus === 'idle' || store.simStatus === 'paused') startSim();
+      else if (store.simStatus === 'finished') { resetSim(); startSim(); }
+    }
+    function setSpeed(s) { store.simSpeed = s; }
+
+    // ---- UI State ----
+    const configCollapsed = ref(false);
+    const localStation = reactive({ ...DEFAULT_STATION_CONFIG });
+    const localQueue = reactive({ ...DEFAULT_QUEUE_CONFIG });
+    const speedOptions = [1, 2, 5, 10];
+
+    const playBtnText = computed(() => {
+      switch (store.simStatus) {
+        case 'idle': return '▶ 开始模拟'; case 'running': return '⏸ 暂停';
+        case 'paused': return '▶ 继续'; case 'finished': return '▶ 重新开始'; default: return '▶ 开始';
+      }
+    });
+
+    const socColorClass = computed(() => {
+      const soc = storageSoc.value;
+      if (soc > 0.5) return 'soc-good'; if (soc > 0.2) return 'soc-warn'; return 'soc-danger';
+    });
+
+    const circumference = Math.PI * 2 * 50;
+    const socColor = computed(() => {
+      const soc = storageSoc.value;
+      if (soc > 0.5) return '#22C55E'; if (soc > 0.2) return '#F59E0B'; return '#EF4444';
+    });
+    const socDash = computed(() => {
+      const filled = storageSoc.value * circumference;
+      return `${filled} ${circumference}`;
+    });
+
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = Math.floor(seconds % 60);
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+    function formatDuration(seconds) {
+      if (seconds <= 0) return '-';
+      const m = Math.floor(seconds / 60);
+      const s = Math.floor(seconds % 60);
+      if (m > 0) return `${m}分${s}秒`;
+      return `${s}秒`;
+    }
+    function gunStatusText(status) {
+      if (status === 'idle') return '空闲'; if (status === 'charging') return '充电中'; if (status === 'degraded') return '降级中'; return status;
+    }
+    function getVehicleSoc(vehicleId) { const v = store.vehicles.find(v => v.id === vehicleId); return v ? v.soc : 0; }
+    function getVehicleLabel(vehicleId) { const v = store.vehicles.find(v => v.id === vehicleId); return v ? CAR_MODEL_CONFIGS[v.model].label : ''; }
+
+    function handleReset() { resetSim(); configCollapsed.value = false; }
+    function applyConfig() {
+      Object.assign(store.stationConfig, { ...localStation });
+      Object.assign(store.queueConfig, { ...localQueue });
+      resetSim(); configCollapsed.value = true;
+    }
+
+    // ---- Charts (Canvas) ----
+    const powerChartRef = ref(null);
+    const powerCanvas = ref(null);
+    const socChartRef = ref(null);
+    const socCanvas = ref(null);
+    let chartRafId = null;
+    let resizeObserver = null;
+
+    const PADDING = { top: 20, right: 12, bottom: 28, left: 50 };
+    const BG_COLOR = '#0F172A';
+    const GRID_COLOR = 'rgba(100,116,139,0.15)';
+    const AXIS_COLOR = '#475569';
+
+    function resizeCanvas(canvas, container) {
+      const rect = container.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr; canvas.height = rect.height * dpr;
+      canvas.style.width = `${rect.width}px`; canvas.style.height = `${rect.height}px`;
+      const ctx = canvas.getContext('2d'); if (ctx) ctx.scale(dpr, dpr);
+    }
+
+    function drawPowerChart() {
+      const canvas = powerCanvas.value; const container = powerChartRef.value;
+      if (!canvas || !container) return;
+      const ctx = canvas.getContext('2d'); if (!ctx) return;
+      const w = container.getBoundingClientRect().width;
+      const h = container.getBoundingClientRect().height;
+      ctx.clearRect(0, 0, w, h); ctx.fillStyle = BG_COLOR; ctx.fillRect(0, 0, w, h);
+      const data = store.chartData;
+      if (data.length < 2) { ctx.fillStyle = '#475569'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('等待模拟数据...', w / 2, h / 2); return; }
+      const plotW = w - PADDING.left - PADDING.right;
+      const plotH = h - PADDING.top - PADDING.bottom;
+      const timeMin = data[0].time; const timeMax = data[data.length - 1].time;
+      const timeRange = Math.max(timeMax - timeMin, 1);
+      let maxPower = 0;
+      for (const d of data) maxPower = Math.max(maxPower, d.totalPower, d.gridPower, d.storagePower);
+      maxPower = Math.max(maxPower * 1.1, 100);
+      const xScale = t => PADDING.left + ((t - timeMin) / timeRange) * plotW;
+      const yScale = v => PADDING.top + plotH - (v / maxPower) * plotH;
+      ctx.strokeStyle = GRID_COLOR; ctx.lineWidth = 0.5;
+      for (let i = 0; i <= 4; i++) { const y = PADDING.top + (plotH / 4) * i; ctx.beginPath(); ctx.moveTo(PADDING.left, y); ctx.lineTo(w - PADDING.right, y); ctx.stroke(); }
+      ctx.fillStyle = 'rgba(239,68,68,0.08)';
+      let inDegrade = false, degradeStartX = 0;
+      for (const d of data) { const x = xScale(d.time); if (d.isDegraded && !inDegrade) { inDegrade = true; degradeStartX = x; } else if (!d.isDegraded && inDegrade) { inDegrade = false; ctx.fillRect(degradeStartX, PADDING.top, x - degradeStartX, plotH); } }
+      if (inDegrade) ctx.fillRect(degradeStartX, PADDING.top, xScale(timeMax) - degradeStartX, plotH);
+      function drawLine(key, color, dash) {
+        ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.setLineDash(dash || []);
+        ctx.beginPath(); let first = true;
+        for (const d of data) { const x = xScale(d.time); const y = yScale(d[key]); if (first) { ctx.moveTo(x, y); first = false; } else ctx.lineTo(x, y); }
+        ctx.stroke(); ctx.setLineDash([]);
+      }
+      drawLine('storagePower', '#F59E0B');
+      drawLine('gridPower', '#3B82F6', [4, 3]);
+      drawLine('totalPower', '#00E5A0');
+      ctx.fillStyle = AXIS_COLOR; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
+      for (let i = 0; i <= 4; i++) { const val = Math.round((maxPower / 4) * (4 - i)); ctx.fillText(`${val}`, PADDING.left - 4, PADDING.top + (plotH / 4) * i + 3); }
+      ctx.textAlign = 'center';
+      const tickCount = Math.min(6, Math.floor(timeRange / 60) + 1);
+      for (let i = 0; i <= tickCount; i++) { const t = timeMin + (timeRange / tickCount) * i; const x = xScale(t); ctx.fillText(`${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`, x, h - 6); }
+      ctx.fillStyle = '#64748B'; ctx.font = '9px sans-serif'; ctx.textAlign = 'left'; ctx.fillText('kW', 4, PADDING.top - 4);
+    }
+
+    function drawSocChart() {
+      const canvas = socCanvas.value; const container = socChartRef.value;
+      if (!canvas || !container) return;
+      const ctx = canvas.getContext('2d'); if (!ctx) return;
+      const w = container.getBoundingClientRect().width; const h = container.getBoundingClientRect().height;
+      ctx.clearRect(0, 0, w, h); ctx.fillStyle = BG_COLOR; ctx.fillRect(0, 0, w, h);
+      const data = store.chartData;
+      if (data.length < 2) { ctx.fillStyle = '#475569'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('等待模拟数据...', w / 2, h / 2); return; }
+      const plotW = w - PADDING.left - PADDING.right;
+      const plotH = h - PADDING.top - PADDING.bottom;
+      const timeMin = data[0].time; const timeMax = data[data.length - 1].time;
+      const timeRange = Math.max(timeMax - timeMin, 1);
+      const xScale = t => PADDING.left + ((t - timeMin) / timeRange) * plotW;
+      const yScale = soc => PADDING.top + plotH - soc * plotH;
+      ctx.strokeStyle = GRID_COLOR; ctx.lineWidth = 0.5;
+      for (let i = 0; i <= 4; i++) { const y = PADDING.top + (plotH / 4) * i; ctx.beginPath(); ctx.moveTo(PADDING.left, y); ctx.lineTo(w - PADDING.right, y); ctx.stroke(); }
+      const y20 = yScale(0.2); ctx.fillStyle = 'rgba(239,68,68,0.06)'; ctx.fillRect(PADDING.left, y20, plotW, PADDING.top + plotH - y20);
+      const y50 = yScale(0.5); ctx.fillStyle = 'rgba(245,158,11,0.04)'; ctx.fillRect(PADDING.left, y50, plotW, y20 - y50);
+      ctx.beginPath(); ctx.moveTo(xScale(data[0].time), yScale(0));
+      for (const d of data) ctx.lineTo(xScale(d.time), yScale(d.storageSoc));
+      ctx.lineTo(xScale(data[data.length - 1].time), yScale(0)); ctx.closePath();
+      const gradient = ctx.createLinearGradient(0, PADDING.top, 0, PADDING.top + plotH);
+      gradient.addColorStop(0, 'rgba(0,229,160,0.3)'); gradient.addColorStop(0.5, 'rgba(0,184,212,0.15)'); gradient.addColorStop(1, 'rgba(0,184,212,0.02)');
+      ctx.fillStyle = gradient; ctx.fill();
+      ctx.strokeStyle = '#00E5A0'; ctx.lineWidth = 2; ctx.beginPath(); let first = true;
+      for (const d of data) { const x = xScale(d.time); const y = yScale(d.storageSoc); if (first) { ctx.moveTo(x, y); first = false; } else ctx.lineTo(x, y); }
+      ctx.stroke();
+      ctx.strokeStyle = 'rgba(239,68,68,0.4)'; ctx.lineWidth = 1; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(PADDING.left, y20); ctx.lineTo(w - PADDING.right, y20); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = AXIS_COLOR; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
+      for (let i = 0; i <= 4; i++) { ctx.fillText(`${Math.round(100 - i * 25)}%`, PADDING.left - 4, PADDING.top + (plotH / 4) * i + 3); }
+      ctx.textAlign = 'center';
+      const tickCount = Math.min(6, Math.floor(timeRange / 60) + 1);
+      for (let i = 0; i <= tickCount; i++) { const t = timeMin + (timeRange / tickCount) * i; const x = xScale(t); ctx.fillText(`${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`, x, h - 6); }
+      ctx.fillStyle = '#64748B'; ctx.font = '9px sans-serif'; ctx.textAlign = 'left'; ctx.fillText('SOC', 4, PADDING.top - 4);
+    }
+
+    function drawAll() { drawPowerChart(); drawSocChart(); chartRafId = requestAnimationFrame(drawAll); }
+    function handleResize() {
+      if (powerCanvas.value && powerChartRef.value) resizeCanvas(powerCanvas.value, powerChartRef.value);
+      if (socCanvas.value && socChartRef.value) resizeCanvas(socCanvas.value, socChartRef.value);
+    }
+
+    onMounted(() => {
+      nextTick(() => {
+        handleResize();
+        chartRafId = requestAnimationFrame(drawAll);
+        resizeObserver = new ResizeObserver(() => handleResize());
+        if (powerChartRef.value) resizeObserver.observe(powerChartRef.value);
+        if (socChartRef.value) resizeObserver.observe(socChartRef.value);
+      });
+    });
+
+    onUnmounted(() => {
+      if (chartRafId !== null) cancelAnimationFrame(chartRafId);
+      if (resizeObserver) resizeObserver.disconnect();
+      stopSim();
+    });
+
+    // Init
+    initSimulation();
+
+    return {
+      store, CAR_MODEL_CONFIGS,
+      configCollapsed, localStation, localQueue, speedOptions,
+      playBtnText, socColorClass, socColor, socDash,
+      queuingVehicles, displayQueue, doneVehicles, vehicleStats, conclusionText,
+      togglePlay, setSpeed, handleReset, applyConfig,
+      formatTime, formatDuration, gunStatusText, getVehicleSoc, getVehicleLabel,
+      powerChartRef, powerCanvas, socChartRef, socCanvas,
+    };
+  }
+});
+
+app.mount('#app');
+</script>
+</body>
+</html>
