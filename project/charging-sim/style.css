@@ -1,0 +1,375 @@
+/* ==================== 全局样式 ==================== */
+/* 整体采用偏蓝灰色深色主题，比纯黑更柔和易读 */
+* { box-sizing: border-box; }
+body { margin: 0; background: #131a2b; font-family: 'DIN Next', 'Helvetica Neue', Arial, sans-serif; }
+
+.charging-sim-page {
+  min-height: 100vh;
+  background: #131a2b;
+  color: #f1f5f9;
+  padding: 16px 20px;
+}
+
+/* ==================== Header（顶部标题 + 控制按钮栏） ==================== */
+.sim-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0, 229, 160, 0.2);
+}
+.header-left .page-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(135deg, #00e5a0, #00b8d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.header-left .title-icon {
+  -webkit-text-fill-color: initial;
+  font-size: 28px;
+}
+.header-left .page-subtitle {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #64748b;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.speed-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.speed-group .speed-label {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-right: 4px;
+}
+/* 模拟速度切换按钮 */
+.speed-btn {
+  background: #253147;
+  border: 1px solid #3d4f6a;
+  color: #a0b0c4;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+.speed-btn:hover { border-color: #00b8d4; color: #00b8d4; }
+.speed-btn.active {
+  background: rgba(0, 184, 212, 0.15);
+  border-color: #00b8d4;
+  color: #00e5a0;
+}
+.control-group { display: flex; gap: 8px; }
+.ctrl-btn {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.play-btn {
+  background: linear-gradient(135deg, #00e5a0, #00b8d4);
+  color: #0a0e1a;
+}
+.play-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(0, 229, 160, 0.3); }
+/* 重置按钮 */
+.reset-btn {
+  background: #253147;
+  color: #a0b0c4;
+  border: 1px solid #3d4f6a;
+}
+.reset-btn:hover:not(:disabled) { border-color: #f59e0b; color: #f59e0b; }
+.reset-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ==================== Metrics Bar（关键指标横条） ==================== */
+.metrics-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(25, 35, 55, 0.9);
+  border: 1px solid rgba(0, 229, 160, 0.15);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 12px;
+  border-right: 1px solid rgba(100, 116, 139, 0.2);
+}
+.metric-item:last-child { border-right: none; }
+.metric-label { font-size: 11px; color: #64748b; margin-bottom: 2px; }
+.metric-value { font-size: 20px; font-weight: 700; }
+.metric-value small { font-size: 12px; font-weight: 400; opacity: 0.6; }
+.time-value { color: #f1f5f9; }
+.power-value { color: #00e5a0; }
+.grid-value { color: #3b82f6; }
+.storage-value { color: #f59e0b; }
+.done-value { color: #22c55e; }
+.soc-good { color: #22c55e; }
+.soc-warn { color: #f59e0b; }
+.soc-danger { color: #ef4444; }
+.degrade-alert {
+  flex-direction: row;
+  gap: 4px;
+  background: rgba(239, 68, 68, 0.15);
+  border-radius: 6px;
+  padding: 6px 14px;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  animation: pulse-alert 1.5s ease-in-out infinite;
+}
+.alert-icon { font-size: 16px; }
+.alert-text { color: #ef4444; font-weight: 600; font-size: 14px; }
+@keyframes pulse-alert { 0%,100%{ opacity:1; } 50%{ opacity:0.6; } }
+
+/* ==================== Main Content Grid（左右两栏主区域） ==================== */
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+@media (max-width: 1200px) { .main-content { grid-template-columns: 1fr; } }
+
+/* ==================== Config Panel（可折叠参数配置面板） ==================== */
+.config-panel {
+  background: rgba(25, 35, 55, 0.9);
+  border: 1px solid rgba(0, 229, 160, 0.15);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  cursor: pointer;
+  user-select: none;
+}
+.panel-header:hover { background: rgba(0, 229, 160, 0.05); }
+.panel-title { font-size: 14px; font-weight: 600; color: #94a3b8; }
+.toggle-icon { font-size: 12px; color: #64748b; }
+.panel-body { padding: 0 16px 16px; }
+.config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+@media (max-width: 900px) { .config-grid { grid-template-columns: 1fr; } }
+.config-section .section-title {
+  font-size: 13px; color: #00e5a0; margin: 0 0 12px;
+  padding-bottom: 6px; border-bottom: 1px solid rgba(0, 229, 160, 0.1);
+}
+.form-row { margin-bottom: 14px; }
+.form-row label { display: block; font-size: 12px; color: #94a3b8; margin-bottom: 6px; }
+.val-badge {
+  display: inline-block; background: rgba(0, 184, 212, 0.15);
+  color: #00b8d4; padding: 1px 6px; border-radius: 3px; font-size: 11px; margin-left: 4px;
+}
+.input-group { display: flex; gap: 6px; }
+/* 配置选项按钮（如储能柜数量、枪数量等） */
+.option-btn {
+  flex: 1; padding: 6px 0; background: #253147; border: 1px solid #3d4f6a;
+  color: #a0b0c4; border-radius: 4px; cursor: pointer; font-size: 12px; transition: all 0.2s;
+}
+.option-btn:hover { border-color: #00b8d4; }
+.option-btn.active { background: rgba(0, 184, 212, 0.15); border-color: #00b8d4; color: #00e5a0; }
+.car-models { flex-wrap: wrap; }
+/* 车型选择按钮 */
+.car-btn {
+  flex: 1; min-width: 100px; display: flex; flex-direction: column; align-items: center;
+  gap: 2px; padding: 8px 6px; background: #253147; border: 1px solid #3d4f6a;
+  color: #a0b0c4; border-radius: 6px; cursor: pointer; transition: all 0.2s;
+}
+.car-btn:hover { border-color: #00b8d4; }
+.car-btn.active { background: rgba(0, 184, 212, 0.15); border-color: #00b8d4; color: #f1f5f9; }
+.car-btn .car-icon { font-size: 20px; }
+.car-btn .car-name { font-size: 12px; font-weight: 600; }
+.car-btn .car-cap { font-size: 10px; color: #64748b; }
+/* 滑块（range slider）样式 */
+.slider {
+  width: 100%; height: 4px; appearance: none; -webkit-appearance: none;
+  background: #253147; border-radius: 2px; outline: none; cursor: pointer;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
+  background: #00e5a0; cursor: pointer; box-shadow: 0 0 6px rgba(0, 229, 160, 0.4);
+}
+.range-hint { display: flex; justify-content: space-between; margin-top: 2px; font-size: 10px; color: #475569; }
+.panel-footer { margin-top: 12px; text-align: center; }
+.apply-btn {
+  padding: 8px 32px; background: linear-gradient(135deg, #00e5a0, #00b8d4);
+  color: #0a0e1a; border: none; border-radius: 6px; font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.3s;
+}
+.apply-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(0, 229, 160, 0.3); }
+
+/* ==================== Station View（充电站实时状态可视化） ==================== */
+.station-view {
+  background: rgba(25, 35, 55, 0.9);
+  border: 1px solid rgba(0, 229, 160, 0.15);
+  border-radius: 8px;
+  padding: 16px;
+}
+.station-view .section-title { font-size: 14px; font-weight: 600; color: #94a3b8; margin: 0 0 12px; }
+.station-layout { display: grid; grid-template-columns: 140px 1fr 150px; gap: 12px; align-items: start; }
+@media (max-width: 800px) { .station-layout { grid-template-columns: 1fr; } }
+.storage-area { display: flex; flex-direction: column; align-items: center; }
+.storage-label { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+.storage-gauge { position: relative; width: 120px; height: 120px; }
+.gauge-svg { width: 100%; height: 100%; }
+.soc-ring { transition: stroke-dasharray 0.5s ease, stroke 0.5s ease; }
+.gauge-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+.gauge-value { display: block; font-size: 22px; font-weight: 700; }
+.gauge-unit { display: block; font-size: 9px; color: #64748b; margin-top: 2px; }
+.storage-power-info { margin-top: 8px; }
+.discharge-tag { font-size: 11px; color: #f59e0b; background: rgba(245, 158, 11, 0.1); padding: 2px 8px; border-radius: 4px; }
+.recharge-tag { font-size: 11px; color: #22c55e; background: rgba(34, 197, 94, 0.1); padding: 2px 8px; border-radius: 4px; }
+.idle-tag { font-size: 11px; color: #64748b; }
+.pile-area { display: flex; flex-direction: column; align-items: center; }
+.pile-icon-wrapper { position: relative; margin-bottom: 12px; }
+.pile-icon {
+  display: flex; flex-direction: column; align-items: center;
+  background: linear-gradient(135deg, rgba(0, 229, 160, 0.15), rgba(0, 184, 212, 0.15));
+  border: 2px solid rgba(0, 229, 160, 0.3); border-radius: 10px; padding: 10px 24px; transition: all 0.3s;
+}
+.pile-icon.degraded { border-color: rgba(239, 68, 68, 0.6); background: rgba(239, 68, 68, 0.1); animation: pile-pulse 1s infinite; }
+.pile-emoji { font-size: 28px; }
+.pile-text { font-size: 12px; color: #00e5a0; font-weight: 600; }
+@keyframes pile-pulse { 0%,100%{ box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.3); } 50%{ box-shadow: 0 0 20px 4px rgba(239, 68, 68, 0.2); } }
+.grid-line { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; }
+.grid-line .grid-label { font-size: 10px; color: #3b82f6; white-space: nowrap; }
+.flow-dots { display: flex; gap: 3px; margin-top: 2px; }
+.flow-dots .dot { width: 4px; height: 4px; border-radius: 50%; background: #3b82f6; animation: flow-down 1s infinite; }
+@keyframes flow-down { 0%{ opacity:0.2; transform:translateY(-3px); } 50%{ opacity:1; transform:translateY(0); } 100%{ opacity:0.2; transform:translateY(3px); } }
+.guns-row { display: flex; gap: 10px; width: 100%; }
+/* 充电枪位卡片 */
+.gun-slot {
+  flex: 1; background: #182236; border: 1px solid #253147; border-radius: 8px;
+  padding: 10px; transition: all 0.3s;
+}
+.gun-slot.charging { border-color: rgba(0, 229, 160, 0.3); }
+.gun-slot.degraded { border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.05); }
+.gun-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.gun-label { font-size: 12px; font-weight: 600; color: #94a3b8; }
+.gun-status-tag { font-size: 10px; padding: 2px 6px; border-radius: 3px; }
+.gun-status-tag.idle { color: #64748b; background: rgba(100, 116, 139, 0.15); }
+.gun-status-tag.charging { color: #00e5a0; background: rgba(0, 229, 160, 0.12); }
+.gun-status-tag.degraded { color: #ef4444; background: rgba(239, 68, 68, 0.15); }
+.vehicle-card { min-height: 60px; display: flex; flex-direction: column; gap: 4px; }
+.vehicle-card.empty { align-items: center; justify-content: center; }
+.vehicle-info { display: flex; align-items: center; gap: 4px; }
+.vehicle-icon { font-size: 14px; }
+.vehicle-name { font-size: 12px; color: #f1f5f9; font-weight: 500; }
+/* 车辆 SOC 进度条 */
+.soc-bar-wrapper { width: 100%; height: 6px; background: #253147; border-radius: 3px; overflow: hidden; }
+.soc-bar { height: 100%; background: linear-gradient(90deg, #00e5a0, #00b8d4); border-radius: 3px; transition: width 0.3s; }
+.soc-bar.bar-degraded { background: linear-gradient(90deg, #ef4444, #f59e0b); }
+.vehicle-stats { display: flex; justify-content: space-between; font-size: 10px; color: #64748b; }
+.empty-text { font-size: 11px; color: #475569; }
+.queue-area .queue-label { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+.queue-list { display: flex; flex-direction: column; gap: 4px; max-height: 260px; overflow-y: auto; }
+/* 排队车辆卡片 */
+.queue-car {
+  display: flex; align-items: center; gap: 4px; padding: 4px 8px;
+  background: #182236; border: 1px solid #253147; border-radius: 4px; font-size: 11px; color: #7a8da6;
+}
+.queue-car.arrived { border-color: rgba(245, 158, 11, 0.3); color: #f59e0b; }
+.q-icon { font-size: 12px; }
+.q-id { font-weight: 600; }
+.q-wait { margin-left: auto; font-size: 10px; }
+.arrived-text { color: #f59e0b; }
+.queue-empty { font-size: 11px; color: #475569; text-align: center; padding: 12px 0; }
+.done-area {
+  margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(34, 197, 94, 0.1);
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+}
+.done-label { font-size: 12px; color: #22c55e; }
+.done-car {
+  font-size: 11px; color: #94a3b8; background: rgba(34, 197, 94, 0.08);
+  padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(34, 197, 94, 0.15);
+}
+.done-car.was-degraded { border-color: rgba(239, 68, 68, 0.2); background: rgba(239, 68, 68, 0.08); }
+.done-car small { color: #64748b; }
+
+/* ==================== Charts Panel（实时图表区） ==================== */
+.charts-panel {
+  background: rgba(25, 35, 55, 0.9);
+  border: 1px solid rgba(0, 229, 160, 0.15);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.charts-panel .section-title { font-size: 14px; font-weight: 600; color: #94a3b8; margin: 0; }
+.chart-block { flex: 1; }
+.chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.chart-title { font-size: 12px; color: #94a3b8; }
+.chart-legend { display: flex; gap: 10px; }
+.legend-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: #64748b; }
+.legend-item .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.chart-container { width: 100%; height: 180px; border-radius: 4px; overflow: hidden; }
+.chart-container canvas { display: block; width: 100%; height: 100%; }
+
+/* ==================== Result Summary（模拟结果分析区） ==================== */
+.result-summary {
+  background: rgba(25, 35, 55, 0.9);
+  border: 1px solid rgba(0, 229, 160, 0.15);
+  border-radius: 8px;
+  padding: 16px;
+}
+.result-summary .section-title { font-size: 14px; font-weight: 600; color: #94a3b8; margin: 0 0 12px; }
+.result-grid { display: grid; grid-template-columns: 300px 1fr; gap: 16px; }
+@media (max-width: 900px) { .result-grid { grid-template-columns: 1fr; } }
+.area-title { font-size: 12px; color: #64748b; margin: 0 0 10px; }
+.timeline-area { max-height: 300px; overflow-y: auto; }
+.no-events { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #22c55e; padding: 20px 0; }
+.ok-icon { font-size: 20px; }
+.timeline { position: relative; padding-left: 16px; }
+.timeline-item { position: relative; padding-bottom: 16px; padding-left: 16px; }
+.timeline-dot {
+  position: absolute; left: -8px; top: 4px; width: 10px; height: 10px;
+  border-radius: 50%; background: #ef4444; box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+}
+.timeline-line { position: absolute; left: -4px; top: 14px; bottom: 0; width: 2px; background: rgba(239, 68, 68, 0.2); }
+.timeline-content { display: flex; flex-direction: column; gap: 2px; }
+.event-time { font-size: 12px; font-weight: 700; color: #ef4444; }
+.event-desc { font-size: 11px; color: #f1f5f9; }
+.event-detail { font-size: 10px; color: #64748b; }
+.stats-area { overflow-x: auto; }
+.stats-table-wrapper { max-height: 300px; overflow-y: auto; }
+.stats-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.stats-table th {
+  padding: 6px 10px; text-align: left; color: #7a8da6;
+  border-bottom: 1px solid rgba(100, 116, 139, 0.25); font-weight: 600;
+  white-space: nowrap; position: sticky; top: 0; background: rgba(25, 35, 55, 0.98);
+}
+.stats-table td { padding: 6px 10px; color: #94a3b8; border-bottom: 1px solid rgba(100, 116, 139, 0.08); white-space: nowrap; }
+.stats-table .row-degraded td { color: #f1f5f9; background: rgba(239, 68, 68, 0.05); }
+.cell-id { font-weight: 700; color: #f1f5f9 !important; }
+.status-tag { font-size: 10px; padding: 2px 6px; border-radius: 3px; }
+.status-tag.normal { color: #22c55e; background: rgba(34, 197, 94, 0.12); }
+.status-tag.degraded { color: #ef4444; background: rgba(239, 68, 68, 0.12); }
+.conclusion {
+  margin-top: 14px; padding: 12px 16px;
+  background: linear-gradient(135deg, rgba(0, 229, 160, 0.06), rgba(0, 184, 212, 0.06));
+  border: 1px solid rgba(0, 229, 160, 0.15); border-radius: 8px;
+  display: flex; align-items: flex-start; gap: 8px;
+}
+.conclusion-icon { font-size: 18px; flex-shrink: 0; }
+.conclusion-text { font-size: 13px; color: #f1f5f9; line-height: 1.6; }
