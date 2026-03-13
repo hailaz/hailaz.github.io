@@ -1,5 +1,4 @@
 /* ==================== 全局样式 ==================== */
-/* 整体采用偏蓝灰色深色主题，比纯黑更柔和易读 */
 * { box-sizing: border-box; }
 body { margin: 0; background: #131a2b; font-family: 'DIN Next', 'Helvetica Neue', Arial, sans-serif; }
 
@@ -10,7 +9,7 @@ body { margin: 0; background: #131a2b; font-family: 'DIN Next', 'Helvetica Neue'
   padding: 16px 20px;
 }
 
-/* ==================== Header（顶部标题 + 控制按钮栏） ==================== */
+/* ==================== Header ==================== */
 .sim-header {
   display: flex;
   align-items: center;
@@ -55,7 +54,6 @@ body { margin: 0; background: #131a2b; font-family: 'DIN Next', 'Helvetica Neue'
   color: #94a3b8;
   margin-right: 4px;
 }
-/* 模拟速度切换按钮 */
 .speed-btn {
   background: #253147;
   border: 1px solid #3d4f6a;
@@ -87,7 +85,6 @@ body { margin: 0; background: #131a2b; font-family: 'DIN Next', 'Helvetica Neue'
   color: #0a0e1a;
 }
 .play-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(0, 229, 160, 0.3); }
-/* 重置按钮 */
 .reset-btn {
   background: #253147;
   color: #a0b0c4;
@@ -96,7 +93,7 @@ body { margin: 0; background: #131a2b; font-family: 'DIN Next', 'Helvetica Neue'
 .reset-btn:hover:not(:disabled) { border-color: #f59e0b; color: #f59e0b; }
 .reset-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-/* ==================== Metrics Bar（关键指标横条） ==================== */
+/* ==================== Metrics Bar ==================== */
 .metrics-bar {
   display: flex;
   align-items: center;
@@ -140,7 +137,7 @@ body { margin: 0; background: #131a2b; font-family: 'DIN Next', 'Helvetica Neue'
 .alert-text { color: #ef4444; font-weight: 600; font-size: 14px; }
 @keyframes pulse-alert { 0%,100%{ opacity:1; } 50%{ opacity:0.6; } }
 
-/* ==================== Main Content Grid（左右两栏主区域） ==================== */
+/* ==================== Main Content Grid ==================== */
 .main-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -149,7 +146,7 @@ body { margin: 0; background: #131a2b; font-family: 'DIN Next', 'Helvetica Neue'
 }
 @media (max-width: 1200px) { .main-content { grid-template-columns: 1fr; } }
 
-/* ==================== Config Panel（可折叠参数配置面板） ==================== */
+/* ==================== Config Panel ==================== */
 .config-panel {
   background: rgba(25, 35, 55, 0.9);
   border: 1px solid rgba(0, 229, 160, 0.15);
@@ -183,7 +180,6 @@ body { margin: 0; background: #131a2b; font-family: 'DIN Next', 'Helvetica Neue'
   color: #00b8d4; padding: 1px 6px; border-radius: 3px; font-size: 11px; margin-left: 4px;
 }
 .input-group { display: flex; gap: 6px; }
-/* 配置选项按钮（如储能柜数量、枪数量等） */
 .option-btn {
   flex: 1; padding: 6px 0; background: #253147; border: 1px solid #3d4f6a;
   color: #a0b0c4; border-radius: 4px; cursor: pointer; font-size: 12px; transition: all 0.2s;
@@ -191,18 +187,49 @@ body { margin: 0; background: #131a2b; font-family: 'DIN Next', 'Helvetica Neue'
 .option-btn:hover { border-color: #00b8d4; }
 .option-btn.active { background: rgba(0, 184, 212, 0.15); border-color: #00b8d4; color: #00e5a0; }
 .car-models { flex-wrap: wrap; }
-/* 车型选择按钮 */
 .car-btn {
   flex: 1; min-width: 100px; display: flex; flex-direction: column; align-items: center;
   gap: 2px; padding: 8px 6px; background: #253147; border: 1px solid #3d4f6a;
   color: #a0b0c4; border-radius: 6px; cursor: pointer; transition: all 0.2s;
+  position: relative;
 }
 .car-btn:hover { border-color: #00b8d4; }
-.car-btn.active { background: rgba(0, 184, 212, 0.15); border-color: #00b8d4; color: #f1f5f9; }
+.car-btn.active { background: rgba(0, 184, 212, 0.15); border-color: var(--car-accent, #00b8d4); color: #f1f5f9; }
+.car-btn.active .car-name { color: var(--car-accent, #00e5a0); }
 .car-btn .car-icon { font-size: 20px; }
-.car-btn .car-name { font-size: 12px; font-weight: 600; }
-.car-btn .car-cap { font-size: 10px; color: #64748b; }
-/* 滑块（range slider）样式 */
+.car-btn .car-name { font-size: 11px; font-weight: 600; }
+.car-btn .car-cap { font-size: 9px; color: #64748b; }
+.car-btn .car-brand-tag {
+  position: absolute; top: 2px; right: 2px;
+  font-size: 8px; color: #475569; background: rgba(71,85,105,0.15);
+  padding: 0px 4px; border-radius: 2px; line-height: 14px;
+}
+
+/* 车型代际分组 */
+.car-gen-groups { display: flex; flex-direction: column; gap: 12px; }
+.car-gen-group { }
+.gen-group-header {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 6px; padding-bottom: 4px;
+  border-bottom: 1px solid rgba(100,116,139,0.1);
+}
+.gen-badge {
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px;
+  white-space: nowrap;
+}
+.badge-gen1 { color: #3B82F6; background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.25); }
+.badge-gen2 { color: #00e5a0; background: rgba(0,229,160,0.12); border: 1px solid rgba(0,229,160,0.25); }
+.gen-subtitle { font-size: 10px; color: #475569; }
+.gen-header-gen1 { }
+.gen-header-gen2 { }
+
+/* 代际筛选按钮 */
+.gen-filter { gap: 4px; }
+.gen-btn.gen-gen1.active { background: rgba(59,130,246,0.15); border-color: #3B82F6; color: #3B82F6; }
+.gen-btn.gen-gen2.active { background: rgba(0,229,160,0.15); border-color: #00e5a0; color: #00e5a0; }
+
+/* 桩配置摘要 */
+.pile-spec { color: #475569; font-size: 10px; margin-left: 6px; }
 .slider {
   width: 100%; height: 4px; appearance: none; -webkit-appearance: none;
   background: #253147; border-radius: 2px; outline: none; cursor: pointer;
@@ -219,8 +246,13 @@ body { margin: 0; background: #131a2b; font-family: 'DIN Next', 'Helvetica Neue'
   cursor: pointer; transition: all 0.3s;
 }
 .apply-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(0, 229, 160, 0.3); }
+.config-summary {
+  font-size: 12px; color: #94a3b8; background: rgba(0, 184, 212, 0.08);
+  padding: 6px 12px; border-radius: 4px; text-align: center;
+}
+.config-summary strong { color: #00e5a0; }
 
-/* ==================== Station View（充电站实时状态可视化） ==================== */
+/* ==================== Station View V2 ==================== */
 .station-view {
   background: rgba(25, 35, 55, 0.9);
   border: 1px solid rgba(0, 229, 160, 0.15);
@@ -228,8 +260,30 @@ body { margin: 0; background: #131a2b; font-family: 'DIN Next', 'Helvetica Neue'
   padding: 16px;
 }
 .station-view .section-title { font-size: 14px; font-weight: 600; color: #94a3b8; margin: 0 0 12px; }
-.station-layout { display: grid; grid-template-columns: 140px 1fr 150px; gap: 12px; align-items: start; }
-@media (max-width: 800px) { .station-layout { grid-template-columns: 1fr; } }
+
+.station-layout-v2 {
+  display: grid;
+  grid-template-columns: 130px 1fr 140px;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "storage grid queue"
+    "storage piles queue";
+  gap: 12px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .station-layout-v2 {
+    grid-template-columns: 1fr;
+    grid-template-areas: "storage" "grid" "piles" "queue";
+  }
+}
+
+.station-layout-v2 .storage-area { grid-area: storage; }
+.station-layout-v2 .grid-connector { grid-area: grid; }
+.station-layout-v2 .piles-zone { grid-area: piles; }
+.station-layout-v2 .queue-area { grid-area: queue; }
+
+/* 储能区 */
 .storage-area { display: flex; flex-direction: column; align-items: center; }
 .storage-label { font-size: 12px; color: #64748b; margin-bottom: 8px; }
 .storage-gauge { position: relative; width: 120px; height: 120px; }
@@ -242,50 +296,410 @@ body { margin: 0; background: #131a2b; font-family: 'DIN Next', 'Helvetica Neue'
 .discharge-tag { font-size: 11px; color: #f59e0b; background: rgba(245, 158, 11, 0.1); padding: 2px 8px; border-radius: 4px; }
 .recharge-tag { font-size: 11px; color: #22c55e; background: rgba(34, 197, 94, 0.1); padding: 2px 8px; border-radius: 4px; }
 .idle-tag { font-size: 11px; color: #64748b; }
-.pile-area { display: flex; flex-direction: column; align-items: center; }
-.pile-icon-wrapper { position: relative; margin-bottom: 12px; }
-.pile-icon {
-  display: flex; flex-direction: column; align-items: center;
-  background: linear-gradient(135deg, rgba(0, 229, 160, 0.15), rgba(0, 184, 212, 0.15));
-  border: 2px solid rgba(0, 229, 160, 0.3); border-radius: 10px; padding: 10px 24px; transition: all 0.3s;
+
+/* 电网连线 */
+.grid-connector {
+  display: flex; align-items: center; justify-content: center;
+  padding: 8px 0;
 }
-.pile-icon.degraded { border-color: rgba(239, 68, 68, 0.6); background: rgba(239, 68, 68, 0.1); animation: pile-pulse 1s infinite; }
-.pile-emoji { font-size: 28px; }
-.pile-text { font-size: 12px; color: #00e5a0; font-weight: 600; }
-@keyframes pile-pulse { 0%,100%{ box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.3); } 50%{ box-shadow: 0 0 20px 4px rgba(239, 68, 68, 0.2); } }
-.grid-line { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; }
-.grid-line .grid-label { font-size: 10px; color: #3b82f6; white-space: nowrap; }
-.flow-dots { display: flex; gap: 3px; margin-top: 2px; }
-.flow-dots .dot { width: 4px; height: 4px; border-radius: 50%; background: #3b82f6; animation: flow-down 1s infinite; }
-@keyframes flow-down { 0%{ opacity:0.2; transform:translateY(-3px); } 50%{ opacity:1; transform:translateY(0); } 100%{ opacity:0.2; transform:translateY(3px); } }
-.guns-row { display: flex; gap: 10px; width: 100%; }
-/* 充电枪位卡片 */
-.gun-slot {
-  flex: 1; background: #182236; border: 1px solid #253147; border-radius: 8px;
-  padding: 10px; transition: all 0.3s;
+.grid-line-v2 {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
 }
-.gun-slot.charging { border-color: rgba(0, 229, 160, 0.3); }
-.gun-slot.degraded { border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.05); }
-.gun-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.gun-label { font-size: 12px; font-weight: 600; color: #94a3b8; }
-.gun-status-tag { font-size: 10px; padding: 2px 6px; border-radius: 3px; }
-.gun-status-tag.idle { color: #64748b; background: rgba(100, 116, 139, 0.15); }
-.gun-status-tag.charging { color: #00e5a0; background: rgba(0, 229, 160, 0.12); }
-.gun-status-tag.degraded { color: #ef4444; background: rgba(239, 68, 68, 0.15); }
-.vehicle-card { min-height: 60px; display: flex; flex-direction: column; gap: 4px; }
-.vehicle-card.empty { align-items: center; justify-content: center; }
-.vehicle-info { display: flex; align-items: center; gap: 4px; }
-.vehicle-icon { font-size: 14px; }
-.vehicle-name { font-size: 12px; color: #f1f5f9; font-weight: 500; }
-/* 车辆 SOC 进度条 */
-.soc-bar-wrapper { width: 100%; height: 6px; background: #253147; border-radius: 3px; overflow: hidden; }
-.soc-bar { height: 100%; background: linear-gradient(90deg, #00e5a0, #00b8d4); border-radius: 3px; transition: width 0.3s; }
+.grid-label-v2 {
+  font-size: 11px; color: #3b82f6; font-weight: 600; white-space: nowrap;
+}
+.flow-bar {
+  width: 100%; height: 3px; background: #1e3a5f; border-radius: 2px; overflow: hidden;
+  position: relative;
+}
+.flow-pulse {
+  position: absolute; top: 0; left: -30%; width: 30%; height: 100%;
+  background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+  animation: flow-pulse-anim 1.2s linear infinite;
+}
+@keyframes flow-pulse-anim {
+  0% { left: -30%; }
+  100% { left: 100%; }
+}
+
+/* ==================== T型充电桩布局 ==================== */
+.piles-zone {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
+
+.t-pile-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 200px;
+  flex: 1;
+  max-width: 350px;
+}
+
+/* T型桩主体 */
+.t-pile-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* T型竖杆 - 连接电网的线缆 */
+.t-stem {
+  width: 4px;
+  height: 28px;
+  display: flex;
+  justify-content: center;
+}
+.stem-cable {
+  width: 4px; height: 100%;
+  background: #253147;
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+.cable-flow {
+  position: absolute; top: -100%; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(180deg, transparent, #00e5a0, transparent);
+  opacity: 0;
+}
+.cable-flow.active {
+  opacity: 1;
+  animation: cable-flow-down 0.8s linear infinite;
+}
+@keyframes cable-flow-down {
+  0% { top: -100%; }
+  100% { top: 100%; }
+}
+
+/* T型横杆 - 滑轨悬吊式桩主体 */
+.t-crossbar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+  padding: 0 4px;
+  gap: 0;
+}
+.t-crossbar::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent 0%, #253147 10%, #253147 90%, transparent 100%);
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+/* 滑轨 */
+.slide-rail {
+  position: absolute;
+  top: 50%; left: 8px; right: 8px;
+  transform: translateY(-50%);
+  height: 5px;
+  z-index: 1;
+}
+.rail-track {
+  position: absolute;
+  top: 1px; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent 0%, #3d5a80 5%, #4a6b8a 50%, #3d5a80 95%, transparent 100%);
+  border-radius: 2px;
+}
+.rail-slider {
+  position: absolute;
+  top: -1px;
+  width: 10px; height: 7px;
+  background: #5a7a9a;
+  border-radius: 2px;
+  transition: background 0.3s;
+}
+.rail-slider.left-slider { left: 12%; }
+.rail-slider.right-slider { right: 12%; }
+.rail-slider.connected { background: #00e5a0; box-shadow: 0 0 6px rgba(0,229,160,0.4); }
+
+/* 悬吊充电枪线（从横杆两端垂下） */
+.hanging-cable {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 20px;
+  z-index: 2;
+  opacity: 0.4;
+  transition: opacity 0.3s;
+}
+.hanging-cable.active { opacity: 1; }
+.hanging-cable .cable-wire {
+  width: 2px; height: 22px;
+  background: linear-gradient(180deg, #3d5a80, #5a7a9a);
+  border-radius: 0 0 1px 1px;
+  position: relative;
+}
+.hanging-cable.active .cable-wire {
+  background: linear-gradient(180deg, #00e5a0, #00b8d4);
+  box-shadow: 0 0 4px rgba(0,229,160,0.3);
+}
+.hanging-cable.active .cable-wire::after {
+  content: '';
+  position: absolute;
+  top: -100%; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(180deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: cable-energy-flow 0.8s linear infinite;
+}
+@keyframes cable-energy-flow {
+  0% { top: -100%; }
+  100% { top: 100%; }
+}
+.cable-gun-tip {
+  font-size: 10px;
+  line-height: 1;
+  transition: all 0.3s;
+  filter: grayscale(0.7);
+}
+.cable-gun-tip.sparking {
+  filter: grayscale(0) brightness(1.3);
+  animation: gun-spark 0.6s ease-in-out infinite alternate;
+}
+@keyframes gun-spark {
+  0% { transform: scale(1); filter: brightness(1.2); }
+  100% { transform: scale(1.15); filter: brightness(1.5) drop-shadow(0 0 4px #00e5a0); }
+}
+
+.pile-badge {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  background: linear-gradient(135deg, rgba(0, 229, 160, 0.12), rgba(0, 184, 212, 0.12));
+  border: 2px solid rgba(0, 229, 160, 0.3);
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+.pile-badge.charging {
+  border-color: rgba(0, 229, 160, 0.5);
+  box-shadow: 0 0 12px rgba(0, 229, 160, 0.15);
+}
+.pile-badge.degraded {
+  border-color: rgba(239, 68, 68, 0.6);
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(245, 158, 11, 0.1));
+  animation: pile-badge-pulse 1s infinite;
+}
+@keyframes pile-badge-pulse { 0%,100%{ box-shadow: 0 0 0 0 rgba(239,68,68,0.3); } 50%{ box-shadow: 0 0 20px 4px rgba(239,68,68,0.2); } }
+.pile-bolt { font-size: 18px; }
+.pile-label { font-size: 12px; color: #00e5a0; font-weight: 700; }
+.pile-power-tag { font-size: 10px; color: #f59e0b; background: rgba(245,158,11,0.12); padding: 1px 6px; border-radius: 3px; }
+.pile-degraded .pile-label { color: #ef4444; }
+
+/* ==================== 车位区（长边并排 - 横向排列） ==================== */
+.parking-slots {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  width: 100%;
+}
+
+/* 单个车位 - 按实际车位长宽比 (约 5.3m×2.5m ≈ 2.1:1) */
+.parking-slot {
+  flex: 1;
+  min-width: 0;
+  background: #161e30;
+  border: 1px solid #253147;
+  border-radius: 6px;
+  padding: 10px 8px 12px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+  min-height: 240px;
+  aspect-ratio: 1 / 2.1;
+}
+.parking-slot.charging {
+  border-color: rgba(0, 229, 160, 0.25);
+  background: #182236;
+}
+.parking-slot.degraded {
+  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.04);
+}
+
+/* 车位头部 */
+.slot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  margin-top: 12px;
+}
+.slot-id { font-size: 10px; font-weight: 700; color: #7a8da6; }
+.slot-status { font-size: 9px; padding: 1px 5px; border-radius: 3px; }
+.slot-status.idle { color: #475569; background: rgba(71,85,105,0.15); }
+.slot-status.charging { color: #00e5a0; background: rgba(0,229,160,0.12); }
+.slot-status.degraded { color: #ef4444; background: rgba(239,68,68,0.15); }
+
+/* ==================== 停车动画特效 ==================== */
+.parked-vehicle {
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 接近阶段 - 车辆从右侧滑入 */
+.parked-vehicle.anim-approaching {
+  transform: translateX(60px) scale(0.8);
+  opacity: 0.4;
+}
+
+/* 倒车入位 - 减速进入 */
+.parked-vehicle.anim-parking {
+  transform: translateX(10px) scale(0.95);
+  opacity: 0.8;
+}
+
+/* 停好 - 最终位置，轻微弹跳 */
+.parked-vehicle.anim-docked {
+  transform: translateX(0) scale(1);
+  opacity: 1;
+  animation: dock-bounce 0.3s ease-out;
+}
+@keyframes dock-bounce {
+  0% { transform: translateX(5px) scale(0.97); }
+  50% { transform: translateX(-2px) scale(1.02); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+/* 刹车灯闪烁 - 停车时 */
+.parking-slot.parking-parking .parked-vehicle::after,
+.parking-slot.parking-docked .parked-vehicle::after {
+  content: '';
+  position: absolute;
+  bottom: 30px;
+  right: 4px;
+  width: 6px; height: 6px;
+  background: #ef4444;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #ef4444;
+  animation: brake-flash 0.4s ease-in-out 2;
+}
+@keyframes brake-flash {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+/* 驶离动画 */
+.parked-vehicle.anim-departing {
+  transform: translateX(-80px) scale(0.85);
+  opacity: 0;
+  transition: all 0.4s ease-in;
+}
+
+/* 停车完成后的尘土特效 */
+.parking-slot.parking-docked::before {
+  content: '';
+  position: absolute;
+  bottom: 8px; left: 50%;
+  transform: translateX(-50%);
+  width: 40px; height: 8px;
+  background: radial-gradient(ellipse, rgba(148,163,184,0.15) 0%, transparent 70%);
+  animation: dust-settle 0.6s ease-out forwards;
+}
+@keyframes dust-settle {
+  0% { width: 20px; opacity: 0.4; }
+  50% { width: 50px; opacity: 0.2; }
+  100% { width: 60px; opacity: 0; }
+}
+
+/* 车辆渲染 */
+.vehicle-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.car-roof {
+  width: 28px; height: 5px;
+  background: rgba(100,116,139,0.15);
+  border-radius: 4px 4px 0 0;
+}
+.car-main {
+  position: relative;
+}
+.car-emoji { font-size: 30px; }
+.car-wheels {
+  display: flex; gap: 14px; margin-top: -2px;
+}
+.wheel {
+  width: 7px; height: 7px;
+  background: #475569;
+  border-radius: 50%;
+  border: 1px solid #5a6e87;
+}
+/* 充电时车轮发光 */
+.parking-slot.charging .wheel {
+  box-shadow: 0 0 4px rgba(0, 229, 160, 0.4);
+}
+
+.vehicle-info-overlay {
+  display: flex; align-items: center; gap: 3px;
+  justify-content: center;
+  font-size: 10px; color: #c8d6e5;
+}
+.v-id { font-weight: 700; color: #f1f5f9; }
+.v-name { color: #94a3b8; }
+
+.soc-bar-wrapper {
+  width: 100%; height: 5px; background: #253147; border-radius: 3px; overflow: hidden; margin: 3px 0;
+}
+.soc-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #00e5a0, #00b8d4);
+  border-radius: 3px;
+  transition: width 0.3s;
+}
 .soc-bar.bar-degraded { background: linear-gradient(90deg, #ef4444, #f59e0b); }
-.vehicle-stats { display: flex; justify-content: space-between; font-size: 10px; color: #64748b; }
-.empty-text { font-size: 11px; color: #475569; }
+
+.vehicle-stats-mini {
+  display: flex; justify-content: space-between; font-size: 9px; color: #64748b;
+}
+.power-reading { color: #f59e0b; font-weight: 600; }
+.power-reading.pulsing {
+  animation: power-pulse 1s ease-in-out infinite;
+  color: #ef4444;
+}
+@keyframes power-pulse { 0%,100%{ opacity:1; } 50%{ opacity:0.5; } }
+
+/* 空车位 */
+.empty-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 310px;
+  position: relative;
+}
+.parking-lines {
+  position: absolute;
+  inset: 8px;
+}
+.p-line {
+  position: absolute;
+  background: rgba(100, 116, 139, 0.12);
+}
+.p-line.left { left: 0; top: 0; bottom: 0; width: 2px; }
+.p-line.right { right: 0; top: 0; bottom: 0; width: 2px; }
+.p-line.bottom { bottom: 0; left: 0; right: 0; height: 2px; }
+.empty-text {
+  font-size: 20px;
+  font-weight: 900;
+  color: rgba(100, 116, 139, 0.15);
+  letter-spacing: 2px;
+}
+
+/* 排队区 */
 .queue-area .queue-label { font-size: 12px; color: #64748b; margin-bottom: 8px; }
-.queue-list { display: flex; flex-direction: column; gap: 4px; max-height: 260px; overflow-y: auto; }
-/* 排队车辆卡片 */
+.queue-list { display: flex; flex-direction: column; gap: 4px; max-height: 300px; overflow-y: auto; }
 .queue-car {
   display: flex; align-items: center; gap: 4px; padding: 4px 8px;
   background: #182236; border: 1px solid #253147; border-radius: 4px; font-size: 11px; color: #7a8da6;
@@ -296,6 +710,8 @@ body { margin: 0; background: #131a2b; font-family: 'DIN Next', 'Helvetica Neue'
 .q-wait { margin-left: auto; font-size: 10px; }
 .arrived-text { color: #f59e0b; }
 .queue-empty { font-size: 11px; color: #475569; text-align: center; padding: 12px 0; }
+
+/* 已完成区 */
 .done-area {
   margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(34, 197, 94, 0.1);
   display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
@@ -308,7 +724,7 @@ body { margin: 0; background: #131a2b; font-family: 'DIN Next', 'Helvetica Neue'
 .done-car.was-degraded { border-color: rgba(239, 68, 68, 0.2); background: rgba(239, 68, 68, 0.08); }
 .done-car small { color: #64748b; }
 
-/* ==================== Charts Panel（实时图表区） ==================== */
+/* ==================== Charts Panel ==================== */
 .charts-panel {
   background: rgba(25, 35, 55, 0.9);
   border: 1px solid rgba(0, 229, 160, 0.15);
@@ -326,7 +742,28 @@ body { margin: 0; background: #131a2b; font-family: 'DIN Next', 'Helvetica Neue'
 .chart-container { width: 100%; height: 180px; border-radius: 4px; overflow: hidden; }
 .chart-container canvas { display: block; width: 100%; height: 100%; }
 
-/* ==================== Result Summary（模拟结果分析区） ==================== */
+/* 车辆选择器 */
+.vehicle-selector {
+  display: flex; align-items: center; gap: 6px;
+}
+.vehicle-select {
+  background: #253147;
+  border: 1px solid #3d4f6a;
+  color: #a0b0c4;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  outline: none;
+}
+.vehicle-select:hover { border-color: #00b8d4; }
+.vehicle-select:focus { border-color: #00e5a0; }
+.vehicle-select option {
+  background: #1e293b;
+  color: #f1f5f9;
+}
+
+/* ==================== Result Summary ==================== */
 .result-summary {
   background: rgba(25, 35, 55, 0.9);
   border: 1px solid rgba(0, 229, 160, 0.15);
@@ -373,3 +810,34 @@ body { margin: 0; background: #131a2b; font-family: 'DIN Next', 'Helvetica Neue'
 }
 .conclusion-icon { font-size: 18px; flex-shrink: 0; }
 .conclusion-text { font-size: 13px; color: #f1f5f9; line-height: 1.6; }
+
+/* ==================== 充电中闪光特效 ==================== */
+.parking-slot.charging::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00e5a0, transparent);
+  animation: charge-glow-slide 2s linear infinite;
+}
+@keyframes charge-glow-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ==================== 车位内嵌功率图表 ==================== */
+.slot-chart-wrapper {
+  width: 100%;
+  height: 50px;
+  margin-top: 6px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: rgba(24, 34, 54, 0.6);
+  border: 1px solid rgba(100, 116, 139, 0.1);
+  position: relative;
+}
+.slot-chart-wrapper canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

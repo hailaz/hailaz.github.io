@@ -13,40 +13,107 @@
 // ==================== 常量与配置 ====================
 
 /**
- * 车型配置表
- * - batteryCapacity: 电池容量 (kWh)
- * - maxChargePower:  单枪最大充电功率 (kW)，目前闪充桩支持最高 1500kW
- * - color:           图表中该车型对应颜色
+ * 车型分代分类
+ * - gen1: 一代兆瓦闪充（超级e平台，2025年3月发布）
+ *   · 充电桩参数：单枪峰值 1000kW，双枪总功率 1000kW，峰值 1360kW
+ *   · 首发车型：汉L、唐L
+ *
+ * - gen2: 二代兆瓦闪充（2026年3月"闪充中国"发布）
+ *   · 充电桩参数：单枪峰值 1500kW，整站最高 2100kW
+ *   · 二代刀片电池：10%-70% 仅需5分钟，10%-97% 仅需9分钟
+ *   · 首搭10款车型
  */
-const CAR_MODEL_CONFIGS = {
-  'han-l': { name: 'han-l', label: '汉L', batteryCapacity: 80, maxChargePower: 800, color: '#3B82F6' },
-  'z9gt':  { name: 'z9gt',  label: '腾势Z9GT', batteryCapacity: 100, maxChargePower: 1000, color: '#8B5CF6' },
-  'u7':    { name: 'u7',    label: '仰望U7', batteryCapacity: 150, maxChargePower: 1500, color: '#F59E0B' },
+
+/** 车型代际枚举 */
+const CAR_GENERATIONS = {
+  gen1: {
+    id: 'gen1',
+    label: '一代兆瓦闪充',
+    subtitle: '超级e平台 · 10C充电倍率 · 单枪峰值1000kW',
+    year: 2025,
+    maxGunPower: 1000,    // 单枪峰值 kW
+    maxPilePower: 1360,   // 单桩峰值 kW
+  },
+  gen2: {
+    id: 'gen2',
+    label: '二代兆瓦闪充',
+    subtitle: '二代刀片电池 · 5分钟充好 · 单枪峰值1500kW',
+    year: 2026,
+    maxGunPower: 1500,    // 单枪峰值 kW
+    maxPilePower: 2100,   // 整站最高 kW
+  },
 };
 
 /**
- * 闪充站默认配置
- * - storageCount:             储能柜数量
- * - storageCapacityPerUnit:   单柜容量 (kWh)
- * - gridPower:                电网输入功率 (kW)
- * - maxDischargePowerPerUnit: 单柜最大放电功率 (kW)
- * - maxChargePowerPerUnit:    单柜最大充电功率（回充）(kW)
- * - gunCount:                 充电枪数量
+ * 车型配置表
+ * - batteryCapacity: 电池容量 (kWh)
+ * - maxChargePower:  单枪最大充电功率 (kW)
+ * - color:           图表中该车型对应颜色
+ * - generation:      所属代际 (gen1 | gen2)
+ * - brand:           品牌系列
+ * - segment:         车型级别
+ */
+const CAR_MODEL_CONFIGS = {
+  // ====== 一代兆瓦闪充 · 超级e平台车型 ======
+  'han-l':      { name: 'han-l',      label: '汉L EV',         batteryCapacity: 100, maxChargePower: 1000, color: '#3B82F6', generation: 'gen1', brand: '王朝', segment: '旗舰轿车' },
+  'tang-l':     { name: 'tang-l',     label: '唐L EV',         batteryCapacity: 100, maxChargePower: 1000, color: '#0EA5E9', generation: 'gen1', brand: '王朝', segment: '旗舰SUV' },
+
+  // ====== 二代兆瓦闪充 · 二代刀片电池首搭10款车型 ======
+  // 王朝网
+  'song-ultra': { name: 'song-ultra', label: '宋Ultra EV',     batteryCapacity: 72,  maxChargePower: 1000, color: '#22C55E', generation: 'gen2', brand: '王朝', segment: '主力SUV' },
+  'da-tang':    { name: 'da-tang',    label: '大唐',            batteryCapacity: 100, maxChargePower: 1200, color: '#06B6D4', generation: 'gen2', brand: '王朝', segment: '大型SUV' },
+  // 海洋网
+  'hailion-06': { name: 'hailion-06', label: '海狮06 EV',      batteryCapacity: 72,  maxChargePower: 1000, color: '#84CC16', generation: 'gen2', brand: '海洋', segment: '紧凑SUV' },
+  'haibao-07':  { name: 'haibao-07',  label: '海豹07 EV',      batteryCapacity: 80,  maxChargePower: 1200, color: '#14B8A6', generation: 'gen2', brand: '海洋', segment: '中型轿车' },
+  // 腾势
+  'z9gt':       { name: 'z9gt',       label: '腾势Z9GT',       batteryCapacity: 120, maxChargePower: 1500, color: '#8B5CF6', generation: 'gen2', brand: '腾势', segment: 'GT轿跑' },
+  'n9':         { name: 'n9',         label: '腾势N9',         batteryCapacity: 100, maxChargePower: 1200, color: '#A855F7', generation: 'gen2', brand: '腾势', segment: '旗舰SUV' },
+  // 方程豹
+  'titan-3':    { name: 'titan-3',    label: '方程豹钛3',      batteryCapacity: 72,  maxChargePower: 1200, color: '#F59E0B', generation: 'gen2', brand: '方程豹', segment: '紧凑SUV' },
+  'titan-7':    { name: 'titan-7',    label: '方程豹钛7 EV',   batteryCapacity: 100, maxChargePower: 1200, color: '#F97316', generation: 'gen2', brand: '方程豹', segment: '中大型SUV' },
+  // 仰望
+  'u7':         { name: 'u7',         label: '仰望U7',         batteryCapacity: 150, maxChargePower: 1500, color: '#EF4444', generation: 'gen2', brand: '仰望', segment: '旗舰轿车' },
+  'u8l':        { name: 'u8l',        label: '仰望U8L 鼎世版', batteryCapacity: 150, maxChargePower: 1500, color: '#EC4899', generation: 'gen2', brand: '仰望', segment: '豪华SUV' },
+};
+
+/**
+ * 闪充站默认配置（基于比亚迪兆瓦闪充实际参数）
+ *
+ * 实际架构：1充电桩 + 2储能柜 + 1充电主机
+ * - 储能柜有 169kWh / 180kWh / 225kWh 三种规格
+ * - 单柜最大输出 800kW，1250A 电流
+ * - 电网输入功率仅需 315 kVA 变压器
+ * - 电网 + 储能协同：一代总输出 1360kW，二代总输出 2100kW
+ * - 每桩固定2枪（滑轨悬吊式T型桩标准配置）
+ *
+ * storagePerPile:             每桩配储能柜数量（实际1桩配2柜）
+ * storageCapacityPerUnit:     单柜容量 (kWh)
+ * gridPower:                  电网输入功率 (kW)
+ * maxDischargePowerPerUnit:   单柜最大放电功率 (kW)
+ * maxChargePowerPerUnit:      单柜最大充电功率（回充）(kW)
+ * pileCount:                  充电桩数量
+ * gunsPerPile:                每桩固定2枪
  */
 const DEFAULT_STATION_CONFIG = {
-  storageCount: 2, storageCapacityPerUnit: 169, gridPower: 360,
-  maxDischargePowerPerUnit: 800, maxChargePowerPerUnit: 200, gunCount: 2,
+  storagePerPile: 2,                   // 每桩配2台储能柜（实际参数）
+  storageCapacityPerUnit: 169,         // 单柜 169 kWh（比亚迪标配）
+  gridPower: 315,                      // 电网输入 315 kW（仅需 315 kVA 变压器）
+  maxDischargePowerPerUnit: 800,       // 单柜最大放电 800 kW
+  maxChargePowerPerUnit: 160,          // 单柜回充功率 (kW)
+  pileCount: 1, gunsPerPile: 2,       // 默认1桩，固定2枪，不可配置
 };
 
 /**
  * 车辆队列默认配置
- * - vehicleCount:    排队车辆总数
- * - carModel:        默认选用的车型
- * - initialSoc:      初始电量百分比 (0~1)
- * - arrivalInterval: 相邻车辆到达间隔 (秒)
+ * - vehicleCount:      排队车辆总数
+ * - carModel:          默认选用的车型
+ * - initialSoc:        初始电量百分比 (0~1)
+ * - targetSoc:         目标充电 SOC (0~1)，充到此值即视为充满
+ * - chargingInterval:  充电间隔 (分钟)，即前车拔枪离开 + 后车停车插枪的非充电时间
+ *                       模拟真实场景：一辆车充完离开后，下一辆车需要一段时间停车、插枪才能开始充电
  */
 const DEFAULT_QUEUE_CONFIG = {
-  vehicleCount: 8, carModel: 'z9gt', initialSoc: 0.1, arrivalInterval: 30,
+  vehicleCount: 50, carModel: 'z9gt', initialSoc: 0.1, targetSoc: 0.97, chargingInterval: 5,
 };
 
 
@@ -103,14 +170,15 @@ function calcChargeIncrement(power, batteryCapacity, deltaTime) {
  * 如果电网 + 储能仍不够，则按需求比例降功分配（即"闪充降级"）。
  * 空闲时若电网有余量，还会对储能柜进行回充。
  *
- * @param {Array}  chargingVehicles          - 当前正在充电的车辆列表
+ * @param {Array}  chargingVehicles          - 当前正在充电的车辆列表（需含 pileIndex 属性）
  * @param {Object} energyStorage             - 储能系统状态
  * @param {number} gridMaxPower              - 电网最大输入功率 (kW)
  * @param {number} simTime                   - 当前模拟时间 (秒)
  * @param {number} deltaTime                 - 时间步长 (秒)
  * @param {Set}    existingDegradeVehicleIds  - 已记录过降级事件的车辆 ID 集合
+ * @param {Array}  [pileGenList]              - 每桩代际 ['gen1'|'gen2', ...]，用于单桩功率上限
  */
-function allocatePower(chargingVehicles, energyStorage, gridMaxPower, simTime, deltaTime, existingDegradeVehicleIds) {
+function allocatePower(chargingVehicles, energyStorage, gridMaxPower, simTime, deltaTime, existingDegradeVehicleIds, pileGenList) {
   const vehiclePowers = new Map();
   const newDegradeEvents = [];
 
@@ -125,13 +193,48 @@ function allocatePower(chargingVehicles, energyStorage, gridMaxPower, simTime, d
     return { gridPowerUsed: 0, storagePowerUsed: 0, totalPower: 0, isDegraded: false, vehiclePowers, newDegradeEvents };
   }
 
-  // 计算每台车的功率需求
+  // 计算每台车的功率需求（先受单枪峰值限制）
   const demands = [];
   let totalDemand = 0;
   for (const v of chargingVehicles) {
-    const demand = getMaxChargePower(v.soc, v.model);
+    let demand = getMaxChargePower(v.soc, v.model);
+    // 单枪峰值限制：取车型代际对应的 maxGunPower
+    const gen = CAR_MODEL_CONFIGS[v.model]?.generation;
+    if (gen && CAR_GENERATIONS[gen]) {
+      demand = Math.min(demand, CAR_GENERATIONS[gen].maxGunPower);
+    }
     demands.push({ vehicle: v, demand });
     totalDemand += demand;
+  }
+
+  // ---- 单桩功率上限约束 ----
+  // 同一桩的多枪合计不能超过该桩的 maxPilePower
+  if (pileGenList && pileGenList.length > 0) {
+    // 按桩分组
+    const pileGroups = {};
+    for (const d of demands) {
+      const pi = d.vehicle.pileIndex;
+      if (pi == null || pi < 0) continue;
+      if (!pileGroups[pi]) pileGroups[pi] = [];
+      pileGroups[pi].push(d);
+    }
+    for (const [piStr, group] of Object.entries(pileGroups)) {
+      const pi = Number(piStr);
+      const genId = pileGenList[pi] || 'gen2';
+      const maxPilePower = CAR_GENERATIONS[genId]?.maxPilePower || Infinity;
+      const pileTotal = group.reduce((s, d) => s + d.demand, 0);
+      if (pileTotal > maxPilePower) {
+        // 按比例缩减到桩上限
+        const ratio = maxPilePower / pileTotal;
+        let diff = 0;
+        for (const d of group) {
+          const capped = d.demand * ratio;
+          diff += d.demand - capped;
+          d.demand = capped;
+        }
+        totalDemand -= diff;
+      }
+    }
   }
 
   // 电网优先供电，不足部分由储能补充

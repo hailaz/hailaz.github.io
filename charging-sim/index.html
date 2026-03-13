@@ -19,7 +19,7 @@
           兆瓦闪充站充电模拟器
         </h1>
         <p class="page-subtitle">
-          基于比亚迪第二代刀片电池 + 兆瓦闪充桩真实参数建模 · 储能降级临界分析
+          基于比亚迪一代/二代兆瓦闪充 + 二代刀片电池真实参数建模 · 滑轨悬吊式T型桩 · 储能降级临界分析
         </p>
       </div>
       <div class="header-right">
@@ -47,17 +47,17 @@
           <div class="config-section">
             <h3 class="section-title">闪充站配置</h3>
             <div class="form-row">
-              <label>储能柜数量</label>
+              <label>每桩储能柜数</label>
               <div class="input-group">
                 <button v-for="n in [1,2,3,4]" :key="n" class="option-btn"
-                  :class="{ active: localStation.storageCount === n }"
-                  @click="localStation.storageCount = n">{{ n }} 台</button>
+                  :class="{ active: localStation.storagePerPile === n }"
+                  @click="localStation.storagePerPile = n">{{ n }} 台/桩</button>
               </div>
             </div>
             <div class="form-row">
               <label>单柜容量 <span class="val-badge">{{ localStation.storageCapacityPerUnit }} kWh</span></label>
               <input v-model.number="localStation.storageCapacityPerUnit" type="range" min="100" max="500" step="10" class="slider" />
-              <div class="range-hint"><span>100</span><span>总计 {{ localStation.storageCount * localStation.storageCapacityPerUnit }} kWh</span><span>500</span></div>
+              <div class="range-hint"><span>100</span><span>总计 {{ localStation.storagePerPile * localStation.pileCount }} 柜 = {{ localStation.storagePerPile * localStation.pileCount * localStation.storageCapacityPerUnit }} kWh</span><span>500</span></div>
             </div>
             <div class="form-row">
               <label>电网输入功率 <span class="val-badge">{{ localStation.gridPower }} kW</span></label>
@@ -66,15 +66,21 @@
             </div>
             <div class="form-row">
               <label>单柜最大放电功率 <span class="val-badge">{{ localStation.maxDischargePowerPerUnit }} kW</span></label>
-              <input v-model.number="localStation.maxDischargePowerPerUnit" type="range" min="200" max="1500" step="50" class="slider" />
-              <div class="range-hint"><span>200 kW</span><span>1500 kW</span></div>
+              <input v-model.number="localStation.maxDischargePowerPerUnit" type="range" min="200" max="800" step="50" class="slider" />
+              <div class="range-hint"><span>200 kW</span><span>800 kW</span></div>
             </div>
             <div class="form-row">
-              <label>充电枪数量</label>
+              <label>充电桩数量</label>
               <div class="input-group">
-                <button v-for="n in [1,2]" :key="n" class="option-btn"
-                  :class="{ active: localStation.gunCount === n }"
-                  @click="localStation.gunCount = n">{{ n }} 枪</button>
+                <button v-for="n in [1,2,3,4]" :key="n" class="option-btn"
+                  :class="{ active: localStation.pileCount === n }"
+                  @click="localStation.pileCount = n">{{ n }} 桩</button>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="config-summary">
+                共 <strong>{{ localStation.pileCount }}</strong> 桩 × <strong>2</strong> 枪 = <strong>{{ localStation.pileCount * 2 }}</strong> 个充电位
+                <span class="pile-spec">（滑轨悬吊式T型桩 · 每桩固定双枪）</span>
               </div>
             </div>
           </div>
@@ -82,15 +88,39 @@
           <div class="config-section">
             <h3 class="section-title">车辆队列配置</h3>
             <div class="form-row">
-              <label>车型选择</label>
-              <div class="input-group car-models">
-                <button v-for="(cfg, key) in CAR_MODEL_CONFIGS" :key="key"
-                  class="car-btn" :class="{ active: localQueue.carModel === key }"
-                  @click="localQueue.carModel = key">
-                  <span class="car-icon">🚗</span>
-                  <span class="car-name">{{ cfg.label }}</span>
-                  <span class="car-cap">{{ cfg.batteryCapacity }}kWh</span>
+              <label>车型代际筛选</label>
+              <div class="input-group gen-filter">
+                <button class="option-btn" :class="{ active: selectedGeneration === 'all' }" @click="selectedGeneration = 'all'">全部</button>
+                <button v-for="(gen, gk) in CAR_GENERATIONS" :key="gk"
+                  class="option-btn gen-btn" :class="{ active: selectedGeneration === gk, ['gen-' + gk]: true }"
+                  @click="selectedGeneration = gk">
+                  {{ gen.label }}
                 </button>
+              </div>
+            </div>
+            <div class="form-row">
+              <label>车型选择</label>
+              <!-- 按代际分组展示 -->
+              <div class="car-gen-groups">
+                <template v-for="(genGroup, gk) in carModelsByGen" :key="gk">
+                  <div class="car-gen-group" v-show="selectedGeneration === 'all' || selectedGeneration === gk">
+                    <div class="gen-group-header" :class="'gen-header-' + gk">
+                      <span class="gen-badge" :class="'badge-' + gk">{{ genGroup.label }}</span>
+                      <span class="gen-subtitle">{{ genGroup.subtitle }}</span>
+                    </div>
+                    <div class="input-group car-models">
+                      <button v-for="m in genGroup.models" :key="m.key"
+                        class="car-btn" :class="{ active: localQueue.carModel === m.key }"
+                        :style="{ '--car-accent': m.color }"
+                        @click="localQueue.carModel = m.key">
+                        <span class="car-icon">🚗</span>
+                        <span class="car-name">{{ m.label }}</span>
+                        <span class="car-cap">{{ m.batteryCapacity }}kWh · {{ m.maxChargePower }}kW</span>
+                        <span class="car-brand-tag">{{ m.brand }}</span>
+                      </button>
+                    </div>
+                  </div>
+                </template>
               </div>
             </div>
             <div class="form-row">
@@ -104,9 +134,14 @@
               <div class="range-hint"><span>5%</span><span>50%</span></div>
             </div>
             <div class="form-row">
-              <label>到达间隔 <span class="val-badge">{{ localQueue.arrivalInterval }} 秒</span></label>
-              <input v-model.number="localQueue.arrivalInterval" type="range" min="0" max="600" step="10" class="slider" />
-              <div class="range-hint"><span>0秒(同时)</span><span>{{ Math.round((localQueue.arrivalInterval / 60) * 10) / 10 }}分钟</span><span>600秒</span></div>
+              <label>目标 SOC <span class="val-badge">{{ Math.round(localQueue.targetSoc * 100) }}%</span></label>
+              <input v-model.number="localQueue.targetSoc" type="range" min="0.5" max="1" step="0.01" class="slider" />
+              <div class="range-hint"><span>50%</span><span>充到此电量即离开</span><span>100%</span></div>
+            </div>
+            <div class="form-row">
+              <label>充电间隔 <span class="val-badge">{{ localQueue.chargingInterval }} 分钟</span></label>
+              <input v-model.number="localQueue.chargingInterval" type="range" min="0.5" max="10" step="0.5" class="slider" />
+              <div class="range-hint"><span>0.5分钟</span><span>前车拔枪 → 后车插枪</span><span>10分钟</span></div>
             </div>
           </div>
         </div>
@@ -139,6 +174,10 @@
         <span class="metric-value" :class="socColorClass">{{ Math.round(store.storageSoc * 100) }}%</span>
       </div>
       <div class="metric-item">
+        <span class="metric-label">桩配置</span>
+        <span class="metric-value done-value">{{ store.chargingPiles.length }}桩×2枪</span>
+      </div>
+      <div class="metric-item">
         <span class="metric-label">已完成</span>
         <span class="metric-value done-value">{{ store.completedVehicles }} / {{ store.vehicles.length }}</span>
       </div>
@@ -153,7 +192,8 @@
       <!-- StationView -->
       <div class="station-view">
         <h3 class="section-title">充电站实时状态</h3>
-        <div class="station-layout">
+        <div class="station-layout-v2">
+          <!-- 储能区 -->
           <div class="storage-area">
             <div class="storage-label">储能柜</div>
             <div class="storage-gauge">
@@ -175,51 +215,111 @@
             </div>
           </div>
 
-          <div class="pile-area">
-            <div class="pile-icon-wrapper">
-              <div class="pile-icon" :class="{ degraded: store.isDegraded }">
-                <span class="pile-emoji">⚡</span>
-                <span class="pile-text">闪充桩</span>
-              </div>
-              <div class="grid-line">
-                <span class="grid-label">电网 {{ Math.round(store.currentGridPower) }}kW</span>
-                <div class="flow-dots grid-dots">
-                  <span v-for="i in 4" :key="i" class="dot" :style="{ animationDelay: i * 0.2 + 's' }"></span>
-                </div>
-              </div>
-            </div>
-            <div class="guns-row">
-              <div v-for="gun in store.chargingGuns" :key="gun.index" class="gun-slot" :class="gun.status">
-                <div class="gun-header">
-                  <span class="gun-label">枪{{ gun.index + 1 }}</span>
-                  <span class="gun-status-tag" :class="gun.status">{{ gunStatusText(gun.status) }}</span>
-                </div>
-                <div v-if="gun.vehicleId > 0" class="vehicle-card charging">
-                  <div class="vehicle-info">
-                    <span class="vehicle-icon">🚗</span>
-                    <span class="vehicle-name">#{{ gun.vehicleId }} {{ getVehicleLabel(gun.vehicleId) }}</span>
-                  </div>
-                  <div class="soc-bar-wrapper">
-                    <div class="soc-bar" :style="{ width: getVehicleSoc(gun.vehicleId) * 100 + '%' }" :class="{ 'bar-degraded': gun.status === 'degraded' }"></div>
-                  </div>
-                  <div class="vehicle-stats">
-                    <span>SOC {{ Math.round(getVehicleSoc(gun.vehicleId) * 100) }}%</span>
-                    <span>{{ Math.round(gun.currentPower) }} kW</span>
-                  </div>
-                </div>
-                <div v-else class="vehicle-card empty"><span class="empty-text">等待车辆</span></div>
+          <!-- 电网连线 -->
+          <div class="grid-connector">
+            <div class="grid-line-v2">
+              <span class="grid-label-v2">⚡ 电网 {{ Math.round(store.currentGridPower) }}kW</span>
+              <div class="flow-bar">
+                <div class="flow-pulse" :style="{ animationDuration: store.currentGridPower > 0 ? '1.2s' : '0s' }"></div>
               </div>
             </div>
           </div>
 
+          <!-- 多充电桩 滑轨悬吊式 T 型布局区 -->
+          <div class="piles-zone">
+            <div v-for="pile in store.chargingPiles" :key="pile.index" class="t-pile-unit" :class="{ 'pile-degraded': pile.status === 'degraded' }">
+              <!-- T型桩主体（竖杆 + 横杆滑轨） -->
+              <div class="t-pile-body">
+                <!-- 竖杆（连接电网的线缆） -->
+                <div class="t-stem">
+                  <div class="stem-cable">
+                    <div class="cable-flow" :class="{ active: pile.status !== 'idle' }"></div>
+                  </div>
+                </div>
+                <!-- 横杆（滑轨 + 桩标识 + 悬吊线缆） -->
+                <div class="t-crossbar">
+                  <!-- 左侧悬吊枪线 -->
+                  <div class="hanging-cable left" :class="{ active: pile.guns[0] && pile.guns[0].vehicleId > 0 }">
+                    <div class="cable-wire"></div>
+                    <div class="cable-gun-tip" :class="{ sparking: pile.guns[0] && pile.guns[0].status === 'charging' }">⚡</div>
+                  </div>
+                  <!-- 滑轨 -->
+                  <div class="slide-rail">
+                    <div class="rail-track"></div>
+                    <div class="rail-slider left-slider" :class="{ connected: pile.guns[0] && pile.guns[0].vehicleId > 0 }"></div>
+                    <div class="rail-slider right-slider" :class="{ connected: pile.guns[1] && pile.guns[1].vehicleId > 0 }"></div>
+                  </div>
+                  <!-- 桩标识徽章 -->
+                  <div class="pile-badge" :class="pile.status">
+                    <span class="pile-bolt">⚡</span>
+                    <span class="pile-label">桩{{ pile.index + 1 }}</span>
+                    <span class="pile-power-tag" v-if="pile.totalPower > 0">{{ Math.round(pile.totalPower) }}kW</span>
+                  </div>
+                  <!-- 右侧悬吊枪线 -->
+                  <div class="hanging-cable right" :class="{ active: pile.guns[1] && pile.guns[1].vehicleId > 0 }">
+                    <div class="cable-wire"></div>
+                    <div class="cable-gun-tip" :class="{ sparking: pile.guns[1] && pile.guns[1].status === 'charging' }">⚡</div>
+                  </div>
+                </div>
+              </div>
+              <!-- 车位区（长边并排 · 固定2个） -->
+              <div class="parking-slots slots-2">
+                <div v-for="gun in pile.guns" :key="gun.index" class="parking-slot" :class="[gun.status, getParkingClass(gun)]">
+                  <!-- 车位标识 -->
+                  <div class="slot-header">
+                    <span class="slot-id">{{ gun.gunInPile === 0 ? '左' : '右' }}位</span>
+                    <span class="slot-status" :class="gun.status">{{ gunStatusText(gun.status) }}</span>
+                  </div>
+                  <!-- 停着的车 -->
+                  <div v-if="gun.vehicleId > 0" class="parked-vehicle" :class="[gun.parkingAnim ? 'anim-' + gun.parkingAnim.phase : 'anim-docked']">
+                    <div class="vehicle-body">
+                      <div class="car-roof"></div>
+                      <div class="car-main">
+                        <span class="car-emoji">🚗</span>
+                      </div>
+                      <div class="car-wheels">
+                        <span class="wheel"></span>
+                        <span class="wheel"></span>
+                      </div>
+                    </div>
+                    <div class="vehicle-info-overlay">
+                      <span class="v-id">#{{ gun.vehicleId }}</span>
+                      <span class="v-name">{{ getVehicleLabel(gun.vehicleId) }}</span>
+                    </div>
+                    <div class="soc-bar-wrapper">
+                      <div class="soc-bar" :style="{ width: getVehicleSoc(gun.vehicleId) * 100 + '%' }" :class="{ 'bar-degraded': gun.status === 'degraded' }"></div>
+                    </div>
+                    <div class="vehicle-stats-mini">
+                      <span>SOC {{ Math.round(getVehicleSoc(gun.vehicleId) * 100) }}%</span>
+                      <span class="power-reading" :class="{ pulsing: gun.currentPower > 500 }">{{ Math.round(gun.currentPower) }} kW</span>
+                    </div>
+                    <!-- 车位内嵌功率曲线 -->
+                    <div class="slot-chart-wrapper" :ref="el => setSlotChartRef(gun.index, el)">
+                      <canvas :ref="el => setSlotCanvasRef(gun.index, el)"></canvas>
+                    </div>
+                  </div>
+                  <!-- 空车位 -->
+                  <div v-else class="empty-slot">
+                    <div class="parking-lines">
+                      <div class="p-line left"></div>
+                      <div class="p-line right"></div>
+                      <div class="p-line bottom"></div>
+                    </div>
+                    <span class="empty-text">P</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 排队区 -->
           <div class="queue-area">
-            <div class="queue-label">排队等候 ({{ queuingVehicles.length }})</div>
+            <div class="queue-label">🚗 排队等候 ({{ queuingVehicles.length }})</div>
             <div class="queue-list">
-              <div v-for="v in displayQueue" :key="v.id" class="queue-car" :class="{ arrived: v.arrivalTime <= store.simTime }">
+              <div v-for="v in displayQueue" :key="v.id" class="queue-car arrived">
                 <span class="q-icon">🚗</span>
                 <span class="q-id">#{{ v.id }}</span>
-                <span v-if="v.arrivalTime > store.simTime" class="q-wait">{{ Math.ceil((v.arrivalTime - store.simTime) / 60) }}分后到</span>
-                <span v-else class="q-wait arrived-text">已到达</span>
+                <span class="q-wait arrived-text">等候中</span>
               </div>
               <div v-if="queuingVehicles.length === 0" class="queue-empty">无排队车辆</div>
             </div>
@@ -259,6 +359,21 @@
           </div>
           <div ref="socChartRef" class="chart-container"><canvas ref="socCanvas"></canvas></div>
         </div>
+        <!-- 车辆功率曲线图 -->
+        <div class="chart-block">
+          <div class="chart-header">
+            <span class="chart-title">车辆功率变化</span>
+            <div class="vehicle-selector">
+              <select v-model.number="selectedVehicleId" class="vehicle-select">
+                <option :value="0">全部车辆对比</option>
+                <option v-for="v in selectableVehicles" :key="v.id" :value="v.id">
+                  #{{ v.id }} {{ CAR_MODEL_CONFIGS[v.model].label }} ({{ v.status === 'done' ? '已完成' : '充电中' }})
+                </option>
+              </select>
+            </div>
+          </div>
+          <div ref="vehiclePowerChartRef" class="chart-container"><canvas ref="vehiclePowerCanvas"></canvas></div>
+        </div>
       </div>
     </div>
 
@@ -287,7 +402,7 @@
           <h4 class="area-title">车辆充电统计</h4>
           <div class="stats-table-wrapper">
             <table class="stats-table">
-              <thead><tr><th>车辆</th><th>车型</th><th>初始SOC</th><th>最终SOC</th><th>耗时</th><th>充电量</th><th>状态</th></tr></thead>
+              <thead><tr><th>车辆</th><th>车型</th><th>初始SOC</th><th>最终SOC</th><th>耗时</th><th>充电量</th><th>峰值功率</th><th>状态</th></tr></thead>
               <tbody>
                 <tr v-for="s in vehicleStats" :key="s.id" :class="{ 'row-degraded': s.degraded }">
                   <td class="cell-id">#{{ s.id }}</td>
@@ -296,6 +411,7 @@
                   <td>{{ Math.round(s.finalSoc * 100) }}%</td>
                   <td>{{ formatDuration(s.chargeTime) }}</td>
                   <td>{{ s.energyCharged }} kWh</td>
+                  <td>{{ s.peakPower }} kW</td>
                   <td>
                     <span v-if="s.degraded" class="status-tag degraded">⚠ 降级</span>
                     <span v-else class="status-tag normal">✓ 正常</span>
