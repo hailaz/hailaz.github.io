@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SVG 架构图可视化编辑器</title>
+<style>
+  /* ============ 基础 ============ */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; }
+  body { background: #0f172a; color: #e2e8f0; }
+  body.theme-light { background: #f1f5f9; color: #0f172a; }
+
+  /* ============ 布局 ============ */
+  .app { display: grid; grid-template-columns: 220px 1fr 300px; grid-template-rows: 48px 1fr; height: 100vh; }
+  .topbar { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; padding: 0 16px; background: #1e293b; border-bottom: 1px solid #334155; }
+  body.theme-light .topbar { background: #fff; border-bottom: 1px solid #cbd5e1; }
+  .topbar .title { font-weight: 800; font-size: 15px; margin-right: 12px; }
+  .topbar .spacer { flex: 1; }
+  .topbar button, .topbar select {
+    background: #334155; color: #e2e8f0; border: 1px solid #475569; border-radius: 6px;
+    padding: 5px 10px; font-size: 12px; cursor: pointer;
+  }
+  .topbar button:hover { background: #475569; }
+  body.theme-light .topbar button, body.theme-light .topbar select {
+    background: #e2e8f0; color: #0f172a; border-color: #cbd5e1;
+  }
+
+  /* 左侧面板 */
+  .sidebar-left { background: #1e293b; border-right: 1px solid #334155; overflow-y: auto; padding: 12px; }
+  body.theme-light .sidebar-left { background: #fff; border-right: 1px solid #cbd5e1; }
+  .panel-section { margin-bottom: 18px; }
+  .panel-section h4 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; }
+  .shape-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .shape-btn {
+    padding: 8px 6px; background: #334155; border: 1px solid #475569; border-radius: 6px;
+    cursor: grab; font-size: 11px; text-align: center; color: #e2e8f0; user-select: none;
+  }
+  body.theme-light .shape-btn { background: #f1f5f9; border-color: #cbd5e1; color: #0f172a; }
+  .shape-btn:hover { background: #475569; }
+  .shape-btn:active { cursor: grabbing; }
+
+  /* 画布 */
+  .canvas-wrap { position: relative; overflow: hidden; background:
+    radial-gradient(circle at center, rgba(59,130,246,0.08) 0%, #0f172a 70%); }
+  body.theme-light .canvas-wrap { background: radial-gradient(circle at center, rgba(59,130,246,0.06) 0%, #f1f5f9 70%); }
+  #canvas { width: 100%; height: 100%; cursor: default; display: block; }
+  #canvas.panning { cursor: grabbing; }
+
+  /* 右侧属性 */
+  .sidebar-right { background: #1e293b; border-left: 1px solid #334155; overflow-y: auto; padding: 12px; }
+  body.theme-light .sidebar-right { background: #fff; border-left: 1px solid #cbd5e1; }
+  .prop-row { margin-bottom: 10px; }
+  .prop-row label { display: block; font-size: 11px; color: #94a3b8; margin-bottom: 3px; }
+  .prop-row input, .prop-row select, .prop-row textarea {
+    width: 100%; background: #334155; color: #e2e8f0; border: 1px solid #475569;
+    border-radius: 4px; padding: 5px 8px; font-size: 12px; font-family: inherit;
+  }
+  body.theme-light .prop-row input, body.theme-light .prop-row select, body.theme-light .prop-row textarea {
+    background: #f1f5f9; color: #0f172a; border-color: #cbd5e1;
+  }
+  .prop-row input[type="color"] { padding: 2px; height: 28px; }
+  .row-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .empty-hint { color: #64748b; font-size: 12px; text-align: center; padding: 40px 10px; }
+
+  /* 节点选中效果 */
+  .node-wrap.selected > .node-bg { stroke: #3b82f6 !important; stroke-width: 2.5px !important; stroke-dasharray: none !important; }
+  .edge.selected { filter: drop-shadow(0 0 4px #3b82f6); }
+
+  /* 连线动画 */
+  .edge-anim { animation: edge-dash 20s linear infinite; }
+  .edge-anim.flow-fast { animation-duration: 10s; }
+  @keyframes edge-dash { 100% { stroke-dashoffset: -1000; } }
+
+  /* 端口（连线锚点） */
+  .port { fill: #3b82f6; stroke: #fff; stroke-width: 1.5; cursor: crosshair; opacity: 0; transition: opacity 0.15s; }
+  .node-wrap:hover .port, .node-wrap.selected .port { opacity: 1; }
+
+  /* 对话框 */
+  .modal-mask {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+    display: none; align-items: center; justify-content: center; z-index: 1000;
+  }
+  .modal-mask.show { display: flex; }
+  .modal {
+    background: #1e293b; border: 1px solid #475569; border-radius: 10px;
+    padding: 20px; width: 720px; max-height: 80vh; display: flex; flex-direction: column;
+  }
+  body.theme-light .modal { background: #fff; border-color: #cbd5e1; }
+  .modal h3 { margin: 0 0 12px; font-size: 15px; }
+  .modal textarea { flex: 1; min-height: 360px; font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: 12px; background: #0f172a; color: #a5f3fc; border: 1px solid #334155;
+    border-radius: 6px; padding: 10px; resize: vertical; }
+  body.theme-light .modal textarea { background: #f1f5f9; color: #0f766e; border-color: #cbd5e1; }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
+
+  /* 风格主题：虾塘风 */
+  .style-clawd .node-bg { filter: url(#nodeGlow); }
+  .style-clawd .arch-outer { backdrop-filter: blur(12px); }
+
+  /* kbd */
+  kbd { background: #334155; padding: 1px 5px; border-radius: 3px; font-size: 10px; font-family: inherit; }
+  body.theme-light kbd { background: #e2e8f0; }
+
+  .hint-bar {
+    position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+    background: rgba(30,41,59,0.9); padding: 6px 14px; border-radius: 20px;
+    font-size: 11px; color: #94a3b8; pointer-events: none;
+  }
+  body.theme-light .hint-bar { background: rgba(255,255,255,0.9); color: #475569; border: 1px solid #cbd5e1; }
+
+  /* emoji 选择器 */
+  .emoji-picker { width: 460px; max-height: 72vh; display: flex; flex-direction: column; }
+  .emoji-search-row { display: flex; gap: 6px; margin-bottom: 10px; }
+  .emoji-search { flex: 1; background: #0f172a; color: #e2e8f0; border: 1px solid #334155;
+                  border-radius: 6px; padding: 6px 10px; font-size: 13px; }
+  body.theme-light .emoji-search { background: #f1f5f9; color: #0f172a; border-color: #cbd5e1; }
+  .emoji-cats { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+  .emoji-cat { padding: 4px 10px; background: #334155; border: 1px solid #475569; color: #e2e8f0;
+               border-radius: 14px; font-size: 12px; cursor: pointer; }
+  body.theme-light .emoji-cat { background: #e2e8f0; border-color: #cbd5e1; color: #0f172a; }
+  .emoji-cat.active { background: #3b82f6; border-color: #2563eb; color: #fff; }
+  .emoji-grid { flex: 1; overflow-y: auto; display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); gap: 2px;
+                background: #0f172a; padding: 8px; border-radius: 6px; }
+  body.theme-light .emoji-grid { background: #f8fafc; }
+  .emoji-item { cursor: pointer; text-align: center; font-size: 24px; padding: 4px;
+                border-radius: 4px; user-select: none; line-height: 1; }
+  .emoji-item:hover { background: rgba(59,130,246,0.3); }
+  .emoji-empty { grid-column: 1 / -1; text-align: center; color: #64748b; padding: 20px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- 顶部栏 -->
+  <div class="topbar">
+    <span class="title">🎨 SVG Arch Editor</span>
+    <button onclick="App.newProject()" title="新建">🆕 新建</button>
+    <button onclick="App.saveProject()" title="保存工程到 JSON">💾 保存</button>
+    <button onclick="document.getElementById('file-input').click()" title="从 JSON 加载">📂 打开</button>
+    <input id="file-input" type="file" accept="application/json" style="display:none" onchange="App.loadProject(event)" />
+    <button onclick="App.undo()" title="撤销 Ctrl+Z">↶ 撤销</button>
+    <button onclick="App.redo()" title="重做 Ctrl+Y">↷ 重做</button>
+    <div class="spacer"></div>
+    <label style="font-size:12px;color:#94a3b8">语言</label>
+    <select id="lang-select" onchange="App.setLang(this.value)">
+      <option value="zh">🇨🇳 中</option>
+      <option value="en">🇬🇧 EN</option>
+    </select>
+    <label style="font-size:12px;color:#94a3b8">主题</label>
+    <select id="theme-select" onchange="App.setTheme(this.value)">
+      <option value="clawd">✨ 虾塘风（毛玻璃/发光）</option>
+      <option value="flat">📐 扁平通用</option>
+    </select>
+    <select id="color-mode" onchange="App.setColorMode(this.value)">
+      <option value="dark">🌙 深色</option>
+      <option value="light">☀️ 浅色</option>
+    </select>
+    <button onclick="App.preview()" style="background:#3b82f6;border-color:#2563eb;color:#fff" title="在新标签页预览（Ctrl+P）">👁 预览</button>
+    <button onclick="App.exportCode()" style="background:#10b981;border-color:#059669">📋 导出代码</button>
+  </div>
+
+  <!-- 左侧形状库 -->
+  <div class="sidebar-left">
+    <div class="panel-section">
+      <h4>节点形状（拖到画布）</h4>
+      <div class="shape-grid">
+        <div class="shape-btn" draggable="true" data-shape="rect">⬛ 矩形</div>
+        <div class="shape-btn" draggable="true" data-shape="round">⏹ 圆角</div>
+        <div class="shape-btn" draggable="true" data-shape="circle">⬤ 圆形</div>
+        <div class="shape-btn" draggable="true" data-shape="ellipse">⬬ 椭圆</div>
+        <div class="shape-btn" draggable="true" data-shape="diamond">◆ 菱形</div>
+        <div class="shape-btn" draggable="true" data-shape="hex">⬡ 六边形</div>
+        <div class="shape-btn" draggable="true" data-shape="emoji">🎯 图标节点</div>
+        <div class="shape-btn" draggable="true" data-shape="badge">🏷 胶囊</div>
+      </div>
+    </div>
+    <div class="panel-section">
+      <h4>分组容器</h4>
+      <div class="shape-grid">
+        <div class="shape-btn" draggable="true" data-shape="group">📦 分组框</div>
+        <div class="shape-btn" draggable="true" data-shape="groupDashed">📋 虚线框</div>
+      </div>
+    </div>
+    <div class="panel-section">
+      <h4>导出控件设置</h4>
+      <div class="prop-row"><label>是否显示控件</label>
+        <select id="ctrl-show" onchange="App.setCtrlOption('show', this.value)">
+          <option value="yes">显示 ➕➖⊙⛶</option>
+          <option value="no">不显示</option>
+        </select>
+      </div>
+      <div class="prop-row"><label>位置</label>
+        <select id="ctrl-pos" onchange="App.setCtrlOption('pos', this.value)">
+          <option value="tr">右上角</option>
+          <option value="tl">左上角</option>
+          <option value="br">右下角</option>
+          <option value="bl">左下角</option>
+        </select>
+      </div>
+      <div class="prop-row"><label>排列方向</label>
+        <select id="ctrl-dir" onchange="App.setCtrlOption('dir', this.value)">
+          <option value="row">水平</option>
+          <option value="col">垂直</option>
+        </select>
+      </div>
+      <div class="prop-row"><label>按钮大小</label>
+        <select id="ctrl-size" onchange="App.setCtrlOption('size', this.value)">
+          <option value="28">小 (28px)</option>
+          <option value="32" selected>中 (32px)</option>
+          <option value="40">大 (40px)</option>
+        </select>
+      </div>
+    </div>
+    <div class="panel-section">
+      <h4>操作提示</h4>
+      <div style="font-size:11px;line-height:1.7;color:#94a3b8">
+        • 拖动形状到画布<br/>
+        • 点击节点选中<br/>
+        • 悬停节点四角端口<br/>
+        • 从端口拖出 = 连线<br/>
+        • 按住 <kbd>Space</kbd> 拖动 = 平移<br/>
+        • <kbd>滚轮</kbd> = 缩放<br/>
+        • <kbd>Del</kbd> = 删除<br/>
+        • <kbd>Ctrl+D</kbd> = 复制<br/>
+        • <kbd>Ctrl+P</kbd> = 预览<br/>
+        • 双击节点 = 编辑文字
+      </div>
+    </div>
+  </div>
+
+  <!-- 中间画布 -->
+  <div class="canvas-wrap">
+    <svg id="canvas" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="nodeGlow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+        </filter>
+        <linearGradient id="grad-purple" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#8B5CF6"/>
+          <stop offset="100%" stop-color="#3b82f6"/>
+        </linearGradient>
+        <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#3b82f6"/>
+          <stop offset="100%" stop-color="#06b6d4"/>
+        </linearGradient>
+        <linearGradient id="grad-green" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#10b981"/>
+          <stop offset="100%" stop-color="#059669"/>
+        </linearGradient>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+        </marker>
+        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(148,163,184,0.15)" stroke-width="1"/>
+        </pattern>
+      </defs>
+      <rect id="grid-bg" width="100%" height="100%" fill="url(#grid)"/>
+      <g id="viewport">
+        <g id="layer-groups"></g>
+        <g id="layer-edges"></g>
+        <g id="layer-nodes"></g>
+        <g id="layer-overlay"></g>
+      </g>
+    </svg>
+    <div class="hint-bar" id="hint-bar">就绪 · 节点 0 · 连线 0</div>
+  </div>
+
+  <!-- 右侧属性 -->
+  <div class="sidebar-right">
+    <div id="prop-empty" class="empty-hint">
+      👈 从左侧拖形状到画布开始创建<br/><br/>
+      选中节点或连线后，这里会显示属性
+    </div>
+    <div id="prop-node" style="display:none">
+      <div class="panel-section">
+        <h4>节点属性</h4>
+        <div class="prop-row"><label>文字（主）</label>
+          <input id="p-label" oninput="App.updateProp('label', this.value)" />
+        </div>
+        <div class="prop-row"><label>副标题</label>
+          <input id="p-sublabel" oninput="App.updateProp('sublabel', this.value)" />
+        </div>
+        <div class="prop-row"><label>图标（emoji）</label>
+          <div style="display:flex;gap:4px">
+            <input id="p-icon" oninput="App.updateProp('icon', this.value)" placeholder="例如 🦞" style="flex:1" />
+            <button onclick="App.openEmojiPicker('p-icon')" title="从表情库选择" style="background:#334155;border:1px solid #475569;color:#e2e8f0;border-radius:4px;padding:0 8px;cursor:pointer">😀</button>
+          </div>
+        </div>
+        <div class="row-2col">
+          <div class="prop-row"><label>填充</label>
+            <input id="p-fill" type="color" oninput="App.updateProp('fill', this.value)" />
+          </div>
+          <div class="prop-row"><label>描边</label>
+            <input id="p-stroke" type="color" oninput="App.updateProp('stroke', this.value)" />
+          </div>
+        </div>
+        <div class="row-2col">
+          <div class="prop-row"><label>文字色</label>
+            <input id="p-color" type="color" oninput="App.updateProp('color', this.value)" />
+          </div>
+          <div class="prop-row"><label>字号</label>
+            <input id="p-fontSize" type="number" min="8" max="48" oninput="App.updateProp('fontSize', +this.value)" />
+          </div>
+        </div>
+        <div class="row-2col">
+          <div class="prop-row"><label>宽</label>
+            <input id="p-w" type="number" min="20" oninput="App.updateProp('w', +this.value)" />
+          </div>
+          <div class="prop-row"><label>高</label>
+            <input id="p-h" type="number" min="20" oninput="App.updateProp('h', +this.value)" />
+          </div>
+        </div>
+        <div class="prop-row"><label>填充样式</label>
+          <select id="p-fillType" onchange="App.updateProp('fillType', this.value)">
+            <option value="solid">纯色</option>
+            <option value="grad-purple">渐变-紫蓝</option>
+            <option value="grad-blue">渐变-蓝青</option>
+            <option value="grad-green">渐变-绿</option>
+            <option value="none">无填充</option>
+          </select>
+        </div>
+        <div class="prop-row">
+          <label><input id="p-glow" type="checkbox" onchange="App.updateProp('glow', this.checked)" /> 发光效果</label>
+        </div>
+        <div class="prop-row"><label>英文文字（用于双语）</label>
+          <input id="p-labelEn" oninput="App.updateProp('labelEn', this.value)" />
+        </div>
+        <button onclick="App.deleteSelected()" style="width:100%;background:#ef4444;color:#fff;border:none;padding:8px;border-radius:5px;cursor:pointer;margin-top:6px">🗑 删除（Del）</button>
+      </div>
+    </div>
+    <div id="prop-edge" style="display:none">
+      <div class="panel-section">
+        <h4>连线属性</h4>
+        <div class="prop-row"><label>类型</label>
+          <select id="e-type" onchange="App.updateProp('type', this.value)">
+            <option value="line">直线</option>
+            <option value="orthogonal">折线（正交）</option>
+            <option value="bezier">贝塞尔曲线</option>
+          </select>
+        </div>
+        <div class="row-2col">
+          <div class="prop-row"><label>颜色</label>
+            <input id="e-stroke" type="color" oninput="App.updateProp('stroke', this.value)" />
+          </div>
+          <div class="prop-row"><label>线宽</label>
+            <input id="e-strokeWidth" type="number" min="1" max="12" oninput="App.updateProp('strokeWidth', +this.value)" />
+          </div>
+        </div>
+        <div class="prop-row"><label>样式</label>
+          <select id="e-dash" onchange="App.updateProp('dash', this.value)">
+            <option value="none">实线</option>
+            <option value="4 4">虚线 4-4</option>
+            <option value="6 6">虚线 6-6</option>
+            <option value="10 6">虚线 10-6</option>
+            <option value="2 4">点线 2-4</option>
+          </select>
+        </div>
+        <div class="prop-row"><label>动画（跑马灯）</label>
+          <select id="e-anim" onchange="App.updateProp('anim', this.value)">
+            <option value="none">静止</option>
+            <option value="normal">正常流动 20s</option>
+            <option value="fast">快速流动 10s</option>
+          </select>
+        </div>
+        <div class="prop-row">
+          <label><input id="e-arrow" type="checkbox" onchange="App.updateProp('arrow', this.checked)" /> 显示箭头</label>
+        </div>
+        <div class="prop-row"><label>连线标签</label>
+          <input id="e-label" oninput="App.updateProp('label', this.value)" />
+        </div>
+        <button onclick="App.deleteSelected()" style="width:100%;background:#ef4444;color:#fff;border:none;padding:8px;border-radius:5px;cursor:pointer;margin-top:6px">🗑 删除</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 导出代码对话框 -->
+<div class="modal-mask" id="export-modal">
+  <div class="modal">
+    <h3>导出完整 HTML（含放大/缩小/复原/全屏 + 拖动 + 滚轮缩放）</h3>
+    <div style="font-size:11px;color:#94a3b8;margin-bottom:6px">
+      💡 直接保存为 .html 文件双击打开；或复制其中的 <code>&lt;svg&gt;</code> 片段嵌入你的网页（控件 JS 也需一并带上）
+    </div>
+    <textarea id="export-code" readonly></textarea>
+    <div class="modal-actions">
+      <button onclick="App.copyExport()" style="background:#10b981;color:#fff;border:none;padding:6px 14px;border-radius:5px;cursor:pointer">📋 复制</button>
+      <button onclick="App.downloadExport()" style="background:#3b82f6;color:#fff;border:none;padding:6px 14px;border-radius:5px;cursor:pointer">⬇️ 下载 .html</button>
+      <button onclick="document.getElementById('export-modal').classList.remove('show')" style="background:#64748b;color:#fff;border:none;padding:6px 14px;border-radius:5px;cursor:pointer">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- emoji 选择器 -->
+<div class="modal-mask" id="emoji-modal">
+  <div class="modal emoji-picker">
+    <h3>😀 选择图标</h3>
+    <div class="emoji-search-row">
+      <input id="emoji-search" class="emoji-search" placeholder="搜索（英文/拼音 关键词，如 face / fire / 电话 / heart）" oninput="App.filterEmoji(this.value)" />
+      <button onclick="document.getElementById('emoji-modal').classList.remove('show')" style="background:#64748b;color:#fff;border:none;padding:0 14px;border-radius:5px;cursor:pointer">关闭</button>
+    </div>
+    <div class="emoji-cats" id="emoji-cats"></div>
+    <div class="emoji-grid" id="emoji-grid"></div>
+  </div>
+
+<script>
+// ================================================================
+// 应用状态 & 工具函数
+// ================================================================
+const NS = "http://www.w3.org/2000/svg";
+const $ = (id) => document.getElementById(id);
+
+const state = {
+  nodes: {},       // id -> node
+  edges: {},       // id -> edge
+  order: [],       // 节点/分组渲染顺序
+  edgeOrder: [],
+  selectedId: null,
+  selectedType: null, // 'node' | 'edge'
+  nextId: 1,
+  lang: "zh",
+  theme: "clawd",
+  colorMode: "dark",
+  viewport: { x: 0, y: 0, scale: 1 },
+  snap: 10,
+  history: [],
+  historyIdx: -1,
+  ctrl: { show: "yes", pos: "tr", dir: "row", size: 32 },
+  emojiTarget: null,
+  _lastPreviewUrl: null,
+};
+
+const svg = $("canvas");
+const viewportG = $("viewport");
+const layerGroups = $("layer-groups");
+const layerEdges = $("layer-edges");
+const layerNodes = $("layer-nodes");
+const layerOverlay = $("layer-overlay");
+const hintBar = $("hint-bar");
+
+function uid(prefix = "n") { return `${prefix}${state.nextId++}`; }
+function snap(v) { return Math.round(v / state.snap) * state.snap; }
+
+function screenToWorld(x, y) {
+  const rect = svg.getBoundingClientRect();
+  const sx = x - rect.left;
+  const sy = y - rect.top;
+  return {
+    x: (sx - state.viewport.x) / state.viewport.scale,
+    y: (sy - state.viewport.y) / state.viewport.scale
+  };
+}
+
+function updateViewport() {
+  viewportG.setAttribute("transform",
+    `translate(${state.viewport.x},${state.viewport.y}) scale(${state.viewport.scale})`);
+  // grid 背景也要跟着缩放
+  $("grid-bg").setAttribute("fill", state.viewport.scale < 0.5 ? "transparent" : "url(#grid)");
+}
+
+// ================================================================
+// 节点工厂：根据 shape 生成 SVG 元素
+// ================================================================
+function createNodeElement(node) {
+  const g = document.createElementNS(NS, "g");
+  g.setAttribute("class", "node-wrap");
+  g.setAttribute("data-id", node.id);
+  g.setAttribute("transform", `translate(${node.x},${node.y})`);
+
+  // 背景形状
+  let bg;
+  const { w, h, shape } = node;
+  switch (shape) {
+    case "circle":
+      bg = document.createElementNS(NS, "circle");
+      bg.setAttribute("cx", w / 2); bg.setAttribute("cy", h / 2);
+      bg.setAttribute("r", Math.min(w, h) / 2);
+      break;
+    case "ellipse":
+      bg = document.createElementNS(NS, "ellipse");
+      bg.setAttribute("cx", w / 2); bg.setAttribute("cy", h / 2);
+      bg.setAttribute("rx", w / 2); bg.setAttribute("ry", h / 2);
+      break;
+    case "diamond":
+      bg = document.createElementNS(NS, "polygon");
+      bg.setAttribute("points", `${w/2},0 ${w},${h/2} ${w/2},${h} 0,${h/2}`);
+      break;
+    case "hex": {
+      const s = h / 2; const dx = s * 0.6;
+      bg = document.createElementNS(NS, "polygon");
+      bg.setAttribute("points", `${dx},0 ${w-dx},0 ${w},${h/2} ${w-dx},${h} ${dx},${h} 0,${h/2}`);
+      break;
+    }
+    case "round":
+    case "badge":
+      bg = document.createElementNS(NS, "rect");
+      bg.setAttribute("width", w); bg.setAttribute("height", h);
+      bg.setAttribute("rx", shape === "badge" ? h / 2 : 10);
+      bg.setAttribute("ry", shape === "badge" ? h / 2 : 10);
+      break;
+    case "group":
+    case "groupDashed":
+      bg = document.createElementNS(NS, "rect");
+      bg.setAttribute("width", w); bg.setAttribute("height", h);
+      bg.setAttribute("rx", 14); bg.setAttribute("ry", 14);
+      if (shape === "groupDashed") bg.setAttribute("stroke-dasharray", "8 6");
+      break;
+    case "emoji":
+    case "rect":
+    default:
+      bg = document.createElementNS(NS, "rect");
+      bg.setAttribute("width", w); bg.setAttribute("height", h);
+      bg.setAttribute("rx", 6); bg.setAttribute("ry", 6);
+  }
+  bg.setAttribute("class", "node-bg");
+  g.appendChild(bg);
+
+  // 文本 / 图标
+  const isGroup = shape === "group" || shape === "groupDashed";
+  if (node.icon) {
+    const ic = document.createElementNS(NS, "text");
+    ic.setAttribute("x", w / 2);
+    ic.setAttribute("y", isGroup ? 22 : (node.sublabel ? h/2 - 4 : h/2 - 10));
+    ic.setAttribute("text-anchor", "middle");
+    ic.setAttribute("dominant-baseline", "middle");
+    ic.setAttribute("font-size", isGroup ? 18 : Math.min(h*0.45, 32));
+    ic.setAttribute("class", "node-icon");
+    ic.textContent = node.icon;
+    g.appendChild(ic);
+  }
+  if (node.label) {
+    const t = document.createElementNS(NS, "text");
+    t.setAttribute("x", isGroup ? 14 : w / 2);
+    t.setAttribute("y", isGroup ? 22 : (node.icon && !node.sublabel ? h/2 + 18 : (node.sublabel ? h/2 + 6 : h/2)));
+    t.setAttribute("text-anchor", isGroup ? "start" : "middle");
+    t.setAttribute("dominant-baseline", "middle");
+    t.setAttribute("font-size", node.fontSize || (isGroup ? 13 : 14));
+    t.setAttribute("font-weight", isGroup ? 700 : 600);
+    t.setAttribute("class", "node-label");
+    t.textContent = state.lang === "en" && node.labelEn ? node.labelEn : node.label;
+    g.appendChild(t);
+  }
+  if (node.sublabel) {
+    const t2 = document.createElementNS(NS, "text");
+    t2.setAttribute("x", w / 2);
+    t2.setAttribute("y", h/2 + 22);
+    t2.setAttribute("text-anchor", "middle");
+    t2.setAttribute("dominant-baseline", "middle");
+    t2.setAttribute("font-size", 11);
+    t2.setAttribute("class", "node-sublabel");
+    t2.setAttribute("opacity", 0.8);
+    t2.textContent = node.sublabel;
+    g.appendChild(t2);
+  }
+
+  // 应用样式
+  applyNodeStyle(g, node);
+
+  // 连线端口（上下左右）
+  const ports = [
+    { x: w/2, y: 0, dir: "t" },
+    { x: w, y: h/2, dir: "r" },
+    { x: w/2, y: h, dir: "b" },
+    { x: 0, y: h/2, dir: "l" },
+  ];
+  for (const p of ports) {
+    const c = document.createElementNS(NS, "circle");
+    c.setAttribute("cx", p.x); c.setAttribute("cy", p.y); c.setAttribute("r", 5);
+    c.setAttribute("class", "port");
+    c.setAttribute("data-port", p.dir);
+    g.appendChild(c);
+  }
+
+  return g;
+}
+
+function applyNodeStyle(g, node) {
+  const bg = g.querySelector(".node-bg");
+  // 填充
+  if (node.fillType && node.fillType !== "solid") {
+    if (node.fillType === "none") bg.setAttribute("fill", "none");
+    else bg.setAttribute("fill", `url(#${node.fillType})`);
+  } else {
+    bg.setAttribute("fill", node.fill || "#1e293b");
+  }
+  bg.setAttribute("stroke", node.stroke || "#3b82f6");
+  bg.setAttribute("stroke-width", node.strokeWidth || 2);
+
+  const isGroupDashed = node.shape === "groupDashed";
+  if (isGroupDashed) bg.setAttribute("stroke-dasharray", "8 6");
+
+  if (node.glow) bg.setAttribute("filter", "url(#nodeGlow)");
+  else bg.removeAttribute("filter");
+
+  g.querySelectorAll(".node-label, .node-sublabel").forEach(t => {
+    t.setAttribute("fill", node.color || "#e2e8f0");
+  });
+}
+
+// 分组半透明填充
+function makeGroupNode(node) {
+  if (!node.fill) node.fill = "rgba(139,92,246,0.05)";
+  if (!node.stroke) node.stroke = "#8b5cf6";
+  if (!node.color) node.color = "#c4b5fd";
+}
+
+// ================================================================
+// 连线工厂
+// ================================================================
+function createEdgeElement(edge) {
+  const g = document.createElementNS(NS, "g");
+  g.setAttribute("class", "edge-wrap");
+  g.setAttribute("data-id", edge.id);
+  const path = document.createElementNS(NS, "path");
+  path.setAttribute("class", "edge");
+  path.setAttribute("fill", "none");
+  g.appendChild(path);
+  // 热区（方便点击）
+  const hit = document.createElementNS(NS, "path");
+  hit.setAttribute("class", "edge-hit");
+  hit.setAttribute("fill", "none");
+  hit.setAttribute("stroke", "transparent");
+  hit.setAttribute("stroke-width", "14");
+  hit.style.cursor = "pointer";
+  g.appendChild(hit);
+  // 标签
+  if (edge.label) {
+    const t = document.createElementNS(NS, "text");
+    t.setAttribute("class", "edge-label");
+    t.setAttribute("text-anchor", "middle");
+    t.setAttribute("font-size", 11);
+    t.setAttribute("fill", edge.stroke || "#94a3b8");
+    t.textContent = edge.label;
+    g.appendChild(t);
+  }
+  updateEdgePath(edge, g);
+  return g;
+}
+
+function updateEdgePath(edge, el) {
+  el = el || layerEdges.querySelector(`[data-id="${edge.id}"]`);
+  if (!el) return;
+  const path = el.querySelector(".edge");
+  const hit = el.querySelector(".edge-hit");
+  const label = el.querySelector(".edge-label");
+
+  const { x1, y1, x2, y2 } = getEdgeEndpoints(edge);
+  let d;
+  if (edge.type === "orthogonal") {
+    const mx = (x1 + x2) / 2;
+    d = `M ${x1} ${y1} L ${mx} ${y1} L ${mx} ${y2} L ${x2} ${y2}`;
+  } else if (edge.type === "bezier") {
+    const dx = Math.abs(x2 - x1) * 0.5;
+    d = `M ${x1} ${y1} C ${x1+dx} ${y1}, ${x2-dx} ${y2}, ${x2} ${y2}`;
+  } else {
+    d = `M ${x1} ${y1} L ${x2} ${y2}`;
+  }
+  path.setAttribute("d", d);
+  hit.setAttribute("d", d);
+
+  path.setAttribute("stroke", edge.stroke || "#94a3b8");
+  path.setAttribute("stroke-width", edge.strokeWidth || 2);
+  if (edge.dash && edge.dash !== "none") path.setAttribute("stroke-dasharray", edge.dash);
+  else path.removeAttribute("stroke-dasharray");
+
+  let cls = "edge";
+  if (edge.anim === "normal") cls += " edge-anim";
+  else if (edge.anim === "fast") cls += " edge-anim flow-fast";
+  path.setAttribute("class", cls);
+
+  if (edge.arrow) path.setAttribute("marker-end", "url(#arrow)");
+  else path.removeAttribute("marker-end");
+
+  if (label) {
+    label.setAttribute("x", (x1 + x2) / 2);
+    label.setAttribute("y", (y1 + y2) / 2 - 6);
+    label.setAttribute("fill", edge.stroke || "#94a3b8");
+    label.textContent = edge.label || "";
+  }
+}
+
+function getEdgeEndpoints(edge) {
+  const from = state.nodes[edge.from];
+  const to = state.nodes[edge.to];
+  const p1 = from ? getPortPos(from, edge.fromPort) : { x: edge.x1, y: edge.y1 };
+  const p2 = to ? getPortPos(to, edge.toPort) : { x: edge.x2, y: edge.y2 };
+  return { x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y };
+}
+
+function getPortPos(node, dir) {
+  const { x, y, w, h } = node;
+  switch (dir) {
+    case "t": return { x: x + w/2, y };
+    case "r": return { x: x + w, y: y + h/2 };
+    case "b": return { x: x + w/2, y: y + h };
+    case "l": return { x, y: y + h/2 };
+    default:  return { x: x + w/2, y: y + h/2 };
+  }
+}
+
+// ================================================================
+// 渲染
+// ================================================================
+function render() {
+  // 清空
+  layerGroups.innerHTML = "";
+  layerNodes.innerHTML = "";
+  layerEdges.innerHTML = "";
+
+  // 先渲染分组（在底层），再渲染其他
+  for (const id of state.order) {
+    const n = state.nodes[id];
+    if (!n) continue;
+    const el = createNodeElement(n);
+    if (n.shape === "group" || n.shape === "groupDashed") layerGroups.appendChild(el);
+    else layerNodes.appendChild(el);
+  }
+  for (const id of state.edgeOrder) {
+    const e = state.edges[id];
+    if (!e) continue;
+    layerEdges.appendChild(createEdgeElement(e));
+  }
+
+  // 高亮选中
+  if (state.selectedId) {
+    const el = svg.querySelector(`[data-id="${state.selectedId}"]`);
+    if (el) el.classList.add("selected");
+  }
+  updateHint();
+}
+
+function rerenderNode(id) {
+  const n = state.nodes[id];
+  if (!n) return;
+  const old = svg.querySelector(`g[data-id="${id}"]`);
+  if (!old) return render();
+  const el = createNodeElement(n);
+  if (state.selectedId === id) el.classList.add("selected");
+  old.replaceWith(el);
+  // 相关连线刷新
+  for (const eid in state.edges) {
+    const e = state.edges[eid];
+    if (e.from === id || e.to === id) updateEdgePath(e);
+  }
+}
+
+function updateHint() {
+  const nodeN = Object.keys(state.nodes).length;
+  const edgeN = Object.keys(state.edges).length;
+  hintBar.textContent = `就绪 · 节点 ${nodeN} · 连线 ${edgeN} · 缩放 ${Math.round(state.viewport.scale*100)}%`;
+}
+
+// ================================================================
+// 节点预设
+// ================================================================
+function defaultNodeByShape(shape) {
+  const base = {
+    shape, w: 140, h: 60, label: "新节点", sublabel: "", icon: "",
+    fill: "#1e293b", stroke: "#3b82f6", color: "#e2e8f0",
+    fontSize: 14, fillType: "solid", glow: false, labelEn: ""
+  };
+  switch (shape) {
+    case "circle":   return { ...base, w: 80, h: 80, label: "" };
+    case "ellipse":  return { ...base, w: 140, h: 70 };
+    case "diamond":  return { ...base, w: 120, h: 80, label: "判断" };
+    case "hex":      return { ...base, w: 140, h: 70, label: "组件" };
+    case "round":    return { ...base, w: 140, h: 60, label: "模块" };
+    case "badge":    return { ...base, w: 140, h: 32, label: "标签", fill:"#fef2f2", stroke:"#ef4444", color:"#ef4444" };
+    case "emoji":    return { ...base, w: 100, h: 100, icon: "🦞", label: "节点" };
+    case "group":    return { ...base, w: 320, h: 220, label: "分组容器", labelEn:"Group",
+                              fill:"rgba(139,92,246,0.05)", stroke:"#8b5cf6", color:"#c4b5fd", fontSize: 13 };
+    case "groupDashed": return { ...base, w: 320, h: 220, label: "虚线分组", labelEn:"Group",
+                              fill:"rgba(59,130,246,0.05)", stroke:"#3b82f6", color:"#93c5fd", fontSize: 13 };
+    default:         return base;
+  }
+}
+
+// ================================================================
+// 交互：拖拽 / 连线 / 选择 / 平移缩放
+// ================================================================
+const drag = { active: false, id: null, dx: 0, dy: 0, startX: 0, startY: 0 };
+const pan  = { active: false, spaceDown: false, startX: 0, startY: 0, vx: 0, vy: 0 };
+const link = { active: false, fromId: null, fromPort: null, tmpPath: null };
+
+// 从侧边栏拖到画布
+document.querySelectorAll(".shape-btn").forEach(btn => {
+  btn.addEventListener("dragstart", (e) => {
+    e.dataTransfer.setData("shape", btn.dataset.shape);
+  });
+});
+svg.addEventListener("dragover", (e) => e.preventDefault());
+svg.addEventListener("drop", (e) => {
+  e.preventDefault();
+  const shape = e.dataTransfer.getData("shape");
+  if (!shape) return;
+  const p = screenToWorld(e.clientX, e.clientY);
+  const n = defaultNodeByShape(shape);
+  n.id = uid();
+  n.x = snap(p.x - n.w / 2);
+  n.y = snap(p.y - n.h / 2);
+  state.nodes[n.id] = n;
+  state.order.push(n.id);
+  pushHistory();
+  render();
+  select(n.id, "node");
+});
+
+// 画布事件
+svg.addEventListener("mousedown", (e) => {
+  const portEl = e.target.closest(".port");
+  const nodeEl = e.target.closest(".node-wrap");
+  const edgeEl = e.target.closest(".edge-wrap");
+
+  // 平移画布
+  if (pan.spaceDown || e.button === 1 || (!portEl && !nodeEl && !edgeEl)) {
+    if (pan.spaceDown || e.button === 1 || e.target.id === "canvas" || e.target.id === "grid-bg") {
+      pan.active = true;
+      pan.startX = e.clientX; pan.startY = e.clientY;
+      pan.vx = state.viewport.x; pan.vy = state.viewport.y;
+      svg.classList.add("panning");
+      if (!portEl && !nodeEl && !edgeEl) select(null);
+      return;
+    }
+  }
+
+  // 连线：从端口开始
+  if (portEl && nodeEl) {
+    link.active = true;
+    link.fromId = nodeEl.dataset.id;
+    link.fromPort = portEl.dataset.port;
+    const p = screenToWorld(e.clientX, e.clientY);
+    const tmp = document.createElementNS(NS, "path");
+    tmp.setAttribute("stroke", "#3b82f6");
+    tmp.setAttribute("stroke-width", 2);
+    tmp.setAttribute("stroke-dasharray", "4 4");
+    tmp.setAttribute("fill", "none");
+    const start = getPortPos(state.nodes[link.fromId], link.fromPort);
+    tmp.setAttribute("d", `M ${start.x} ${start.y} L ${p.x} ${p.y}`);
+    layerOverlay.appendChild(tmp);
+    link.tmpPath = tmp;
+    return;
+  }
+
+  // 选中并拖拽节点
+  if (nodeEl) {
+    const id = nodeEl.dataset.id;
+    select(id, "node");
+    drag.active = true; drag.id = id;
+    const p = screenToWorld(e.clientX, e.clientY);
+    const n = state.nodes[id];
+    drag.dx = p.x - n.x; drag.dy = p.y - n.y;
+    drag.startX = n.x; drag.startY = n.y;
+    return;
+  }
+
+  if (edgeEl) {
+    select(edgeEl.dataset.id, "edge");
+    return;
+  }
+});
+
+svg.addEventListener("mousemove", (e) => {
+  if (pan.active) {
+    state.viewport.x = pan.vx + (e.clientX - pan.startX);
+    state.viewport.y = pan.vy + (e.clientY - pan.startY);
+    updateViewport();
+    return;
+  }
+  if (drag.active) {
+    const p = screenToWorld(e.clientX, e.clientY);
+    const n = state.nodes[drag.id];
+    n.x = snap(p.x - drag.dx);
+    n.y = snap(p.y - drag.dy);
+    const g = svg.querySelector(`g.node-wrap[data-id="${drag.id}"]`);
+    if (g) g.setAttribute("transform", `translate(${n.x},${n.y})`);
+    for (const eid in state.edges) {
+      const ed = state.edges[eid];
+      if (ed.from === drag.id || ed.to === drag.id) updateEdgePath(ed);
+    }
+    return;
+  }
+  if (link.active && link.tmpPath) {
+    const start = getPortPos(state.nodes[link.fromId], link.fromPort);
+    const p = screenToWorld(e.clientX, e.clientY);
+    link.tmpPath.setAttribute("d", `M ${start.x} ${start.y} L ${p.x} ${p.y}`);
+  }
+});
+
+svg.addEventListener("mouseup", (e) => {
+  if (pan.active) { pan.active = false; svg.classList.remove("panning"); }
+  if (drag.active) {
+    const n = state.nodes[drag.id];
+    if (n && (n.x !== drag.startX || n.y !== drag.startY)) pushHistory();
+    drag.active = false;
+  }
+  if (link.active) {
+    const target = e.target.closest(".port");
+    const targetNode = e.target.closest(".node-wrap");
+    if (target && targetNode && targetNode.dataset.id !== link.fromId) {
+      const edge = {
+        id: uid("e"),
+        from: link.fromId, fromPort: link.fromPort,
+        to: targetNode.dataset.id, toPort: target.dataset.port,
+        type: "orthogonal", stroke: "#3b82f6", strokeWidth: 2,
+        dash: "4 4", anim: "normal", arrow: true, label: ""
+      };
+      state.edges[edge.id] = edge;
+      state.edgeOrder.push(edge.id);
+      pushHistory();
+      render();
+      select(edge.id, "edge");
+    }
+    if (link.tmpPath) link.tmpPath.remove();
+    link.active = false; link.tmpPath = null;
+  }
+});
+
+// 滚轮缩放
+svg.addEventListener("wheel", (e) => {
+  e.preventDefault();
+  const factor = e.deltaY < 0 ? 1.1 : 0.9;
+  const rect = svg.getBoundingClientRect();
+  const sx = e.clientX - rect.left;
+  const sy = e.clientY - rect.top;
+  const wx = (sx - state.viewport.x) / state.viewport.scale;
+  const wy = (sy - state.viewport.y) / state.viewport.scale;
+  state.viewport.scale = Math.max(0.2, Math.min(3, state.viewport.scale * factor));
+  state.viewport.x = sx - wx * state.viewport.scale;
+  state.viewport.y = sy - wy * state.viewport.scale;
+  updateViewport();
+  updateHint();
+}, { passive: false });
+
+// 双击编辑文字
+svg.addEventListener("dblclick", (e) => {
+  const nodeEl = e.target.closest(".node-wrap");
+  if (!nodeEl) return;
+  const n = state.nodes[nodeEl.dataset.id];
+  const txt = prompt("编辑文字：", n.label || "");
+  if (txt !== null) {
+    n.label = txt;
+    rerenderNode(n.id);
+    if (state.selectedId === n.id) $("p-label").value = txt;
+    pushHistory();
+  }
+});
+
+// 键盘
+window.addEventListener("keydown", (e) => {
+  if (e.code === "Space" && !isInputFocused()) {
+    pan.spaceDown = true; svg.style.cursor = "grab";
+    e.preventDefault();
+  }
+  if (isInputFocused()) return;
+  if (e.key === "Delete" || e.key === "Backspace") { App.deleteSelected(); e.preventDefault(); }
+  if ((e.ctrlKey || e.metaKey) && e.key === "z") { App.undo(); e.preventDefault(); }
+  if ((e.ctrlKey || e.metaKey) && (e.key === "y" || (e.shiftKey && e.key === "Z"))) { App.redo(); e.preventDefault(); }
+  if ((e.ctrlKey || e.metaKey) && e.key === "d") { App.duplicate(); e.preventDefault(); }
+  if ((e.ctrlKey || e.metaKey) && e.key === "p") { App.preview(); e.preventDefault(); }
+});
+window.addEventListener("keyup", (e) => {
+  if (e.code === "Space") { pan.spaceDown = false; svg.style.cursor = "default"; }
+});
+function isInputFocused() {
+  const t = document.activeElement;
+  return t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT");
+}
+
+// ================================================================
+// 选择与属性面板
+// ================================================================
+function select(id, type) {
+  // 去掉旧
+  svg.querySelectorAll(".selected").forEach(el => el.classList.remove("selected"));
+  state.selectedId = id; state.selectedType = type;
+  $("prop-empty").style.display = id ? "none" : "block";
+  $("prop-node").style.display = (id && type === "node") ? "block" : "none";
+  $("prop-edge").style.display = (id && type === "edge") ? "block" : "none";
+  if (!id) return;
+  const el = svg.querySelector(`[data-id="${id}"]`);
+  if (el) el.classList.add("selected");
+  if (type === "node") {
+    const n = state.nodes[id];
+    $("p-label").value = n.label || "";
+    $("p-sublabel").value = n.sublabel || "";
+    $("p-icon").value = n.icon || "";
+    $("p-fill").value = toHexColor(n.fill);
+    $("p-stroke").value = toHexColor(n.stroke);
+    $("p-color").value = toHexColor(n.color);
+    $("p-fontSize").value = n.fontSize || 14;
+    $("p-w").value = n.w; $("p-h").value = n.h;
+    $("p-fillType").value = n.fillType || "solid";
+    $("p-glow").checked = !!n.glow;
+    $("p-labelEn").value = n.labelEn || "";
+  } else if (type === "edge") {
+    const ed = state.edges[id];
+    $("e-type").value = ed.type || "line";
+    $("e-stroke").value = toHexColor(ed.stroke);
+    $("e-strokeWidth").value = ed.strokeWidth || 2;
+    $("e-dash").value = ed.dash || "none";
+    $("e-anim").value = ed.anim || "none";
+    $("e-arrow").checked = !!ed.arrow;
+    $("e-label").value = ed.label || "";
+  }
+}
+
+function toHexColor(c) {
+  if (!c) return "#1e293b";
+  if (c.startsWith("#")) return c.length === 7 ? c : c;
+  if (c.startsWith("rgb")) {
+    const m = c.match(/\d+/g);
+    if (m && m.length >= 3) {
+      return "#" + [m[0],m[1],m[2]].map(x => (+x).toString(16).padStart(2,"0")).join("");
+    }
+  }
+  return "#1e293b";
+}
+
+// ================================================================
+// 历史记录
+// ================================================================
+function snapshot() {
+  return JSON.stringify({
+    nodes: state.nodes, edges: state.edges,
+    order: state.order, edgeOrder: state.edgeOrder, nextId: state.nextId
+  });
+}
+function pushHistory() {
+  state.history = state.history.slice(0, state.historyIdx + 1);
+  state.history.push(snapshot());
+  if (state.history.length > 50) state.history.shift();
+  state.historyIdx = state.history.length - 1;
+}
+function restoreHistory(idx) {
+  if (idx < 0 || idx >= state.history.length) return;
+  const s = JSON.parse(state.history[idx]);
+  state.nodes = s.nodes; state.edges = s.edges;
+  state.order = s.order; state.edgeOrder = s.edgeOrder; state.nextId = s.nextId;
+  state.historyIdx = idx;
+  state.selectedId = null;
+  select(null);
+  render();
+}
+
+// ================================================================
+// 导出为 SVG + CSS 代码
+// ================================================================
+function exportSvgString() {
+  // 计算边界
+  const nodes = Object.values(state.nodes);
+  if (!nodes.length) return "<!-- 画布为空 -->";
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (const n of nodes) {
+    minX = Math.min(minX, n.x);
+    minY = Math.min(minY, n.y);
+    maxX = Math.max(maxX, n.x + n.w);
+    maxY = Math.max(maxY, n.y + n.h);
+  }
+  const pad = 40;
+  const vbX = minX - pad, vbY = minY - pad;
+  const vbW = (maxX - minX) + pad*2, vbH = (maxY - minY) + pad*2;
+
+  // 克隆当前 viewportG 的子元素（groups/edges/nodes），不包含端口和 overlay
+  const clone = viewportG.cloneNode(true);
+  // 移除 overlay & 选中高亮 & 端口
+  clone.querySelectorAll(".port, #layer-overlay").forEach(el => el.remove());
+  clone.querySelectorAll(".selected").forEach(el => el.classList.remove("selected"));
+  clone.querySelectorAll(".edge-hit").forEach(el => el.remove());
+  clone.removeAttribute("transform");
+
+  const defsHTML = `
+    <defs>
+      <filter id="nodeGlow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+      </filter>
+      <linearGradient id="grad-purple" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#8B5CF6"/><stop offset="100%" stop-color="#3b82f6"/>
+      </linearGradient>
+      <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#06b6d4"/>
+      </linearGradient>
+      <linearGradient id="grad-green" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#059669"/>
+      </linearGradient>
+      <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+      </marker>
+    </defs>`;
+
+  const cssBlock = `<style>
+  .edge-anim { animation: edge-dash 20s linear infinite; }
+  .edge-anim.flow-fast { animation-duration: 10s; }
+  @keyframes edge-dash { to { stroke-dashoffset: -1000; } }
+</style>`;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vbX} ${vbY} ${vbW} ${vbH}" style="max-width:100%;height:auto;">
+${cssBlock}
+${defsHTML}
+  ${clone.innerHTML}
+</svg>`;
+}
+
+function exportStandaloneHTML() {
+  // 导出独立 HTML 时使用带 id 的 svg，以便 JS 控制 viewBox
+  const nodes = Object.values(state.nodes);
+  let minX = 0, minY = 0, maxX = 600, maxY = 400;
+  if (nodes.length) {
+    minX = Infinity; minY = Infinity; maxX = -Infinity; maxY = -Infinity;
+    for (const n of nodes) {
+      minX = Math.min(minX, n.x);
+      minY = Math.min(minY, n.y);
+      maxX = Math.max(maxX, n.x + n.w);
+      maxY = Math.max(maxY, n.y + n.h);
+    }
+  }
+  const pad = 40;
+  const vbX = minX - pad, vbY = minY - pad;
+  const vbW = (maxX - minX) + pad*2, vbH = (maxY - minY) + pad*2;
+
+  // 克隆纯净 SVG 内容
+  const clone = viewportG.cloneNode(true);
+  clone.querySelectorAll(".port, .edge-hit").forEach(el => el.remove());
+  clone.querySelectorAll(".selected").forEach(el => el.classList.remove("selected"));
+  clone.removeAttribute("transform");
+
+  const defsHTML = `<defs>
+    <filter id="nodeGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <linearGradient id="grad-purple" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#8B5CF6"/><stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <linearGradient id="grad-green" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>`;
+
+  const bgColor  = state.colorMode === "light" ? "#f1f5f9" : "#0f172a";
+  const panelBg  = state.colorMode === "light" ? "#fff"     : "#1e293b";
+  const btnBg    = state.colorMode === "light" ? "rgba(255,255,255,0.9)" : "rgba(30,41,59,0.85)";
+  const btnColor = state.colorMode === "light" ? "#0f172a" : "#e2e8f0";
+  const btnBorder= state.colorMode === "light" ? "#cbd5e1" : "#475569";
+
+  // 控件位置与方向
+  const C = state.ctrl || { show: "yes", pos: "tr", dir: "row", size: 32 };
+  const showControls = C.show !== "no";
+  const posStyle = (() => {
+    switch (C.pos) {
+      case "tl": return "top: 12px; left: 12px;";
+      case "br": return "bottom: 12px; right: 12px;";
+      case "bl": return "bottom: 12px; left: 12px;";
+      case "tr": default: return "top: 12px; right: 12px;";
+    }
+  })();
+  const dirStyle = C.dir === "col" ? "flex-direction: column;" : "flex-direction: row;";
+  const btnSize = +C.size || 32;
+  const btnFontSize = Math.round(btnSize * 0.5);
+  const controlsHTML = showControls ? `
+      <div class="svg-controls">
+        <button class="svg-btn" onclick="zoomSvg(1.2)" title="放大">+</button>
+        <button class="svg-btn" onclick="zoomSvg(0.8)" title="缩小">−</button>
+        <button class="svg-btn" onclick="resetSvg()" title="复原">⊙</button>
+        <button class="svg-btn" onclick="toggleFullscreen()" title="全屏">⛶</button>
+      </div>` : "";
+
+  return `<!DOCTYPE html>
+<html lang="${state.lang}">
+<head>
+<meta charset="UTF-8">
+<title>Arch Diagram</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 40px; background: ${bgColor};
+         font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+         min-height: 100vh; }
+  .arch-outer { background: ${panelBg}; padding: 30px; border-radius: 20px;
+                max-width: 1200px; margin: 0 auto; position: relative;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+  .arch-outer h2 { margin: 0 0 20px; color: ${btnColor}; font-size: 22px; }
+  #svg-container { position: relative; width: 100%; height: 70vh; min-height: 500px;
+                   border-radius: 14px; overflow: hidden;
+                   background: radial-gradient(circle at center, rgba(59,130,246,0.05) 0%, transparent 70%); }
+  #svg-container:fullscreen { background: ${bgColor}; padding: 20px; }
+  #arch-svg { width: 100%; height: 100%; display: block; cursor: grab; }
+  #arch-svg.dragging { cursor: grabbing; }
+  .svg-controls { position: absolute; ${posStyle} display: flex; ${dirStyle} gap: 6px;
+                  background: ${btnBg}; backdrop-filter: blur(8px);
+                  padding: 4px; border-radius: 8px; border: 1px solid ${btnBorder}; z-index: 10; }
+  .svg-btn { width: ${btnSize}px; height: ${btnSize}px; border: none; background: transparent;
+             border-radius: 6px; cursor: pointer; font-size: ${btnFontSize}px; color: ${btnColor};
+             display: flex; align-items: center; justify-content: center;
+             transition: background 0.15s; }
+  .svg-btn:hover { background: rgba(59,130,246,0.2); }
+  .edge-anim { animation: edge-dash 20s linear infinite; }
+  .edge-anim.flow-fast { animation-duration: 10s; }
+  @keyframes edge-dash { to { stroke-dashoffset: -1000; } }
+</style>
+</head>
+<body>
+  <div class="arch-outer">
+    <h2>架构图</h2>
+    <div id="svg-container">
+      ${controlsHTML}
+      <svg id="arch-svg" xmlns="http://www.w3.org/2000/svg"
+           viewBox="${vbX} ${vbY} ${vbW} ${vbH}"
+           preserveAspectRatio="xMidYMid meet">
+        ${defsHTML}
+        ${clone.innerHTML}
+      </svg>
+    </div>
+  </div>
+` + '<' + 'script>' + `
+  const DEFAULT_VIEWBOX = { x: ${vbX}, y: ${vbY}, w: ${vbW}, h: ${vbH} };
+  const BASE_W = ${vbW};
+  const MIN_ZOOM = 0.3;
+  const MAX_ZOOM = 5;
+  let viewBox = { ...DEFAULT_VIEWBOX };
+
+  const svgEl = document.getElementById('arch-svg');
+  const container = document.getElementById('svg-container');
+
+  function updateViewBox() {
+    svgEl.setAttribute('viewBox',
+      viewBox.x + ' ' + viewBox.y + ' ' + viewBox.w + ' ' + viewBox.h);
+  }
+
+  function zoomSvg(factor) {
+    const newW = viewBox.w / factor;
+    const newH = viewBox.h / factor;
+    const scale = BASE_W / newW;
+    if (scale < MIN_ZOOM || scale > MAX_ZOOM) return;
+    // 以中心为基准缩放
+    viewBox.x += (viewBox.w - newW) / 2;
+    viewBox.y += (viewBox.h - newH) / 2;
+    viewBox.w = newW; viewBox.h = newH;
+    updateViewBox();
+  }
+
+  function resetSvg() {
+    viewBox = { ...DEFAULT_VIEWBOX };
+    updateViewBox();
+  }
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      container.requestFullscreen().catch(err => console.log(err));
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
+  // 拖动平移
+  let dragging = false, startPoint = null;
+  svgEl.addEventListener('mousedown', (e) => {
+    dragging = true;
+    startPoint = { x: e.clientX, y: e.clientY };
+    svgEl.classList.add('dragging');
+  });
+  window.addEventListener('mouseup', () => {
+    dragging = false;
+    svgEl.classList.remove('dragging');
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (!dragging || !startPoint) return;
+    const rect = svgEl.getBoundingClientRect();
+    const scaleX = viewBox.w / rect.width;
+    const scaleY = viewBox.h / rect.height;
+    const dx = e.clientX - startPoint.x;
+    const dy = e.clientY - startPoint.y;
+    viewBox.x -= dx * scaleX;
+    viewBox.y -= dy * scaleY;
+    updateViewBox();
+    startPoint = { x: e.clientX, y: e.clientY };
+  });
+
+  // 滚轮缩放（以鼠标位置为中心）
+  svgEl.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const factor = e.deltaY < 0 ? 1.1 : 0.9;
+    const newW = viewBox.w / factor;
+    const newH = viewBox.h / factor;
+    const scale = BASE_W / newW;
+    if (scale < MIN_ZOOM || scale > MAX_ZOOM) return;
+    const rect = svgEl.getBoundingClientRect();
+    const mx = (e.clientX - rect.left) / rect.width;
+    const my = (e.clientY - rect.top)  / rect.height;
+    viewBox.x += (viewBox.w - newW) * mx;
+    viewBox.y += (viewBox.h - newH) * my;
+    viewBox.w = newW; viewBox.h = newH;
+    updateViewBox();
+  }, { passive: false });
+` + '<' + '/script>' + `
+</body>
+</html>`;
+}
+
+// ================================================================
+// Emoji 数据库（分类 + 关键词索引，方便搜索）
+// ================================================================
+const EMOJI_DB = {
+  "常用": [
+    ["🦞","shrimp lobster 虾 龙虾"],["🎯","target 目标 靶子"],["🔥","fire 火 热门"],["⭐","star 星 收藏"],
+    ["✨","sparkles 闪光 新"],["💡","idea bulb 灯泡 点子"],["🚀","rocket 火箭 启动 发射"],["⚡","bolt 闪电 快"],
+    ["🎨","palette 画板 设计"],["🔧","wrench 扳手 工具"],["🛠️","tools 工具"],["🔨","hammer 锤子"],
+    ["⚙️","gear settings 齿轮 设置"],["🧩","puzzle 拼图 组件"],["📦","package box 包 盒子"],["🗂️","folder 文件夹"],
+    ["📁","folder 文件夹"],["📂","open-folder 文件夹"],["📄","page 文档"],["📋","clipboard 剪贴板"],
+    ["📌","pin 图钉"],["📎","clip 回形针"],["🔗","link 链接"],["🔒","lock 锁 安全"],
+    ["🔓","unlock 解锁"],["🔑","key 钥匙"],["🛡️","shield 盾 防护 安全"],["🏷️","tag 标签"],
+  ],
+  "笑脸/人物": [
+    ["😀","grinning face 笑"],["😃","happy"],["😄","smile"],["😁","beaming"],["😆","laugh 笑"],
+    ["😅","sweat-smile"],["🤣","rofl 爆笑"],["😂","joy 大笑"],["🙂","slight-smile"],["🙃","upside-down"],
+    ["😉","wink"],["😊","blush"],["😇","angel"],["🥰","love"],["😍","heart-eyes"],
+    ["🤩","star-struck"],["😘","kiss"],["😋","yum"],["😎","cool 酷"],["🤓","nerd"],
+    ["🧐","monocle"],["🤨","raised-brow"],["😐","neutral"],["😑","expressionless"],["🙄","eye-roll"],
+    ["😏","smirk"],["😮","open-mouth"],["😴","sleeping"],["🤤","drool"],["😪","sleepy"],
+    ["🥱","yawn"],["😵","dizzy 晕"],["🤯","mind-blown 震惊"],["🥵","hot"],["🥶","cold"],
+    ["😱","scream"],["😭","crying"],["😢","tear"],["😡","angry 怒"],["🤬","cursing"],
+    ["🤔","thinking 思考"],["🤗","hug"],["🤫","shush"],["🤐","zipper-mouth"],["🤭","hand-over-mouth"],
+    ["🙊","see-no-evil monkey"],["🙈","hear-no-evil monkey"],["🙉","speak-no-evil monkey"],
+    ["👨","man 男"],["👩","woman 女"],["👶","baby 婴儿 儿童"],["👧","girl 女孩"],["👦","boy 男孩"],
+    ["🧑","person 人"],["👴","old-man 老人"],["👵","old-woman 老太"],["👮","police 警察"],
+    ["👷","worker 工人"],["🧑‍💻","tech-dev 程序员 极客"],["🧑‍🔬","scientist 科学"],["🧑‍🏫","teacher 老师"],
+    ["🧑‍⚕️","doctor 医生"],["🤖","robot 机器人"],["👻","ghost 幽灵"],["👽","alien 外星"],
+    ["💀","skull 骷髅"],["👾","game 游戏"],
+  ],
+  "动物/自然": [
+    ["🐶","dog 狗"],["🐱","cat 猫"],["🐭","mouse 鼠"],["🐹","hamster 仓鼠"],["🐰","rabbit 兔"],
+    ["🦊","fox 狐"],["🐻","bear 熊"],["🐼","panda 熊猫"],["🐨","koala 考拉"],["🐯","tiger 虎"],
+    ["🦁","lion 狮"],["🐮","cow 牛"],["🐷","pig 猪"],["🐸","frog 蛙"],["🐵","monkey 猴"],
+    ["🐔","chicken 鸡"],["🐧","penguin 企鹅"],["🐦","bird 鸟"],["🦅","eagle 鹰"],["🦆","duck 鸭"],
+    ["🦉","owl 猫头鹰"],["🐴","horse 马"],["🦄","unicorn 独角兽"],["🐝","bee 蜜蜂"],["🐛","bug 虫"],
+    ["🦋","butterfly 蝴蝶"],["🐢","turtle 龟"],["🐍","snake 蛇"],["🦖","dino 恐龙"],["🐙","octopus"],
+    ["🦑","squid"],["🦐","shrimp 虾"],["🦀","crab 蟹"],["🐠","fish 鱼"],["🐬","dolphin 海豚"],
+    ["🐳","whale 鲸"],["🦈","shark 鲨"],["🐊","croc 鳄"],["🌲","tree 树"],["🌳","tree"],
+    ["🌴","palm 棕榈"],["🌵","cactus 仙人掌"],["🌸","cherry-blossom 樱花"],["🌺","hibiscus 花"],
+    ["🌻","sunflower 向日葵"],["🌼","flower 花"],["🌷","tulip 郁金香"],["🌹","rose 玫瑰"],
+    ["🍀","clover 四叶草"],["🍁","maple 枫叶"],["🍂","leaves 叶"],["🍃","leaf 叶"],
+    ["🌞","sun 太阳"],["🌝","moon 月"],["🌚","new-moon"],["🌙","crescent 月亮"],["⭐","star"],
+    ["🌟","star"],["💫","dizzy"],["☀️","sun"],["🌤️","sun-cloud"],["⛅","part-cloud"],
+    ["☁️","cloud 云"],["🌧️","rain 雨"],["⛈️","storm 暴雨"],["🌩️","lightning 闪电"],["❄️","snow 雪"],
+    ["☃️","snowman 雪人"],["🌈","rainbow 彩虹"],["🔥","fire"],["💧","drop 水滴"],["🌊","wave 浪"],
+  ],
+  "食物": [
+    ["🍎","apple 苹果"],["🍊","orange 橙"],["🍋","lemon 柠檬"],["🍌","banana 香蕉"],["🍉","watermelon 西瓜"],
+    ["🍇","grape 葡萄"],["🍓","strawberry 草莓"],["🫐","blueberry"],["🍒","cherry"],["🍑","peach"],
+    ["🥭","mango 芒果"],["🍍","pineapple 菠萝"],["🥥","coconut"],["🥝","kiwi"],["🍅","tomato"],
+    ["🍆","eggplant"],["🥑","avocado"],["🥦","broccoli"],["🥬","greens"],["🌶️","pepper 辣"],
+    ["🌽","corn 玉米"],["🥕","carrot 胡萝卜"],["🧄","garlic 蒜"],["🧅","onion 洋葱"],["🥔","potato 土豆"],
+    ["🍠","sweet-potato"],["🥐","croissant"],["🍞","bread 面包"],["🥖","baguette"],["🧀","cheese"],
+    ["🥚","egg 蛋"],["🍳","cooking"],["🥞","pancake"],["🥓","bacon"],["🍔","burger 汉堡"],
+    ["🍟","fries 薯条"],["🍕","pizza"],["🌭","hotdog"],["🥪","sandwich"],["🌮","taco"],
+    ["🌯","burrito"],["🍣","sushi 寿司"],["🍱","bento 便当"],["🍙","rice-ball 饭团"],["🍚","rice 米饭"],
+    ["🍜","ramen 拉面"],["🍝","pasta"],["🍛","curry 咖喱"],["🍲","stew"],["🥟","dumpling 饺子"],
+    ["🍦","ice-cream 冰淇淋"],["🍨","ice-cream"],["🍩","donut"],["🍪","cookie 饼干"],["🎂","cake 蛋糕"],
+    ["🍰","cake"],["🍫","chocolate 巧克力"],["🍬","candy 糖"],["🍭","lollipop"],["🍯","honey 蜂蜜"],
+    ["☕","coffee 咖啡"],["🍵","tea 茶"],["🧋","bubble-tea 奶茶"],["🥤","drink 饮料"],["🍺","beer 啤酒"],
+    ["🍷","wine 红酒"],["🍸","cocktail"],["🥂","champagne"],
+  ],
+  "活动/运动": [
+    ["⚽","football 足球"],["🏀","basketball 篮球"],["🏈","american-football"],["⚾","baseball 棒球"],
+    ["🎾","tennis 网球"],["🏐","volleyball 排球"],["🏓","pingpong 乒乓"],["🏸","badminton 羽毛球"],
+    ["🎱","billiards 台球"],["🏒","hockey 曲棍球"],["🏑","field-hockey"],["🎣","fishing 钓鱼"],
+    ["🥊","boxing 拳击"],["🥋","martial-arts 武术"],["🏋️","weight-lifting 举重"],["🤸","gymnastics"],
+    ["🚴","cycling 骑车"],["🏊","swimming 游泳"],["🏃","running 跑步"],["🚶","walking 走路"],
+    ["⛷️","ski 滑雪"],["🏂","snowboard"],["🎿","skis"],["🏆","trophy 奖杯"],["🥇","gold-medal 金牌"],
+    ["🥈","silver-medal 银牌"],["🥉","bronze-medal 铜牌"],["🎖️","medal 奖章"],["🏅","medal"],
+    ["🎮","game-controller 游戏"],["🕹️","joystick 摇杆"],["🎲","dice 骰子"],["♟️","chess 棋"],
+    ["🎭","theater 戏剧"],["🎨","art"],["🎬","clapperboard 电影"],["🎤","microphone 麦克风"],
+    ["🎧","headphones 耳机"],["🎵","music-note 音乐"],["🎶","notes"],["🎸","guitar 吉他"],
+    ["🎹","piano 钢琴"],["🥁","drum 鼓"],["🎺","trumpet 小号"],["🎻","violin 小提琴"],
+  ],
+  "旅行/交通": [
+    ["🚗","car 汽车"],["🚕","taxi 出租"],["🚙","suv"],["🚌","bus 公交"],["🚎","trolley"],
+    ["🏎️","racing-car 赛车"],["🚓","police-car 警车"],["🚑","ambulance 救护车"],["🚒","fire-truck 消防车"],
+    ["🚚","truck 卡车"],["🚛","lorry"],["🚜","tractor 拖拉机"],["🏍️","motorcycle 摩托"],["🛵","scooter"],
+    ["🚲","bicycle 自行车"],["🛴","kick-scooter"],["🛹","skateboard"],["🚆","train 火车"],["🚄","bullet-train 高铁"],
+    ["🚇","metro 地铁"],["✈️","airplane 飞机"],["🛫","takeoff 起飞"],["🛬","landing 降落"],["🚁","helicopter"],
+    ["🚀","rocket"],["🛸","ufo"],["⛵","sailboat"],["🚤","speedboat"],["🛥️","motorboat"],
+    ["🚢","ship 船"],["⚓","anchor"],["🗺️","map 地图"],["🧭","compass 指南针"],["🗽","statue-of-liberty"],
+    ["🗼","tokyo-tower"],["🏰","castle 城堡"],["🏯","japanese-castle"],["🎢","roller-coaster"],["🎡","ferris-wheel"],
+    ["🌋","volcano 火山"],["⛰️","mountain 山"],["🗻","mt-fuji"],["🏔️","snow-mountain"],["🏕️","camping"],
+    ["🏖️","beach 海滩"],["🏜️","desert"],["🏝️","island 岛"],
+  ],
+  "物品": [
+    ["📱","mobile-phone 手机"],["💻","laptop 笔记本"],["🖥️","desktop 台式"],["⌨️","keyboard 键盘"],
+    ["🖱️","mouse 鼠标"],["🖨️","printer 打印机"],["💾","floppy 软盘 保存"],["💿","cd"],["📀","dvd"],
+    ["📷","camera 相机"],["📸","camera-flash"],["📹","video-camera 摄像"],["🎥","movie-camera"],
+    ["📺","tv 电视"],["📻","radio 收音机"],["⏰","alarm 闹钟"],["⏲️","timer 定时"],["⏱️","stopwatch"],
+    ["🕰️","mantelpiece-clock"],["⌚","watch 手表"],["📞","phone 电话"],["☎️","telephone 座机"],
+    ["📠","fax 传真"],["📟","pager"],["🔋","battery 电池"],["🔌","plug 插头"],["💡","bulb"],
+    ["🔦","flashlight 手电"],["🕯️","candle 蜡烛"],["🧯","extinguisher 灭火器"],["🛢️","oil-drum 油桶"],
+    ["💰","money-bag 钱袋"],["💵","dollar 美元"],["💴","yen 日元"],["💶","euro 欧元"],["💷","pound 英镑"],
+    ["💳","credit-card 信用卡"],["💎","gem 钻石"],["⚖️","balance-scale 天平"],["🧰","toolbox 工具箱"],
+    ["🔩","nut-bolt 螺丝"],["⚙️","gear 齿轮"],["🧲","magnet 磁铁"],["🧪","test-tube 试管"],["🧬","dna"],
+    ["🔬","microscope 显微镜"],["🔭","telescope 望远镜"],["📡","antenna 天线 信号"],["💊","pill 药"],
+    ["💉","syringe 针管"],["🩺","stethoscope 听诊器"],["🚪","door 门"],["🛏️","bed 床"],["🛋️","sofa 沙发"],
+    ["🚽","toilet 马桶"],["🚿","shower 淋浴"],["🛁","bathtub 浴缸"],["🧴","lotion-bottle"],
+    ["🧹","broom 扫帚"],["🧺","basket 篮子"],["🧻","toilet-paper"],["🧼","soap 肥皂"],["🧽","sponge"],
+    ["🛒","cart 购物车"],["🎁","gift 礼物"],["🎈","balloon 气球"],["🎉","party 派对"],["🎊","confetti"],
+    ["📮","mailbox 邮箱"],["📬","mailbox-with-mail"],["📭","mailbox-no-mail"],["✉️","envelope 信封 邮件"],
+    ["📧","email 邮件"],["📨","incoming-mail"],["📤","outbox"],["📥","inbox"],
+    ["📝","memo 便条"],["📒","ledger 账簿"],["📓","notebook 笔记本"],["📔","notebook-decor"],
+    ["📕","closed-book 红书"],["📗","green-book"],["📘","blue-book"],["📙","orange-book"],
+    ["📚","books 书堆"],["📖","open-book"],["🔖","bookmark 书签"],["📰","newspaper 报纸"],
+  ],
+  "符号/标记": [
+    ["❤️","heart red 红心 爱"],["🧡","heart orange"],["💛","heart yellow"],["💚","heart green"],
+    ["💙","heart blue"],["💜","heart purple"],["🖤","heart black"],["🤍","heart white"],
+    ["💔","broken-heart 心碎"],["💘","heart-arrow 爱心箭"],["💕","two-hearts"],["💖","sparkle-heart"],
+    ["💗","growing-heart"],["💓","heartbeat"],["💞","revolving-hearts"],["💟","decoration-heart"],
+    ["❣️","exclaim-heart"],["💌","love-letter"],["♥️","suit-heart"],["♠️","suit-spade"],
+    ["♦️","suit-diamond"],["♣️","suit-club"],["🀄","mahjong"],["🎴","flower-playing-cards"],
+    ["💯","100 满分"],["🆕","new-badge 新"],["🆗","ok"],["🆒","cool"],["🆓","free 免费"],
+    ["🆙","up"],["🆘","sos"],["🔝","top"],["🔚","end"],["🔙","back"],
+    ["🔛","on-arrow"],["🔜","soon"],["✅","check-mark 勾选 完成"],["❎","cross-mark"],["✔️","check"],
+    ["❌","cross 错 删除"],["⭕","circle"],["🔴","red-circle 红"],["🟠","orange-circle"],["🟡","yellow-circle"],
+    ["🟢","green-circle 绿"],["🔵","blue-circle 蓝"],["🟣","purple-circle"],["⚫","black-circle"],
+    ["⚪","white-circle"],["🟤","brown-circle"],["🟥","red-square"],["🟧","orange-square"],
+    ["🟨","yellow-square"],["🟩","green-square"],["🟦","blue-square"],["🟪","purple-square"],
+    ["⬛","black-square"],["⬜","white-square"],["🔶","orange-diamond"],["🔷","blue-diamond"],
+    ["🔸","small-orange-diamond"],["🔹","small-blue-diamond"],["▶️","play 播放"],["⏸️","pause 暂停"],
+    ["⏯️","play-pause"],["⏹️","stop 停止"],["⏺️","record 录制"],["⏭️","next-track"],["⏮️","prev-track"],
+    ["⏩","fast-forward"],["⏪","rewind"],["🔼","up-btn"],["🔽","down-btn"],["🔀","shuffle"],
+    ["🔁","loop"],["🔂","repeat-one"],["🔄","refresh 刷新"],["🔃","clockwise"],["⬆️","up 上"],
+    ["⬇️","down 下"],["⬅️","left 左"],["➡️","right 右"],["↗️","upper-right"],["↘️","lower-right"],
+    ["↙️","lower-left"],["↖️","upper-left"],["↕️","up-down"],["↔️","left-right"],["🔀","crossed"],
+    ["↩️","leftwards-hook"],["↪️","rightwards-hook"],["⤴️","up-turn"],["⤵️","down-turn"],
+    ["🔢","1234 数字"],["🔤","abc 字母"],["🔠","ABCD uppercase"],["🔡","abcd lowercase"],
+    ["♻️","recycle 回收"],["♾️","infinity 无限"],["⚠️","warning 警告"],["🚫","prohibited 禁止"],
+    ["🚸","children-crossing"],["⛔","no-entry"],["📵","no-mobile"],["🔞","18plus"],["☢️","radioactive 辐射"],
+    ["☣️","biohazard 生化"],["❓","question red 问号"],["❔","question white"],["❗","exclamation red 感叹"],
+    ["❕","exclamation white"],["💬","speech 对话"],["💭","thought 思考气泡"],["🗨️","left-speech"],["🗯️","right-speech"],
+    ["💤","zzz 睡觉"],["💢","anger"],["💥","collision 爆炸"],["💦","sweat 汗"],["💨","dash 风"],
+    ["💫","dizzy-stars"],
+  ],
+};
+
+function buildEmojiIndex() {
+  const all = [];
+  for (const cat in EMOJI_DB) {
+    for (const [emoji, keywords] of EMOJI_DB[cat]) {
+      all.push({ emoji, keywords: keywords.toLowerCase(), cat });
+    }
+  }
+  return all;
+}
+const EMOJI_ALL = buildEmojiIndex();
+
+function renderEmojiPicker(filterText = "", activeCat = null) {
+  const cats = $("emoji-cats");
+  const grid = $("emoji-grid");
+  // 分类按钮
+  cats.innerHTML = "";
+  const addCat = (name) => {
+    const b = document.createElement("div");
+    b.className = "emoji-cat" + (activeCat === name ? " active" : "");
+    b.textContent = name;
+    b.onclick = () => renderEmojiPicker("", name === "全部" ? null : name);
+    cats.appendChild(b);
+  };
+  addCat("全部");
+  for (const c in EMOJI_DB) addCat(c);
+
+  // 列表
+  let list = EMOJI_ALL;
+  if (activeCat) list = list.filter(e => e.cat === activeCat);
+  if (filterText) {
+    const q = filterText.toLowerCase().trim();
+    list = list.filter(e => e.keywords.includes(q) || e.emoji.includes(q));
+  }
+
+  grid.innerHTML = "";
+  if (!list.length) {
+    grid.innerHTML = '<div class="emoji-empty">未找到匹配的表情</div>';
+    return;
+  }
+  const frag = document.createDocumentFragment();
+  for (const e of list) {
+    const d = document.createElement("div");
+    d.className = "emoji-item";
+    d.textContent = e.emoji;
+    d.title = e.keywords;
+    d.onclick = () => {
+      if (!state.emojiTarget) return;
+      const input = document.getElementById(state.emojiTarget);
+      if (input) {
+        input.value = e.emoji;
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      document.getElementById("emoji-modal").classList.remove("show");
+    };
+    frag.appendChild(d);
+  }
+  grid.appendChild(frag);
+}
+
+// ================================================================
+// App 对外 API
+// ================================================================
+const App = {
+  newProject() {
+    if (Object.keys(state.nodes).length && !confirm("清空当前画布？")) return;
+    state.nodes = {}; state.edges = {}; state.order = []; state.edgeOrder = [];
+    state.selectedId = null; state.nextId = 1;
+    state.history = []; state.historyIdx = -1;
+    pushHistory();
+    render(); select(null);
+  },
+  saveProject() {
+    const data = JSON.stringify({
+      v: 1, lang: state.lang, theme: state.theme, colorMode: state.colorMode, ctrl: state.ctrl,
+      nodes: state.nodes, edges: state.edges, order: state.order, edgeOrder: state.edgeOrder
+    }, null, 2);
+    const blob = new Blob([data], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `arch-${Date.now()}.json`;
+    a.click();
+  },
+  loadProject(e) {
+    const f = e.target.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      try {
+        const s = JSON.parse(r.result);
+        state.nodes = s.nodes || {}; state.edges = s.edges || {};
+        state.order = s.order || []; state.edgeOrder = s.edgeOrder || [];
+        state.nextId = Math.max(1, ...state.order.map(id => +id.replace(/\D/g,"")||0),
+                                   ...state.edgeOrder.map(id => +id.replace(/\D/g,"")||0)) + 1;
+        if (s.lang) { state.lang = s.lang; $("lang-select").value = s.lang; }
+        if (s.theme) { state.theme = s.theme; $("theme-select").value = s.theme; }
+        if (s.colorMode) { state.colorMode = s.colorMode; $("color-mode").value = s.colorMode; App.setColorMode(s.colorMode); }
+        if (s.ctrl) {
+          state.ctrl = s.ctrl;
+          $("ctrl-show").value = s.ctrl.show || "yes";
+          $("ctrl-pos").value = s.ctrl.pos || "tr";
+          $("ctrl-dir").value = s.ctrl.dir || "row";
+          $("ctrl-size").value = s.ctrl.size || 32;
+        }
+        pushHistory();
+        render();
+      } catch (err) { alert("加载失败：" + err.message); }
+    };
+    r.readAsText(f);
+    e.target.value = "";
+  },
+  setLang(v) { state.lang = v; render(); },
+  setTheme(v) {
+    state.theme = v;
+    document.body.classList.toggle("style-clawd", v === "clawd");
+  },
+  setColorMode(v) {
+    state.colorMode = v;
+    document.body.classList.toggle("theme-light", v === "light");
+  },
+  updateProp(key, value) {
+    if (state.selectedType === "node") {
+      state.nodes[state.selectedId][key] = value;
+      rerenderNode(state.selectedId);
+    } else if (state.selectedType === "edge") {
+      state.edges[state.selectedId][key] = value;
+      updateEdgePath(state.edges[state.selectedId]);
+      // 标签变化重渲染整条线
+      if (key === "label") {
+        const el = svg.querySelector(`g.edge-wrap[data-id="${state.selectedId}"]`);
+        if (el) el.replaceWith(createEdgeElement(state.edges[state.selectedId]));
+      }
+    }
+  },
+  deleteSelected() {
+    if (!state.selectedId) return;
+    if (state.selectedType === "node") {
+      delete state.nodes[state.selectedId];
+      state.order = state.order.filter(id => id !== state.selectedId);
+      // 删除相关连线
+      for (const eid in state.edges) {
+        if (state.edges[eid].from === state.selectedId || state.edges[eid].to === state.selectedId) {
+          delete state.edges[eid];
+          state.edgeOrder = state.edgeOrder.filter(id => id !== eid);
+        }
+      }
+    } else {
+      delete state.edges[state.selectedId];
+      state.edgeOrder = state.edgeOrder.filter(id => id !== state.selectedId);
+    }
+    state.selectedId = null;
+    pushHistory();
+    render(); select(null);
+  },
+  duplicate() {
+    if (!state.selectedId || state.selectedType !== "node") return;
+    const n = state.nodes[state.selectedId];
+    const copy = JSON.parse(JSON.stringify(n));
+    copy.id = uid(); copy.x += 20; copy.y += 20;
+    state.nodes[copy.id] = copy;
+    state.order.push(copy.id);
+    pushHistory();
+    render();
+    select(copy.id, "node");
+  },
+  undo() {
+    if (state.historyIdx > 0) restoreHistory(state.historyIdx - 1);
+  },
+  redo() {
+    if (state.historyIdx < state.history.length - 1) restoreHistory(state.historyIdx + 1);
+  },
+  exportCode() {
+    $("export-code").value = exportStandaloneHTML();
+    $("export-modal").classList.add("show");
+  },
+  preview() {
+    // 生成完整 HTML 并在新标签页打开预览
+    const html = exportStandaloneHTML();
+    // 释放上一次的 URL，避免内存泄漏
+    if (state._lastPreviewUrl) {
+      try { URL.revokeObjectURL(state._lastPreviewUrl); } catch (e) {}
+    }
+    const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    state._lastPreviewUrl = url;
+    const win = window.open(url, "arch-preview");
+    if (!win) {
+      alert("预览窗口被浏览器拦截，请允许弹出窗口后重试。");
+    }
+  },
+  setCtrlOption(key, value) {
+    state.ctrl[key] = (key === "size") ? +value : value;
+  },
+  openEmojiPicker(targetInputId) {
+    state.emojiTarget = targetInputId;
+    $("emoji-search").value = "";
+    renderEmojiPicker("", null);
+    $("emoji-modal").classList.add("show");
+    setTimeout(() => $("emoji-search").focus(), 50);
+  },
+  filterEmoji(text) {
+    renderEmojiPicker(text, null);
+  },
+  copyExport() {
+    const ta = $("export-code"); ta.select();
+    document.execCommand("copy");
+    alert("已复制到剪贴板");
+  },
+  downloadExport() {
+    const html = exportStandaloneHTML();
+    const blob = new Blob([html], { type: "text/html" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `arch-${Date.now()}.html`;
+    a.click();
+  }
+};
+
+// ================================================================
+// 初始化：内置示例
+// ================================================================
+function loadDemo() {
+  const addNode = (opts) => {
+    const n = { ...defaultNodeByShape(opts.shape), ...opts, id: uid() };
+    state.nodes[n.id] = n; state.order.push(n.id); return n.id;
+  };
+  const addEdge = (from, fromPort, to, toPort, opts = {}) => {
+    const e = { id: uid("e"), from, fromPort, to, toPort,
+      type: "orthogonal", stroke: "#3b82f6", strokeWidth: 2, dash: "4 4", anim: "normal", arrow: true, ...opts };
+    state.edges[e.id] = e; state.edgeOrder.push(e.id);
+  };
+
+  const g1 = addNode({ shape: "group", x: 80, y: 60, w: 340, h: 260, label: "🏠 客户端", labelEn: "Client" });
+  const g2 = addNode({ shape: "groupDashed", x: 500, y: 60, w: 340, h: 260, label: "☁️ 云端", labelEn: "Cloud", stroke: "#10b981", color: "#6ee7b7" });
+
+  const n1 = addNode({ shape: "emoji", x: 130, y: 140, w: 100, h: 100, icon: "📱", label: "App", labelEn: "App", glow: true });
+  const n2 = addNode({ shape: "round", x: 260, y: 170, w: 140, h: 50, label: "智能网关", labelEn: "Gateway", fill: "#8b5cf6", stroke:"#a78bfa", color:"#fff", glow: true });
+  const n3 = addNode({ shape: "hex", x: 540, y: 150, w: 140, h: 70, label: "AI 路由", labelEn: "AI Router", fill:"#0ea5e9", stroke:"#0284c7", color:"#fff" });
+  const n4 = addNode({ shape: "rect", x: 720, y: 160, w: 100, h: 50, label: "模型池", labelEn: "Models", fillType:"grad-green", stroke:"#10b981", color:"#fff" });
+  const n5 = addNode({ shape: "badge", x: 240, y: 380, w: 180, h: 36, label: "🛡️ 隐私脱敏门卫", labelEn:"Privacy Gate" });
+
+  addEdge(n1, "r", n2, "l", { stroke:"#8b5cf6", anim:"normal" });
+  addEdge(n2, "r", n3, "l", { stroke:"#06b6d4", anim:"fast", strokeWidth: 3 });
+  addEdge(n3, "r", n4, "l", { stroke:"#10b981", anim:"normal" });
+  addEdge(n2, "b", n5, "t", { stroke:"#ef4444", anim:"none", dash:"none", label:"敏感词拦截" });
+
+  pushHistory();
+}
+
+// 启动
+App.setTheme("clawd");
+App.setColorMode("dark");
+loadDemo();
+render();
+
+// 初始视口居中
+(() => {
+  const rect = svg.getBoundingClientRect();
+  state.viewport.x = 20;
+  state.viewport.y = 20;
+  updateViewport();
+})();
+</script>
+</body>
+</html>
