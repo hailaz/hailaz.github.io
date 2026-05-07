@@ -1,0 +1,87 @@
+{
+  "meta": {
+    "name": "cyberpunk",
+    "version": "1.0.0",
+    "mode": "dark",
+    "vibeTags": ["neon", "tech", "energetic"],
+    "description": "赛博朋克：暗底 + 霓虹高饱和（紫粉 + 青绿） + 发光阴影 + 几乎直角，适合电竞/AI 工具/夜店"
+  },
+  "color": {
+    "primary": {
+      "50":  "#3b0a4d",
+      "100": "#4f1469",
+      "200": "#6a2089",
+      "300": "#8a30aa",
+      "400": "#aa44cc",
+      "500": "#d946ef",
+      "600": "#e879f9",
+      "700": "#f0abfc",
+      "800": "#f5d0fe",
+      "900": "#fae8ff"
+    },
+    "neutral": {
+      "50":  "#000000",
+      "100": "#0a0a14",
+      "200": "#13131f",
+      "300": "#1c1c2e",
+      "400": "#262640",
+      "500": "#3a3a55",
+      "600": "#5a5a78",
+      "700": "#8888aa",
+      "800": "#bbbbcc",
+      "900": "#eaeaf2"
+    },
+    "semantic": {
+      "success": { "50": "#022c22", "100": "#053c2c", "200": "#065f46", "300": "#047857", "400": "#059669", "500": "#10b981", "600": "#34d399", "700": "#6ee7b7", "800": "#a7f3d0", "900": "#d1fae5" },
+      "warning": { "50": "#3a1a02", "100": "#5a2a02", "200": "#7c3d04", "300": "#9a4a04", "400": "#cc6a08", "500": "#f59e0b", "600": "#fbbf24", "700": "#fcd34d", "800": "#fde68a", "900": "#fef3c7" },
+      "danger":  { "50": "#330a0e", "100": "#52111a", "200": "#7c1d2a", "300": "#a8253a", "400": "#cf3b54", "500": "#ef4444", "600": "#f87171", "700": "#fca5a5", "800": "#fecaca", "900": "#fee2e2" },
+      "info":    { "50": "#062731", "100": "#0a3a47", "200": "#125060", "300": "#176e85", "400": "#208ea8", "500": "#22d3ee", "600": "#67e8f9", "700": "#a5f3fc", "800": "#cffafe", "900": "#ecfeff" }
+    }
+  },
+  "typography": {
+    "fontFamily": {
+      "sans": "\"Space Grotesk\", \"Rajdhani\", system-ui, sans-serif",
+      "serif": "\"Orbitron\", serif",
+      "mono": "\"JetBrains Mono\", \"Fira Code\", monospace"
+    },
+    "fontSize": { "xs": 12, "sm": 14, "base": 16, "lg": 18, "xl": 22, "2xl": 28, "3xl": 36, "4xl": 48, "5xl": 64 },
+    "lineHeight": { "tight": 1.1, "normal": 1.4, "relaxed": 1.6 },
+    "fontWeight": { "regular": 400, "medium": 500, "semibold": 600, "bold": 700 }
+  },
+  "spacing": { "0": 0, "1": 4, "2": 8, "3": 12, "4": 16, "6": 24, "8": 32, "12": 48, "16": 64, "24": 96 },
+  "radius":  { "none": 0, "sm": 2, "md": 4, "lg": 6, "xl": 10, "full": 9999 },
+  "shadow": {
+    "none": "none",
+    "sm": "0 0 8px rgba(217,70,239,.35)",
+    "md": "0 0 16px rgba(217,70,239,.5)",
+    "lg": "0 0 24px rgba(34,211,238,.55), 0 0 48px rgba(217,70,239,.35)",
+    "xl": "0 0 48px rgba(34,211,238,.7), 0 0 96px rgba(217,70,239,.5)"
+  },
+  "breakpoint": {
+    "mobile": 0, "tablet": 768, "desktop": 1024, "wide": 1440,
+    "scaling": {
+      "fontSize": {
+        "base": { "min": 14, "max": 16 },
+        "lg":   { "min": 16, "max": 18 },
+        "xl":   { "min": 18, "max": 22 },
+        "2xl":  { "min": 22, "max": 28 },
+        "3xl":  { "min": 28, "max": 36 },
+        "4xl":  { "min": 36, "max": 48 },
+        "5xl":  { "min": 48, "max": 64 }
+      },
+      "spacing":   { "mobile": 0.875, "tablet": 1.0, "desktop": 1.0, "wide": 1.125 },
+      "container": { "mobile": 0,     "tablet": 720, "desktop": 960, "wide": 1280 }
+    }
+  },
+  "motion": {
+    "duration": { "instant": 0, "fast": 120, "base": 180, "slow": 280 },
+    "easing": {
+      "standard":   "cubic-bezier(.2,.8,.2,1)",
+      "emphasized": "cubic-bezier(.3,1.4,.3,1)",
+      "decelerate": "cubic-bezier(0,0,.2,1)",
+      "accelerate": "cubic-bezier(.4,0,1,1)"
+    }
+  },
+  "zIndex": { "base": 0, "dropdown": 1000, "sticky": 1100, "modal": 1300, "popover": 1400, "toast": 1500 },
+  "icon": { "source": "lucide", "sizeBase": 20, "strokeWidth": 2 }
+}

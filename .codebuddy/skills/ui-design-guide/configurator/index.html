@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>UI Design Guide — Configurator</title>
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ==================== Topbar ==================== -->
+  <header class="topbar">
+    <span class="brand">🎨 ui-design-guide · 小程序设计配置</span>
+
+    <label>预设:
+      <select id="preset-select">
+        <option value="weui-light">🟢 WeUI 亮色（推荐）</option>
+        <option value="weui-dark">🟢 WeUI 暗色</option>
+        <option value="default-light">default-light</option>
+        <option value="default-dark">default-dark</option>
+        <option value="apple-style">apple-style</option>
+        <option value="material-style">material-style</option>
+        <option value="minimal">minimal</option>
+        <option value="cyberpunk">cyberpunk</option>
+      </select>
+    </label>
+
+    <input id="vibe-input" type="text" placeholder="✨ 输入 Vibe（如 calm, professional, medical）" />
+    <button class="tool" id="btn-apply-vibe">应用 Vibe</button>
+
+    <button class="tool" id="btn-toggle-theme">🌓 明/暗</button>
+
+    <span class="grow"></span>
+
+    <label class="tool">
+      📂 导入 tokens
+      <input type="file" id="file-tokens" accept=".json" hidden />
+    </label>
+    <label class="tool">
+      📂 导入 brand-kit
+      <input type="file" id="file-brand" accept=".json" hidden />
+    </label>
+    <button class="tool primary" id="btn-export-tokens">⬇ 导出 tokens</button>
+    <button class="tool primary" id="btn-export-brand">⬇ 导出 brand-kit</button>
+    <a href="../preview/preview-template.html" class="tool" style="text-decoration:none;display:inline-flex;align-items:center;gap:4px;" title="打开小程序原型预览">📱 小程序预览</a>
+  </header>
+
+  <!-- ==================== Body 三栏 ==================== -->
+  <div class="body">
+
+    <!-- Left: 表单 Tabs -->
+    <aside class="panel-left">
+      <nav class="tabs">
+        <button data-tab="vibe"   class="tab active">Vibe</button>
+        <button data-tab="brand"  class="tab">Brand Kit</button>
+        <button data-tab="tokens" class="tab">Tokens</button>
+      </nav>
+
+      <!-- Vibe -->
+      <section class="tab-panel" data-panel="vibe">
+        <h3>风格情绪（小程序适配）</h3>
+        <p class="muted">为微信小程序调整整体视觉风格。点击标签快速应用，或在顶部输入框组合多个标签。</p>
+        <div id="vibe-tags" class="vibe-grid"></div>
+        <div id="vibe-hint" class="hint"></div>
+      </section>
+
+      <!-- Brand Kit -->
+      <section class="tab-panel" data-panel="brand" hidden>
+        <h3>品牌资产</h3>
+
+        <div class="field">
+          <label>品牌名 <span class="req">*</span></label>
+          <input class="ipt" data-bk="brandName" placeholder="如：Acme" />
+        </div>
+
+        <div class="field">
+          <label>品牌语调 <span class="req">*</span></label>
+          <select class="ipt" data-bk="tone">
+            <option value="formal">formal · 正式</option>
+            <option value="friendly">friendly · 友好</option>
+            <option value="geek">geek · 极客</option>
+            <option value="playful">playful · 俏皮</option>
+            <option value="luxury">luxury · 高奢</option>
+            <option value="medical">medical · 严谨</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>图标风格</label>
+          <select class="ipt" data-bk="iconStyle">
+            <option value="outline">outline · 线性</option>
+            <option value="filled">filled · 实心</option>
+            <option value="duotone">duotone · 双色</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Logo（内联 SVG）</label>
+          <textarea class="ipt mono" data-bk="logoSvg" rows="4" placeholder="<svg ...>...</svg>"></textarea>
+          <div class="logo-preview" id="logo-preview"></div>
+        </div>
+
+        <div class="field">
+          <label>锁定品牌色（每行一个 HEX）</label>
+          <textarea class="ipt mono" data-bk="lockedColors" rows="3" placeholder="#1677ff&#10;#ff5500"></textarea>
+        </div>
+
+        <div class="field">
+          <label>语调样例 · 按钮 CTA（每行一个）</label>
+          <textarea class="ipt" data-bk="voiceSamples.buttonCta" rows="3" placeholder="立即开始&#10;一键提交"></textarea>
+        </div>
+        <div class="field">
+          <label>语调样例 · 错误提示（每行一个）</label>
+          <textarea class="ipt" data-bk="voiceSamples.errorMessage" rows="2"></textarea>
+        </div>
+        <div class="field">
+          <label>语调样例 · 空状态（每行一个）</label>
+          <textarea class="ipt" data-bk="voiceSamples.emptyState" rows="2"></textarea>
+        </div>
+      </section>
+
+      <!-- Tokens -->
+      <section class="tab-panel" data-panel="tokens" hidden>
+        <h3>设计 Token（小程序优化）</h3>
+
+        <details open>
+          <summary>🟢 WeUI 品牌色</summary>
+          <div class="hint" style="margin-bottom:8px;">微信小程序规范默认品牌色 #07C160，可自定义主色调。</div>
+          <div class="grid-color" id="grid-primary"></div>
+        </details>
+
+        <details>
+          <summary>颜色 · Neutral</summary>
+          <div class="grid-color" id="grid-neutral"></div>
+        </details>
+
+        <details>
+          <summary>颜色 · Semantic（success/warning/danger/info · 仅 500）</summary>
+          <div class="grid-color" id="grid-semantic"></div>
+        </details>
+
+        <details>
+          <summary>字体</summary>
+          <div class="field">
+            <label>无衬线 (sans)</label>
+            <input class="ipt mono" data-tk="typography.fontFamily.sans" />
+          </div>
+          <div class="field">
+            <label>等宽 (mono)</label>
+            <input class="ipt mono" data-tk="typography.fontFamily.mono" />
+          </div>
+          <div class="field">
+            <label>基准字号 base (px)</label>
+            <input class="ipt" type="number" data-tk="typography.fontSize.base" />
+          </div>
+        </details>
+
+        <details>
+          <summary>圆角</summary>
+          <div class="field"><label>sm</label><input class="ipt" type="number" data-tk="radius.sm" /></div>
+          <div class="field"><label>md</label><input class="ipt" type="number" data-tk="radius.md" /></div>
+          <div class="field"><label>lg</label><input class="ipt" type="number" data-tk="radius.lg" /></div>
+          <div class="field"><label>xl</label><input class="ipt" type="number" data-tk="radius.xl" /></div>
+        </details>
+
+        <details>
+          <summary>间距（4px 基线）</summary>
+          <div class="field"><label>1 (基础 = 4px)</label><input class="ipt" type="number" data-tk="spacing.1" /></div>
+          <div class="field"><label>2</label><input class="ipt" type="number" data-tk="spacing.2" /></div>
+          <div class="field"><label>4</label><input class="ipt" type="number" data-tk="spacing.4" /></div>
+          <div class="field"><label>8</label><input class="ipt" type="number" data-tk="spacing.8" /></div>
+        </details>
+
+        <details>
+          <summary>阴影（CSS 字符串）</summary>
+          <div class="field"><label>sm</label><input class="ipt mono" data-tk="shadow.sm" /></div>
+          <div class="field"><label>md</label><input class="ipt mono" data-tk="shadow.md" /></div>
+          <div class="field"><label>lg</label><input class="ipt mono" data-tk="shadow.lg" /></div>
+        </details>
+
+        <details>
+          <summary>动效</summary>
+          <div class="field"><label>fast (ms)</label><input class="ipt" type="number" data-tk="motion.duration.fast" /></div>
+          <div class="field"><label>base (ms)</label><input class="ipt" type="number" data-tk="motion.duration.base" /></div>
+          <div class="field"><label>slow (ms)</label><input class="ipt" type="number" data-tk="motion.duration.slow" /></div>
+        </details>
+
+        <details>
+          <summary>📱 小程序适配</summary>
+          <div class="hint" style="margin-bottom:8px;">微信小程序使用 rpx 单位，1rpx = 屏幕宽度/750。</div>
+          <div class="field"><label>设计稿宽度 (px)</label><input class="ipt" type="number" data-tk="breakpoint.designWidth" value="375" /></div>
+          <div class="field"><label>TabBar 高度 (px)</label><input class="ipt" type="number" data-tk="breakpoint.tabbarHeight" value="50" /></div>
+          <div class="field"><label>导航栏高度 (px)</label><input class="ipt" type="number" data-tk="breakpoint.navbarHeight" value="44" /></div>
+          <div class="field"><label>状态栏高度 (px)</label><input class="ipt" type="number" data-tk="breakpoint.statusbarHeight" value="44" /></div>
+          <div class="field"><label>底部安全区 (px)</label><input class="ipt" type="number" data-tk="breakpoint.safeAreaBottom" value="34" /></div>
+        </details>
+
+        <details>
+          <summary>断点（Magic Resize）</summary>
+          <div class="field"><label>tablet (px)</label><input class="ipt" type="number" data-tk="breakpoint.tablet" /></div>
+          <div class="field"><label>desktop (px)</label><input class="ipt" type="number" data-tk="breakpoint.desktop" /></div>
+          <div class="field"><label>wide (px)</label><input class="ipt" type="number" data-tk="breakpoint.wide" /></div>
+          <div class="field"><label>spacing 缩放 mobile</label><input class="ipt" type="number" step="0.05" data-tk="breakpoint.scaling.spacing.mobile" /></div>
+          <div class="field"><label>spacing 缩放 wide</label><input class="ipt" type="number" step="0.05" data-tk="breakpoint.scaling.spacing.wide" /></div>
+        </details>
+
+        <details>
+          <summary>元信息</summary>
+          <div class="field"><label>主题名</label><input class="ipt" data-tk="meta.name" /></div>
+          <div class="field"><label>版本 (semver)</label><input class="ipt" data-tk="meta.version" /></div>
+          <div class="field"><label>模式</label>
+            <select class="ipt" data-tk="meta.mode">
+              <option value="light">light</option><option value="dark">dark</option>
+            </select>
+          </div>
+        </details>
+      </section>
+    </aside>
+
+    <!-- Center: 实时预览（微信小程序风格） -->
+    <main class="panel-center">
+      <div class="preview-toolbar">
+        <strong>📱 小程序实时预览</strong>
+        <span class="muted">所有变更即时应用到 WeUI 组件</span>
+        <span class="grow"></span>
+        <a href="../preview/preview-template.html" target="_blank" class="link">↗ 在原型预览器中打开</a>
+      </div>
+
+      <div class="preview-area" id="preview-area">
+        <!-- Logo 区 -->
+        <div class="preview-brand">
+          <span class="logo-slot" id="brand-logo-slot"></span>
+          <span class="brand-name" id="brand-name-display">Acme</span>
+        </div>
+
+        <h1 class="ph1">小程序设计系统预览</h1>
+        <p class="muted">基于 WeUI 规范，所有组件响应 Token 变更。</p>
+
+        <h2 class="ps">WeUI Buttons</h2>
+        <div style="display:flex;flex-direction:column;gap:10px;max-width:320px;">
+          <button class="pbtn pbtn-primary" style="width:100%;border-radius:8px;height:44px;"><span class="psp"></span><span id="cta-sample">微信一键登录</span></button>
+          <button class="pbtn pbtn-secondary" style="width:100%;border-radius:8px;height:44px;border:1px solid var(--color-primary-500);background:transparent;color:var(--color-primary-500);">次要操作</button>
+          <button class="pbtn pbtn-danger" style="width:100%;border-radius:8px;height:44px;">危险操作</button>
+          <div class="row">
+            <button class="pbtn pbtn-primary" style="padding:6px 14px;font-size:13px;border-radius:6px;">小按钮</button>
+            <button class="pbtn pbtn-ghost" style="padding:6px 14px;font-size:13px;border-radius:6px;">Ghost</button>
+          </div>
+        </div>
+
+        <h2 class="ps">Cell 列表</h2>
+        <div style="background:var(--color-neutral-50);border-radius:8px;overflow:hidden;border:1px solid var(--color-neutral-200);">
+          <div style="display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid var(--color-neutral-200);gap:12px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--color-primary-500)"><circle cx="12" cy="12" r="10"/></svg>
+            <span style="flex:1;font-size:15px;">标题文字</span>
+            <span style="color:var(--color-neutral-500);font-size:14px;">说明 ›</span>
+          </div>
+          <div style="display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid var(--color-neutral-200);gap:12px;">
+            <span style="flex:1;font-size:15px;">个人设置</span>
+            <span style="color:var(--color-neutral-500);font-size:14px;">›</span>
+          </div>
+          <div style="display:flex;align-items:center;padding:14px 16px;gap:12px;">
+            <span style="flex:1;font-size:15px;">关于</span>
+            <span style="color:var(--color-neutral-500);font-size:14px;">v1.0.0 ›</span>
+          </div>
+        </div>
+
+        <h2 class="ps">Form 表单</h2>
+        <div style="background:var(--color-neutral-50);border-radius:8px;overflow:hidden;border:1px solid var(--color-neutral-200);">
+          <div style="display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid var(--color-neutral-200);">
+            <span style="width:64px;font-size:15px;flex-shrink:0;">用户名</span>
+            <input class="pinput" placeholder="请输入用户名" id="ph-sample" style="border:none;background:transparent;padding:0;max-width:none;width:100%;" />
+          </div>
+          <div style="display:flex;align-items:center;padding:12px 16px;">
+            <span style="width:64px;font-size:15px;flex-shrink:0;">手机号</span>
+            <input class="pinput" placeholder="请输入手机号" style="border:none;background:transparent;padding:0;max-width:none;width:100%;" />
+          </div>
+        </div>
+
+        <h2 class="ps">Card 卡片</h2>
+        <div class="pcard" style="border-radius:8px;">
+          <h3 class="pcard-title">月活跃用户</h3>
+          <div class="pcard-num">12,340</div>
+          <span class="ptag">+5.2%</span>
+        </div>
+
+        <h2 class="ps">Empty State 空态</h2>
+        <div class="pempty" style="border-radius:8px;">
+          <svg class="pempty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="4" y="6" width="16" height="14" rx="2"/><path d="M4 10h16"/>
+          </svg>
+          <p id="empty-sample">还没有数据</p>
+          <button class="pbtn pbtn-primary" id="empty-cta-sample" style="border-radius:8px;">立即添加</button>
+        </div>
+
+        <h2 class="ps">色阶预览</h2>
+        <div class="scale-rows" id="scale-rows"></div>
+      </div>
+    </main>
+
+    <!-- Right: JSON 输出 -->
+    <aside class="panel-right">
+      <div class="tabs">
+        <button data-jtab="tokens" class="tab active">design-tokens.json</button>
+        <button data-jtab="brand"   class="tab">brand-kit.json</button>
+      </div>
+      <pre class="json-out" data-jpanel="tokens" id="json-tokens"></pre>
+      <pre class="json-out" data-jpanel="brand" id="json-brand" hidden></pre>
+      <div id="validation" class="validation"></div>
+    </aside>
+  </div>
+
+  <footer class="footer muted">
+    微信小程序设计规范 · 基于 WeUI 组件库 · Token 驱动全局样式 · 导出 JSON 可直接用于小程序项目。
+    若 file:// 协议下 fetch 被拦截，可用「导入」按钮上传，或运行 <code>python3 -m http.server</code>。
+  </footer>
+</div>
+
+<script src="./app.js"></script>
+</body>
+</html>

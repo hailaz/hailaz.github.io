@@ -1,0 +1,164 @@
+{
+  "$schema": "https://codebuddy.local/skills/ui-design-guide/vibe-tags.schema.json",
+  "version": "1.0.0",
+  "description": "Vibe/Mood 标签到 design-tokens 数值微调建议的映射表。configurator 与 SKILL.md 的 Step 0 Vibe Mapping 都基于此表执行。每条建议为相对调整指引（hue 范围、saturation/radius/duration 修正系数），最终值仍由用户在 configurator 中确认。",
+  "tags": {
+    "calm": {
+      "label": "宁静",
+      "synonyms": ["serene", "peaceful", "soft", "宁静", "平和"],
+      "hue": [180, 220],
+      "saturation": "low",
+      "radius": "lg",
+      "shadow": "soft",
+      "duration": "slow",
+      "notes": "低饱和冷色 + 大圆角 + 柔阴影 + 慢动效，适合医疗/冥想/教育"
+    },
+    "professional": {
+      "label": "专业",
+      "synonyms": ["business", "corporate", "trustworthy", "专业", "商务"],
+      "hue": [200, 230],
+      "saturation": "medium",
+      "radius": "sm",
+      "shadow": "subtle",
+      "duration": "base",
+      "notes": "中性蓝 + 小圆角 + 克制阴影，适合金融/SaaS/政务"
+    },
+    "playful": {
+      "label": "俏皮",
+      "synonyms": ["fun", "cheerful", "vivid", "俏皮", "活泼"],
+      "hue": [340, 30],
+      "saturation": "high",
+      "radius": "xl",
+      "shadow": "lifted",
+      "duration": "fast",
+      "notes": "暖色高饱和 + 大圆角 + 弹性动效，适合社交/儿童/生活方式"
+    },
+    "tech": {
+      "label": "科技",
+      "synonyms": ["futuristic", "cyber", "digital", "科技", "未来"],
+      "hue": [250, 290],
+      "saturation": "high",
+      "radius": "sm",
+      "shadow": "glow",
+      "duration": "fast",
+      "notes": "紫蓝/青 + 直角倾向 + 发光阴影，适合开发者工具/AI 产品"
+    },
+    "medical": {
+      "label": "医疗",
+      "synonyms": ["health", "clinical", "clean", "医疗", "健康"],
+      "hue": [160, 210],
+      "saturation": "low",
+      "radius": "md",
+      "shadow": "subtle",
+      "duration": "base",
+      "notes": "青绿/蓝绿 + 中圆角 + 极简阴影，强调清洁与可信"
+    },
+    "luxury": {
+      "label": "高奢",
+      "synonyms": ["premium", "elegant", "refined", "高奢", "尊贵"],
+      "hue": [30, 50],
+      "saturation": "low",
+      "radius": "none",
+      "shadow": "subtle",
+      "duration": "slow",
+      "notes": "金/米 + 直角 + 大留白 + 慢动效，强调克制与质感"
+    },
+    "energetic": {
+      "label": "活力",
+      "synonyms": ["bold", "vibrant", "active", "活力", "热血"],
+      "hue": [0, 30],
+      "saturation": "high",
+      "radius": "md",
+      "shadow": "lifted",
+      "duration": "fast",
+      "notes": "红橙高饱和 + 强阴影 + 快动效，适合运动/电竞/促销"
+    },
+    "minimal": {
+      "label": "极简",
+      "synonyms": ["clean", "focused", "neutral", "极简", "简约"],
+      "hue": [0, 360],
+      "saturation": "very-low",
+      "radius": "sm",
+      "shadow": "none",
+      "duration": "base",
+      "notes": "中性灰 + 最小装饰 + 无阴影；颜色仅作功能性强调"
+    },
+    "warm": {
+      "label": "温暖",
+      "synonyms": ["cozy", "homely", "温暖", "亲和"],
+      "hue": [20, 50],
+      "saturation": "medium",
+      "radius": "lg",
+      "shadow": "soft",
+      "duration": "slow",
+      "notes": "橙/赭 + 大圆角 + 柔阴影，适合餐饮/社区/旅游"
+    },
+    "neon": {
+      "label": "霓虹",
+      "synonyms": ["cyberpunk", "vivid-dark", "霓虹", "赛博"],
+      "hue": [280, 320],
+      "saturation": "very-high",
+      "radius": "sm",
+      "shadow": "glow",
+      "duration": "fast",
+      "notes": "暗底 + 霓虹高饱和 + 发光阴影，适合赛博朋克/夜店/电竞"
+    },
+    "wechat": {
+      "label": "微信原生",
+      "synonyms": ["weui", "miniprogram", "wx", "微信", "小程序"],
+      "hue": [130, 160],
+      "saturation": "high",
+      "radius": "md",
+      "shadow": "subtle",
+      "duration": "base",
+      "notes": "微信绿主色 (#07C160) + WeUI 规范圆角 + 克制阴影，遵循小程序设计规范",
+      "platform": "wechat-miniprogram"
+    },
+    "ecommerce": {
+      "label": "电商促销",
+      "synonyms": ["commerce", "shopping", "sale", "电商", "购物"],
+      "hue": [0, 20],
+      "saturation": "high",
+      "radius": "md",
+      "shadow": "lifted",
+      "duration": "fast",
+      "notes": "红橙高饱和 + 明显阴影 + 快动效，突出价格与 CTA，适合电商/促销/限时秒杀"
+    },
+    "social": {
+      "label": "社交轻量",
+      "synonyms": ["chat", "community", "lite", "社交", "社群"],
+      "hue": [120, 160],
+      "saturation": "medium",
+      "radius": "lg",
+      "shadow": "soft",
+      "duration": "base",
+      "notes": "柔和绿色 + 大圆角气泡 + 柔阴影，适合聊天/朋友圈/社区评论类场景"
+    }
+  },
+  "saturationLevels": {
+    "very-low":  { "s": [0,   15] },
+    "low":       { "s": [15,  35] },
+    "medium":    { "s": [35,  60] },
+    "high":      { "s": [60,  85] },
+    "very-high": { "s": [85, 100] }
+  },
+  "shadowPresets": {
+    "none":    "none",
+    "subtle":  "0 1px 2px rgba(0,0,0,.06)",
+    "soft":    "0 4px 12px rgba(0,0,0,.08)",
+    "lifted":  "0 8px 24px rgba(0,0,0,.12)",
+    "glow":    "0 0 16px rgba(99,102,241,.45)"
+  },
+  "radiusPresets": {
+    "none": 0,
+    "sm":   4,
+    "md":   8,
+    "lg":   12,
+    "xl":   20
+  },
+  "durationPresets": {
+    "fast":  150,
+    "base":  220,
+    "slow":  320
+  }
+}

@@ -1,0 +1,236 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://codebuddy.local/skills/ui-design-guide/design-tokens.schema.json",
+  "title": "Design Tokens",
+  "description": "ui-design-guide Skill 的设计 token 唯一契约。所有主题预设、configurator 输出、preview 消费、各框架模板生成都遵循本 schema。",
+  "type": "object",
+  "required": ["meta", "color", "typography", "spacing", "radius", "shadow", "breakpoint", "motion"],
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["name", "version", "mode"],
+      "additionalProperties": false,
+      "properties": {
+        "name":     { "type": "string", "minLength": 1 },
+        "version":  { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$", "description": "semver" },
+        "mode":     { "enum": ["light", "dark"] },
+        "vibeTags": { "type": "array", "items": { "type": "string" }, "uniqueItems": true, "description": "情绪/风格标签，如 calm/professional/playful/tech/medical/luxury" },
+        "description": { "type": "string" },
+        "platform": { "type": "string", "enum": ["web", "h5", "wechat-miniprogram", "uniapp", "vue", "react", "multi"], "description": "目标平台标识，决定 token 落地策略" }
+      }
+    },
+    "color": {
+      "type": "object",
+      "required": ["primary", "neutral", "semantic"],
+      "properties": {
+        "primary":  { "$ref": "#/definitions/colorScale" },
+        "neutral":  { "$ref": "#/definitions/colorScale" },
+        "semantic": {
+          "type": "object",
+          "required": ["success", "warning", "danger", "info"],
+          "properties": {
+            "success": { "$ref": "#/definitions/colorScale" },
+            "warning": { "$ref": "#/definitions/colorScale" },
+            "danger":  { "$ref": "#/definitions/colorScale" },
+            "info":    { "$ref": "#/definitions/colorScale" }
+          }
+        },
+        "modeOverrides": {
+          "type": "object",
+          "description": "针对 dark / light 模式的覆盖，仅写差异项",
+          "properties": {
+            "light": { "type": "object" },
+            "dark":  { "type": "object" }
+          }
+        }
+      }
+    },
+    "typography": {
+      "type": "object",
+      "required": ["fontFamily", "fontSize", "lineHeight", "fontWeight"],
+      "properties": {
+        "fontFamily": {
+          "type": "object",
+          "required": ["sans", "mono"],
+          "properties": {
+            "sans":   { "type": "string" },
+            "serif":  { "type": "string" },
+            "mono":   { "type": "string" }
+          }
+        },
+        "fontSize": {
+          "type": "object",
+          "description": "px 字号阶梯，建议 12/14/16/18/20/24/30/36/48/60",
+          "properties": {
+            "xs":   { "type": "number" },
+            "sm":   { "type": "number" },
+            "base": { "type": "number" },
+            "lg":   { "type": "number" },
+            "xl":   { "type": "number" },
+            "2xl":  { "type": "number" },
+            "3xl":  { "type": "number" },
+            "4xl":  { "type": "number" },
+            "5xl":  { "type": "number" }
+          },
+          "required": ["xs", "sm", "base", "lg", "xl", "2xl", "3xl"]
+        },
+        "lineHeight": {
+          "type": "object",
+          "properties": {
+            "tight":   { "type": "number" },
+            "normal":  { "type": "number" },
+            "relaxed": { "type": "number" }
+          },
+          "required": ["tight", "normal", "relaxed"]
+        },
+        "fontWeight": {
+          "type": "object",
+          "properties": {
+            "regular":  { "type": "integer" },
+            "medium":   { "type": "integer" },
+            "semibold": { "type": "integer" },
+            "bold":     { "type": "integer" }
+          },
+          "required": ["regular", "medium", "semibold", "bold"]
+        }
+      }
+    },
+    "spacing": {
+      "type": "object",
+      "description": "基于 4px 基线网格；键名为阶梯档位，值为 px",
+      "patternProperties": {
+        "^\\d+$": { "type": "number", "minimum": 0 }
+      },
+      "required": ["0", "1", "2", "3", "4", "6", "8", "12", "16", "24"]
+    },
+    "radius": {
+      "type": "object",
+      "required": ["none", "sm", "md", "lg", "full"],
+      "properties": {
+        "none": { "type": "number" },
+        "sm":   { "type": "number" },
+        "md":   { "type": "number" },
+        "lg":   { "type": "number" },
+        "xl":   { "type": "number" },
+        "full": { "type": "number", "description": "推荐使用 9999 表示完全圆形" }
+      }
+    },
+    "shadow": {
+      "type": "object",
+      "required": ["sm", "md", "lg"],
+      "properties": {
+        "none": { "type": "string" },
+        "sm":   { "type": "string", "description": "CSS box-shadow 完整字符串" },
+        "md":   { "type": "string" },
+        "lg":   { "type": "string" },
+        "xl":   { "type": "string" }
+      }
+    },
+    "breakpoint": {
+      "type": "object",
+      "required": ["mobile", "tablet", "desktop", "wide"],
+      "properties": {
+        "mobile":  { "type": "number", "description": "默认 0；移动端起点" },
+        "tablet":  { "type": "number", "description": "默认 768" },
+        "desktop": { "type": "number", "description": "默认 1024" },
+        "wide":    { "type": "number", "description": "默认 1440" },
+        "scaling": {
+          "type": "object",
+          "description": "Magic Resize：字号与间距随断点的缩放规约",
+          "properties": {
+            "fontSize": {
+              "type": "object",
+              "description": "fluid typography clamp 规约：每个 fontSize 阶梯在 mobile/desktop 端的最小/最大值（px）",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "min": { "type": "number" },
+                  "max": { "type": "number" }
+                },
+                "required": ["min", "max"]
+              }
+            },
+            "spacing": {
+              "type": "object",
+              "description": "spacing 阶梯随断点的缩放系数；如 mobile=0.875 表示 mobile 端 spacing 整体 ×0.875",
+              "properties": {
+                "mobile":  { "type": "number" },
+                "tablet":  { "type": "number" },
+                "desktop": { "type": "number" },
+                "wide":    { "type": "number" }
+              }
+            },
+            "container": {
+              "type": "object",
+              "description": "页面最大容器宽度（px）",
+              "properties": {
+                "mobile":  { "type": "number" },
+                "tablet":  { "type": "number" },
+                "desktop": { "type": "number" },
+                "wide":    { "type": "number" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "motion": {
+      "type": "object",
+      "required": ["duration", "easing"],
+      "properties": {
+        "duration": {
+          "type": "object",
+          "required": ["fast", "base", "slow"],
+          "properties": {
+            "instant": { "type": "number", "description": "ms" },
+            "fast":    { "type": "number" },
+            "base":    { "type": "number" },
+            "slow":    { "type": "number" }
+          }
+        },
+        "easing": {
+          "type": "object",
+          "required": ["standard", "emphasized"],
+          "properties": {
+            "standard":   { "type": "string", "description": "cubic-bezier(...)" },
+            "emphasized": { "type": "string" },
+            "decelerate": { "type": "string" },
+            "accelerate": { "type": "string" }
+          }
+        }
+      }
+    },
+    "zIndex": {
+      "type": "object",
+      "properties": {
+        "base":     { "type": "integer" },
+        "dropdown": { "type": "integer" },
+        "sticky":   { "type": "integer" },
+        "modal":    { "type": "integer" },
+        "popover":  { "type": "integer" },
+        "toast":    { "type": "integer" }
+      }
+    },
+    "icon": {
+      "type": "object",
+      "description": "图标系统约定（选填）",
+      "properties": {
+        "source":  { "type": "string", "description": "如 lucide/iconify/custom" },
+        "sizeBase": { "type": "number" },
+        "strokeWidth": { "type": "number" }
+      }
+    }
+  },
+  "definitions": {
+    "colorScale": {
+      "type": "object",
+      "description": "50/100/200/300/400/500/600/700/800/900 色阶；500 为基色",
+      "required": ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900"],
+      "patternProperties": {
+        "^(50|[1-9]00)$": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

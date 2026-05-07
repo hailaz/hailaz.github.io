@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>UI Design Guide — Preview Prototype（微信小程序）</title>
+<style>
+/* ==================== Token-driven base ==================== */
+:root {
+  --color-primary-50:  #eff6ff;
+  --color-primary-500: #07c160;
+  --color-primary-600: #06ad56;
+  --color-primary-700: #059a4c;
+  --color-neutral-50:  #fafafa;
+  --color-neutral-100: #f5f5f5;
+  --color-neutral-200: #e5e5e5;
+  --color-neutral-300: #d4d4d4;
+  --color-neutral-500: #737373;
+  --color-neutral-700: #404040;
+  --color-neutral-900: #171717;
+  --color-success-500: #07c160;
+  --color-warning-500: #ffc300;
+  --color-danger-500:  #fa5151;
+  --color-info-500:    #10aeff;
+
+  /* WeUI 专属色 */
+  --weui-brand:       #07c160;
+  --weui-brand-dark:  #06ad56;
+  --weui-link:        #576b95;
+  --weui-red:         #fa5151;
+  --weui-orange:      #fa9d3b;
+  --weui-yellow:      #ffc300;
+  --weui-green:       #91d300;
+  --weui-lightgreen:  #95ec69;
+  --weui-blue:        #10aeff;
+  --weui-indigo:      #1485ee;
+  --weui-purple:      #6467f0;
+  --weui-bg-0:        #ededed;
+  --weui-bg-1:        #f7f7f7;
+  --weui-bg-2:        #ffffff;
+  --weui-fg-0:        #000000;
+  --weui-fg-1:        rgba(0,0,0,.55);
+  --weui-fg-2:        rgba(0,0,0,.3);
+  --weui-separator:   rgba(0,0,0,.1);
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", Menlo, monospace;
+  --font-size-xs: 11px; --font-size-sm: 13px; --font-size-base: 15px;
+  --font-size-lg: 17px; --font-size-xl: 20px; --font-size-2xl: 24px; --font-size-3xl: 30px;
+  --leading-tight: 1.25; --leading-normal: 1.5;
+  --weight-regular: 400; --weight-medium: 500; --weight-semibold: 600; --weight-bold: 700;
+  --space-0: 0; --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-6: 24px; --space-8: 32px; --space-12: 48px;
+  --radius-none: 0; --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px; --radius-xl: 16px; --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px 0 rgba(0,0,0,.06);
+  --shadow-md: 0 4px 8px -2px rgba(0,0,0,.08);
+  --shadow-lg: 0 12px 24px -8px rgba(0,0,0,.12);
+  --dur-fast: 150ms; --dur-base: 220ms; --dur-slow: 320ms;
+  --ease-standard: cubic-bezier(.2,0,0,1);
+
+  /* preview shell */
+  --shell-bg:    #f0f0f0;
+  --shell-fg:    #111;
+  --shell-side:  #fff;
+  --shell-border:#e5e7eb;
+  --shell-muted: #6b7280;
+}
+
+[data-theme="dark"] {
+  --shell-bg:    #0f1115;
+  --shell-fg:    #e5e7eb;
+  --shell-side:  #1a1d24;
+  --shell-border:#2a2f3a;
+  --shell-muted: #9ca3af;
+  --weui-bg-0: #111;
+  --weui-bg-1: #1a1a1a;
+  --weui-bg-2: #222;
+  --weui-fg-0: #fff;
+  --weui-fg-1: rgba(255,255,255,.55);
+  --weui-fg-2: rgba(255,255,255,.3);
+  --weui-separator: rgba(255,255,255,.1);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; }
+body {
+  font-family: var(--font-sans);
+  background: var(--shell-bg);
+  color: var(--shell-fg);
+  font-size: var(--font-size-base);
+  line-height: var(--leading-normal);
+}
+
+/* ==================== Shell 布局 ==================== */
+.shell { display: grid; grid-template-rows: 56px 1fr; height: 100vh; }
+.topbar {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: 0 var(--space-4);
+  background: var(--shell-side);
+  border-bottom: 1px solid var(--shell-border);
+}
+.topbar .brand { font-weight: var(--weight-semibold); margin-right: var(--space-4); white-space: nowrap; }
+.topbar select, .topbar button.tool {
+  height: 32px; padding: 0 var(--space-3);
+  background: var(--shell-bg); border: 1px solid var(--shell-border);
+  border-radius: 6px; color: var(--shell-fg); font: inherit; cursor: pointer;
+}
+.topbar a.tool {
+  height: 32px; padding: 0 var(--space-3);
+  background: var(--shell-bg); border: 1px solid var(--shell-border);
+  border-radius: 6px; color: var(--shell-fg); font: inherit; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 4px; text-decoration: none; font-size: 13px;
+}
+.topbar .grow { flex: 1; }
+.topbar small { color: var(--shell-muted); }
+
+.body { display: grid; grid-template-columns: 220px 1fr; overflow: hidden; }
+.sidebar {
+  background: var(--shell-side);
+  border-right: 1px solid var(--shell-border);
+  overflow-y: auto; padding: var(--space-3);
+}
+.sidebar .group { margin-bottom: var(--space-4); }
+.sidebar .group-title {
+  font-size: var(--font-size-xs); text-transform: uppercase;
+  color: var(--shell-muted); letter-spacing: 0.05em;
+  padding: 0 var(--space-2); margin-bottom: var(--space-1);
+}
+.sidebar a {
+  display: block; padding: var(--space-2) var(--space-3);
+  border-radius: 6px; color: var(--shell-fg); text-decoration: none; font-size: var(--font-size-sm);
+}
+.sidebar a:hover { background: var(--shell-bg); }
+.sidebar a.active { background: var(--weui-brand); color: #fff; }
+
+.main { overflow-y: auto; padding: var(--space-6); display: flex; justify-content: center; align-items: flex-start; }
+
+/* ==================== 微信小程序模拟器外壳 ==================== */
+.mp-simulator {
+  width: 375px; min-height: 667px;
+  background: var(--weui-bg-1);
+  border-radius: 40px;
+  border: 8px solid #1a1a1a;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25), 0 0 0 2px #333 inset;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  position: relative;
+  transition: width .3s ease, min-height .3s ease;
+}
+[data-device="desktop"] .mp-simulator { width: 100%; max-width: 100%; min-height: calc(100vh - 120px); border-radius: var(--radius-lg); border: 1px solid var(--shell-border); box-shadow: var(--shadow-md); }
+
+/* 状态栏 */
+.mp-statusbar {
+  height: 44px;
+  background: var(--weui-bg-2);
+  display: flex; align-items: center;
+  padding: 0 16px;
+  font-size: 12px; font-weight: 500;
+  color: var(--weui-fg-0);
+  flex-shrink: 0;
+}
+.mp-statusbar .time { flex: 1; }
+.mp-statusbar .icons { display: flex; gap: 4px; align-items: center; }
+.mp-statusbar .icons svg { width: 16px; height: 16px; }
+
+/* 导航栏 */
+.mp-navbar {
+  height: 44px;
+  background: var(--weui-bg-2);
+  display: flex; align-items: center;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--weui-separator);
+  flex-shrink: 0;
+  position: relative;
+}
+.mp-navbar .title {
+  flex: 1; text-align: center;
+  font-size: 17px; font-weight: 600;
+  color: var(--weui-fg-0);
+}
+.mp-navbar .back-arrow {
+  width: 24px; height: 24px; cursor: pointer;
+  color: var(--weui-fg-0);
+}
+/* 胶囊按钮 */
+.mp-capsule {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 16px; height: 32px;
+  overflow: hidden;
+  background: rgba(255,255,255,.6);
+}
+.mp-capsule-btn {
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.mp-capsule-divider {
+  width: 1px; height: 18px; background: rgba(0,0,0,.15);
+}
+.mp-capsule svg { width: 18px; height: 18px; color: var(--weui-fg-0); }
+
+/* 内容区 */
+.mp-content {
+  flex: 1; overflow-y: auto;
+  background: var(--weui-bg-1);
+  padding: 0;
+}
+
+/* TabBar */
+.mp-tabbar {
+  height: 50px; flex-shrink: 0;
+  background: var(--weui-bg-2);
+  border-top: 1px solid var(--weui-separator);
+  display: flex; align-items: center; justify-content: space-around;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.mp-tabbar-item {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  cursor: pointer; font-size: 10px; color: var(--weui-fg-1);
+  padding: 4px 0;
+  transition: color .15s;
+}
+.mp-tabbar-item.active { color: var(--weui-brand); }
+.mp-tabbar-item svg { width: 24px; height: 24px; }
+
+/* ==================== WeUI 组件 ==================== */
+/* Cell 列表 */
+.weui-cells {
+  background: var(--weui-bg-2);
+  margin: 8px 0;
+}
+.weui-cell {
+  display: flex; align-items: center;
+  padding: 16px;
+  min-height: 48px;
+  border-bottom: 1px solid var(--weui-separator);
+  gap: 12px;
+}
+.weui-cell:last-child { border-bottom: none; }
+.weui-cell__hd { flex-shrink: 0; }
+.weui-cell__hd .weui-icon { width: 24px; height: 24px; color: var(--weui-brand); }
+.weui-cell__bd { flex: 1; font-size: 15px; color: var(--weui-fg-0); }
+.weui-cell__ft { color: var(--weui-fg-2); font-size: 14px; display: flex; align-items: center; gap: 4px; }
+.weui-cell__ft::after {
+  content: ''; display: block;
+  width: 8px; height: 8px;
+  border-top: 2px solid var(--weui-fg-2);
+  border-right: 2px solid var(--weui-fg-2);
+  transform: rotate(45deg);
+}
+
+/* WeUI 按钮 */
+.weui-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: calc(100% - 32px); margin: 0 auto;
+  height: 48px; border-radius: 8px;
+  font-size: 17px; font-weight: 500;
+  border: none; cursor: pointer;
+  transition: opacity .2s;
+}
+.weui-btn:active { opacity: .7; }
+.weui-btn-primary { background: var(--weui-brand); color: #fff; }
+.weui-btn-default { background: var(--weui-bg-2); color: var(--weui-brand); border: 1px solid var(--weui-brand); }
+.weui-btn-warn { background: var(--weui-red); color: #fff; }
+.weui-btn-mini {
+  display: inline-flex; width: auto; padding: 0 16px;
+  height: 32px; font-size: 13px; border-radius: 6px;
+  margin: 0;
+}
+
+/* Form */
+.weui-form-group {
+  background: var(--weui-bg-2);
+  margin: 8px 0;
+}
+.weui-form-cell {
+  display: flex; align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--weui-separator);
+}
+.weui-form-cell:last-child { border-bottom: none; }
+.weui-form-label { width: 80px; font-size: 15px; color: var(--weui-fg-0); flex-shrink: 0; }
+.weui-form-input {
+  flex: 1; border: none; background: transparent;
+  font-size: 15px; color: var(--weui-fg-0); outline: none;
+  font-family: var(--font-sans);
+}
+.weui-form-input::placeholder { color: var(--weui-fg-2); }
+
+/* 搜索栏 */
+.weui-search-bar {
+  padding: 8px 16px;
+  background: var(--weui-bg-2);
+  display: flex; align-items: center; gap: 8px;
+}
+.weui-search-input {
+  flex: 1; height: 32px;
+  background: var(--weui-bg-1);
+  border: none; border-radius: 6px;
+  padding: 0 12px 0 32px;
+  font-size: 14px; color: var(--weui-fg-0);
+  position: relative;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 10px center;
+  background-size: 14px;
+}
+.weui-search-input:focus { outline: none; }
+
+/* Toast & Dialog */
+.weui-msg {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 48px 24px; text-align: center;
+  min-height: 400px; justify-content: center;
+}
+.weui-msg__icon { width: 64px; height: 64px; margin-bottom: 24px; }
+.weui-msg__title { font-size: 20px; font-weight: 500; margin-bottom: 8px; color: var(--weui-fg-0); }
+.weui-msg__desc { font-size: 14px; color: var(--weui-fg-1); margin-bottom: 32px; line-height: 1.6; }
+
+/* ActionSheet */
+.weui-actionsheet {
+  background: var(--weui-bg-2); border-radius: 12px 12px 0 0;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.weui-actionsheet__action {
+  padding: 16px; text-align: center;
+  font-size: 17px; color: var(--weui-fg-0);
+  border-bottom: 1px solid var(--weui-separator);
+  cursor: pointer;
+}
+.weui-actionsheet__action.destructive { color: var(--weui-red); }
+.weui-actionsheet__cancel {
+  margin-top: 8px; padding: 16px;
+  text-align: center; font-size: 17px;
+  color: var(--weui-fg-0); background: var(--weui-bg-2);
+  cursor: pointer;
+}
+
+/* Tag */
+.weui-tag {
+  display: inline-block; padding: 2px 8px;
+  border-radius: 4px; font-size: 11px; font-weight: 500;
+}
+.weui-tag-green { background: rgba(7,193,96,.12); color: var(--weui-brand); }
+.weui-tag-orange { background: rgba(250,157,59,.12); color: var(--weui-orange); }
+.weui-tag-red { background: rgba(250,81,81,.12); color: var(--weui-red); }
+.weui-tag-blue { background: rgba(16,174,255,.12); color: var(--weui-blue); }
+
+/* Loading */
+.weui-loading { width: 20px; height: 20px; display: inline-block; vertical-align: middle; animation: spin .8s linear infinite; border: 2px solid var(--weui-brand); border-right-color: transparent; border-radius: 50%; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Badge */
+.weui-badge {
+  display: inline-block; min-width: 8px; height: 16px; padding: 0 4px;
+  border-radius: 8px; background: var(--weui-red); color: #fff;
+  font-size: 11px; line-height: 16px; text-align: center;
+}
+.weui-badge-dot { width: 8px; height: 8px; min-width: 8px; padding: 0; border-radius: 50%; }
+
+/* Card */
+.weui-card {
+  background: var(--weui-bg-2);
+  border-radius: 8px; margin: 8px 12px;
+  padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+.weui-card__title { font-size: 15px; font-weight: 600; margin-bottom: 8px; color: var(--weui-fg-0); }
+
+/* 小程序页面标题区 */
+.mp-page-header { padding: 16px; }
+.mp-page-header h2 { margin: 0 0 4px; font-size: 24px; font-weight: 700; color: var(--weui-fg-0); }
+.mp-page-header p { margin: 0; font-size: 14px; color: var(--weui-fg-1); }
+
+/* Grid 宫格 */
+.weui-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  background: var(--weui-bg-2); padding: 16px 8px;
+}
+.weui-grid-item {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 12px 0; cursor: pointer;
+}
+.weui-grid-item__icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.weui-grid-item__text { font-size: 11px; color: var(--weui-fg-1); }
+
+/* Swiper 模拟 */
+.mp-swiper {
+  height: 160px; margin: 0 12px 8px;
+  border-radius: 8px; overflow: hidden;
+  position: relative;
+  background: linear-gradient(135deg, var(--weui-brand) 0%, var(--weui-indigo) 100%);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 18px; font-weight: 600;
+}
+.mp-swiper-dots {
+  position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 4px;
+}
+.mp-swiper-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.4); }
+.mp-swiper-dot.active { background: #fff; width: 16px; border-radius: 3px; }
+
+/* 半屏弹窗 */
+.weui-half-screen {
+  background: var(--weui-bg-2); border-radius: 12px 12px 0 0;
+  padding: 24px 16px; position: relative;
+}
+.weui-half-screen__hd { display: flex; align-items: center; margin-bottom: 16px; }
+.weui-half-screen__title { font-size: 20px; font-weight: 600; flex: 1; color: var(--weui-fg-0); }
+
+/* 底部安全区 */
+.mp-safe-bottom { height: 34px; background: var(--weui-bg-2); }
+
+/* 状态切换器 */
+.state-switch {
+  position: fixed; right: var(--space-6); bottom: var(--space-6);
+  background: var(--shell-side); border: 1px solid var(--shell-border);
+  border-radius: var(--radius-lg); padding: var(--space-2);
+  box-shadow: var(--shadow-lg); display: flex; gap: var(--space-1); z-index: 100;
+}
+.state-switch button {
+  height: 28px; padding: 0 var(--space-2);
+  background: transparent; border: 0; color: var(--shell-fg); cursor: pointer; font-size: var(--font-size-xs);
+  border-radius: 4px;
+}
+.state-switch button.on { background: var(--weui-brand); color: #fff; }
+
+/* 返回按钮 */
+.back-btn {
+  position: fixed; left: var(--space-6); bottom: var(--space-6);
+  height: 36px; padding: 0 var(--space-3);
+  background: var(--shell-side); border: 1px solid var(--shell-border);
+  border-radius: var(--radius-md); color: var(--shell-fg);
+  cursor: pointer; box-shadow: var(--shadow-md); z-index: 100;
+}
+.back-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* skeleton */
+.weui-skeleton {
+  background: linear-gradient(90deg, var(--weui-bg-0) 25%, rgba(0,0,0,.04) 37%, var(--weui-bg-0) 63%);
+  background-size: 400% 100%; animation: sk 1.4s ease infinite; border-radius: 4px;
+}
+@keyframes sk { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+
+/* Avatar */
+.weui-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--weui-bg-0); flex-shrink: 0; }
+.weui-avatar-sm { width: 32px; height: 32px; }
+.weui-avatar-lg { width: 64px; height: 64px; }
+.weui-avatar-square { border-radius: 8px; }
+
+/* 商品卡片 */
+.mp-goods-card {
+  background: var(--weui-bg-2); border-radius: 8px;
+  overflow: hidden; margin: 0 4px;
+}
+.mp-goods-card__img {
+  width: 100%; aspect-ratio: 1; background: var(--weui-bg-0);
+  display: flex; align-items: center; justify-content: center; color: var(--weui-fg-2); font-size: 24px;
+}
+.mp-goods-card__info { padding: 8px 10px; }
+.mp-goods-card__title { font-size: 13px; color: var(--weui-fg-0); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.mp-goods-card__price { font-size: 15px; color: var(--weui-red); font-weight: 600; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<div class="shell" data-device="miniprogram">
+
+  <!-- ==================== Topbar ==================== -->
+  <header class="topbar">
+    <span class="brand">🎨 ui-design-guide · 小程序预览</span>
+    <a href="../configurator/index.html" class="tool" title="返回设计系统配置页面">⚙️ 设计配置</a>
+
+    <label>主题：
+      <select id="theme-select">
+        <option value="weui-light">🟢 WeUI 亮色</option>
+        <option value="weui-dark">🟢 WeUI 暗色</option>
+        <option value="default-light">默认亮色</option>
+        <option value="default-dark">默认暗色</option>
+        <option value="apple-style">Apple 风格</option>
+        <option value="material-style">Material 风格</option>
+        <option value="minimal">极简</option>
+        <option value="cyberpunk">赛博朋克</option>
+      </select>
+    </label>
+
+    <button class="tool" id="btn-toggle-theme" title="切换明/暗">🌓 明/暗</button>
+    <label>视口：
+      <select id="device-select">
+        <option value="miniprogram">📱 小程序</option>
+        <option value="desktop">🖥 桌面宽屏</option>
+      </select>
+    </label>
+
+    <span class="grow"></span>
+
+    <label class="tool" style="display:inline-flex;align-items:center;gap:6px;">
+      📂 上传 tokens
+      <input type="file" id="file-tokens" accept=".json" style="display:none" />
+    </label>
+    <small id="theme-status" class="muted"></small>
+  </header>
+
+  <!-- ==================== Body ==================== -->
+  <div class="body">
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="group">
+        <div class="group-title">WeUI 组件</div>
+        <a href="#/components" data-route="/components">组件矩阵</a>
+      </div>
+      <div class="group">
+        <div class="group-title">小程序页面</div>
+        <a href="#/mp/home"      data-route="/mp/home">首页（TabBar）</a>
+        <a href="#/mp/list"      data-route="/mp/list">商品列表</a>
+        <a href="#/mp/detail"    data-route="/mp/detail">商品详情</a>
+        <a href="#/mp/mine"      data-route="/mp/mine">个人中心</a>
+        <a href="#/mp/search"    data-route="/mp/search">搜索页</a>
+        <a href="#/mp/order"     data-route="/mp/order">订单列表</a>
+      </div>
+      <div class="group">
+        <div class="group-title">状态页</div>
+        <a href="#/mp/login"     data-route="/mp/login">登录/授权</a>
+        <a href="#/mp/empty"     data-route="/mp/empty">空态页</a>
+        <a href="#/mp/error"     data-route="/mp/error">网络错误</a>
+        <a href="#/mp/success"   data-route="/mp/success">操作成功</a>
+      </div>
+    </nav>
+
+    <!-- Main viewport -->
+    <main class="main" id="main">
+      <div class="mp-simulator" id="mp-simulator">
+        <!-- 状态栏 -->
+        <div class="mp-statusbar">
+          <span class="time" id="mp-time">9:41</span>
+          <div class="icons">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+          </div>
+        </div>
+
+        <!-- 导航栏 -->
+        <div class="mp-navbar" id="mp-navbar">
+          <svg class="back-arrow" id="mp-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M15 18l-6-6 6-6"/></svg>
+          <div class="title" id="mp-title">首页</div>
+          <div class="mp-capsule">
+            <div class="mp-capsule-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+            </div>
+            <div class="mp-capsule-divider"></div>
+            <div class="mp-capsule-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- 内容 -->
+        <div class="mp-content" id="mp-content"></div>
+
+        <!-- TabBar -->
+        <div class="mp-tabbar" id="mp-tabbar">
+          <div class="mp-tabbar-item active" data-tab="home">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+            <span>首页</span>
+          </div>
+          <div class="mp-tabbar-item" data-tab="category">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            <span>分类</span>
+          </div>
+          <div class="mp-tabbar-item" data-tab="cart">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+            <span>购物车</span>
+          </div>
+          <div class="mp-tabbar-item" data-tab="mine">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>我的</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- 状态切换器 -->
+  <div class="state-switch" id="state-switch" style="display:none;">
+    <small class="muted" style="align-self:center;padding:0 6px;">状态:</small>
+    <button data-state="default" class="on">default</button>
+    <button data-state="hover">hover</button>
+    <button data-state="loading">loading</button>
+    <button data-state="disabled">disabled</button>
+    <button data-state="skeleton">skeleton</button>
+  </div>
+
+  <!-- 返回栈按钮 -->
+  <button class="back-btn" id="btn-back" disabled>← 返回</button>
+</div>
+
+<script>
+/* ==================== Tokens → CSS Variables ==================== */
+function tokensToCssVars(tokens) {
+  const map = {};
+  for (const grp of ['primary', 'neutral']) {
+    for (const [step, val] of Object.entries(tokens.color?.[grp] || {})) map[`--color-${grp}-${step}`] = val;
+  }
+  for (const [name, scale] of Object.entries(tokens.color?.semantic || {})) {
+    for (const [step, val] of Object.entries(scale)) map[`--color-${name}-${step}`] = val;
+  }
+  for (const [k, v] of Object.entries(tokens.typography?.fontFamily || {})) map[`--font-${k}`] = v;
+  for (const [k, v] of Object.entries(tokens.typography?.fontSize || {}))   map[`--font-size-${k}`] = `${v}px`;
+  for (const [k, v] of Object.entries(tokens.typography?.lineHeight || {})) map[`--leading-${k}`] = String(v);
+  for (const [k, v] of Object.entries(tokens.typography?.fontWeight || {})) map[`--weight-${k}`] = String(v);
+  for (const [k, v] of Object.entries(tokens.spacing || {})) map[`--space-${k}`] = `${v}px`;
+  for (const [k, v] of Object.entries(tokens.radius || {}))  map[`--radius-${k}`] = typeof v === 'number' ? `${v}px` : v;
+  for (const [k, v] of Object.entries(tokens.shadow || {}))  map[`--shadow-${k}`] = v;
+  for (const [k, v] of Object.entries(tokens.motion?.duration || {})) map[`--dur-${k}`] = `${v}ms`;
+  for (const [k, v] of Object.entries(tokens.motion?.easing || {}))   map[`--ease-${k}`] = v;
+  return map;
+}
+
+function applyTokens(tokens) {
+  const map = tokensToCssVars(tokens);
+  for (const [k, v] of Object.entries(map)) document.documentElement.style.setProperty(k, v);
+  const mode = document.documentElement.dataset.theme;
+  const overrides = tokens.color?.modeOverrides?.[mode];
+  if (overrides) {
+    for (const [grp, scale] of Object.entries(overrides)) {
+      for (const [step, val] of Object.entries(scale)) {
+        document.documentElement.style.setProperty(`--color-${grp}-${step}`, val);
+      }
+    }
+  }
+  document.getElementById('theme-status').textContent = `已加载: ${tokens.meta?.name ?? '(unnamed)'}`;
+  state.tokens = tokens;
+}
+
+async function loadPreset(name) {
+  try {
+    const res = await fetch(`../assets/themes/${name}.json`);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const tokens = await res.json();
+    applyTokens(tokens);
+  } catch (err) {
+    document.getElementById('theme-status').textContent = `⚠ 无法 fetch（请用本地服务或上传）`;
+  }
+}
+
+/* ==================== 时间更新 ==================== */
+function updateTime() {
+  const now = new Date();
+  document.getElementById('mp-time').textContent = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+}
+setInterval(updateTime, 30000);
+updateTime();
+
+/* ==================== Hash 路由 + 返回栈 ==================== */
+const state = {
+  tokens: null,
+  stack: [],
+  currentRoute: '/mp/home',
+};
+
+const TABBAR_ROUTES = ['/mp/home', '/mp/list', '/mp/mine'];
+const TABBAR_MAP = { '/mp/home': 'home', '/mp/list': 'category', '/mp/mine': 'mine' };
+const TITLE_MAP = {
+  '/components': '组件矩阵',
+  '/mp/home': '首页',
+  '/mp/list': '商品列表',
+  '/mp/detail': '商品详情',
+  '/mp/mine': '我的',
+  '/mp/search': '搜索',
+  '/mp/order': '我的订单',
+  '/mp/login': '登录',
+  '/mp/empty': '暂无数据',
+  '/mp/error': '网络错误',
+  '/mp/success': '操作成功',
+};
+
+function navigate(route, push = true) {
+  if (push && state.currentRoute && state.currentRoute !== route) {
+    state.stack.push(state.currentRoute);
+    if (state.stack.length > 32) state.stack.shift();
+  }
+  state.currentRoute = route;
+  render(route);
+  document.getElementById('btn-back').disabled = state.stack.length === 0;
+
+  // 更新侧栏高亮
+  document.querySelectorAll('.sidebar a').forEach(a => a.classList.toggle('active', a.dataset.route === route));
+
+  // 更新导航栏标题 + 返回按钮
+  document.getElementById('mp-title').textContent = TITLE_MAP[route] || '页面';
+  const backArrow = document.getElementById('mp-back');
+  backArrow.style.display = state.stack.length > 0 ? 'block' : 'none';
+
+  // TabBar 显示逻辑
+  const tabbar = document.getElementById('mp-tabbar');
+  tabbar.style.display = TABBAR_ROUTES.includes(route) || route === '/components' ? 'flex' : 'none';
+  if (TABBAR_MAP[route]) {
+    document.querySelectorAll('.mp-tabbar-item').forEach(item => {
+      item.classList.toggle('active', item.dataset.tab === TABBAR_MAP[route]);
+    });
+  }
+
+  // 状态切换器
+  document.getElementById('state-switch').style.display = route === '/components' ? 'flex' : 'none';
+}
+
+window.addEventListener('hashchange', () => {
+  const route = location.hash.replace(/^#/, '') || '/mp/home';
+  if (route !== state.currentRoute) navigate(route);
+});
+
+document.getElementById('btn-back').addEventListener('click', goBack);
+document.getElementById('mp-back').addEventListener('click', goBack);
+
+function goBack() {
+  const prev = state.stack.pop();
+  if (prev) {
+    location.hash = '#' + prev;
+    state.currentRoute = prev;
+    render(prev);
+    document.getElementById('btn-back').disabled = state.stack.length === 0;
+    document.getElementById('mp-back').style.display = state.stack.length > 0 ? 'block' : 'none';
+    document.getElementById('mp-title').textContent = TITLE_MAP[prev] || '页面';
+    document.querySelectorAll('.sidebar a').forEach(a => a.classList.toggle('active', a.dataset.route === prev));
+    const tabbar = document.getElementById('mp-tabbar');
+    tabbar.style.display = TABBAR_ROUTES.includes(prev) || prev === '/components' ? 'flex' : 'none';
+  }
+}
+
+// TabBar 点击
+document.getElementById('mp-tabbar').addEventListener('click', e => {
+  const item = e.target.closest('.mp-tabbar-item');
+  if (!item) return;
+  const tab = item.dataset.tab;
+  const routeMap = { home: '/mp/home', category: '/mp/list', cart: '/mp/order', mine: '/mp/mine' };
+  if (routeMap[tab]) {
+    location.hash = '#' + routeMap[tab];
+  }
+});
+
+/* ==================== 视图渲染 ==================== */
+function render(route) {
+  const el = document.getElementById('mp-content');
+  switch (route) {
+    case '/components':    el.innerHTML = viewComponents(); break;
+    case '/mp/home':       el.innerHTML = viewMPHome(); break;
+    case '/mp/list':       el.innerHTML = viewMPList(); break;
+    case '/mp/detail':     el.innerHTML = viewMPDetail(); break;
+    case '/mp/mine':       el.innerHTML = viewMPMine(); break;
+    case '/mp/search':     el.innerHTML = viewMPSearch(); break;
+    case '/mp/order':      el.innerHTML = viewMPOrder(); break;
+    case '/mp/login':      el.innerHTML = viewMPLogin(); break;
+    case '/mp/empty':      el.innerHTML = viewMPEmpty(); break;
+    case '/mp/error':      el.innerHTML = viewMPError(); break;
+    case '/mp/success':    el.innerHTML = viewMPSuccess(); break;
+    default:               el.innerHTML = viewMPHome();
+  }
+}
+
+/* ============ WeUI 组件矩阵 ============ */
+function viewComponents() {
+  return `
+<div style="padding:16px;">
+<div class="mp-page-header">
+  <h2>WeUI 组件矩阵</h2>
+  <p>微信小程序设计规范组件展示</p>
+</div>
+
+<h3 style="padding:0 16px;font-size:13px;color:var(--weui-fg-1);margin:16px 0 8px;">按钮</h3>
+<div style="padding:0 16px;display:flex;flex-direction:column;gap:12px;">
+  <button class="weui-btn weui-btn-primary">主要按钮</button>
+  <button class="weui-btn weui-btn-default">次要按钮</button>
+  <button class="weui-btn weui-btn-warn">警告按钮</button>
+  <div style="display:flex;gap:8px;justify-content:center;">
+    <button class="weui-btn weui-btn-mini weui-btn-primary">小按钮</button>
+    <button class="weui-btn weui-btn-mini weui-btn-default">小按钮</button>
+  </div>
+</div>
+
+<h3 style="padding:0 16px;font-size:13px;color:var(--weui-fg-1);margin:24px 0 8px;">Cell 列表</h3>
+<div class="weui-cells">
+  <div class="weui-cell">
+    <div class="weui-cell__hd"><svg class="weui-icon" viewBox="0 0 24 24" fill="var(--weui-brand)"><circle cx="12" cy="12" r="10"/></svg></div>
+    <div class="weui-cell__bd">标题文字</div>
+    <div class="weui-cell__ft">说明文字</div>
+  </div>
+  <div class="weui-cell">
+    <div class="weui-cell__bd">标题文字</div>
+    <div class="weui-cell__ft">详情</div>
+  </div>
+  <div class="weui-cell">
+    <div class="weui-cell__bd">带标签</div>
+    <div class="weui-cell__ft"><span class="weui-tag weui-tag-green">已完成</span></div>
+  </div>
+</div>
+
+<h3 style="padding:0 16px;font-size:13px;color:var(--weui-fg-1);margin:24px 0 8px;">表单</h3>
+<div class="weui-form-group">
+  <div class="weui-form-cell">
+    <span class="weui-form-label">用户名</span>
+    <input class="weui-form-input" placeholder="请输入用户名" />
+  </div>
+  <div class="weui-form-cell">
+    <span class="weui-form-label">密码</span>
+    <input class="weui-form-input" type="password" placeholder="请输入密码" />
+  </div>
+  <div class="weui-form-cell">
+    <span class="weui-form-label">手机号</span>
+    <input class="weui-form-input" type="tel" placeholder="请输入手机号" />
+  </div>
+</div>
+
+<h3 style="padding:0 16px;font-size:13px;color:var(--weui-fg-1);margin:24px 0 8px;">标签 & 徽章</h3>
+<div style="padding:0 16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+  <span class="weui-tag weui-tag-green">成功</span>
+  <span class="weui-tag weui-tag-orange">待处理</span>
+  <span class="weui-tag weui-tag-red">失败</span>
+  <span class="weui-tag weui-tag-blue">进行中</span>
+  <span class="weui-badge">8</span>
+  <span class="weui-badge">99+</span>
+  <span class="weui-badge weui-badge-dot"></span>
+</div>
+
+<h3 style="padding:0 16px;font-size:13px;color:var(--weui-fg-1);margin:24px 0 8px;">卡片</h3>
+<div class="weui-card">
+  <div class="weui-card__title">月活跃用户</div>
+  <div style="font-size:28px;font-weight:700;color:var(--weui-fg-0);">12,340</div>
+  <span class="weui-tag weui-tag-green" style="margin-top:8px;">+5.2%</span>
+</div>
+
+<h3 style="padding:0 16px;font-size:13px;color:var(--weui-fg-1);margin:24px 0 8px;">加载 & 骨架屏</h3>
+<div style="padding:0 16px;display:flex;gap:16px;align-items:center;">
+  <span class="weui-loading"></span>
+  <span style="font-size:14px;color:var(--weui-fg-1);">加载中...</span>
+</div>
+<div class="weui-card" style="margin-top:12px;">
+  <div class="weui-skeleton" style="height:16px;width:40%;margin-bottom:12px;"></div>
+  <div class="weui-skeleton" style="height:12px;width:100%;margin-bottom:8px;"></div>
+  <div class="weui-skeleton" style="height:12px;width:70%;"></div>
+</div>
+
+<h3 style="padding:0 16px;font-size:13px;color:var(--weui-fg-1);margin:24px 0 8px;">ActionSheet</h3>
+<div class="weui-actionsheet" style="margin:0 12px;border-radius:12px;overflow:hidden;">
+  <div class="weui-actionsheet__action">拍照</div>
+  <div class="weui-actionsheet__action">从相册选择</div>
+  <div class="weui-actionsheet__action destructive">删除</div>
+</div>
+
+<div style="height:32px;"></div>
+</div>
+`;
+}
+
+/* ============ 小程序首页 ============ */
+function viewMPHome() {
+  return `
+<div class="weui-search-bar">
+  <input class="weui-search-input" placeholder="搜索商品、店铺" readonly onclick="location.hash='#/mp/search'" />
+</div>
+
+<div class="mp-swiper">
+  <span>春季新品上市 🌸</span>
+  <div class="mp-swiper-dots">
+    <div class="mp-swiper-dot active"></div>
+    <div class="mp-swiper-dot"></div>
+    <div class="mp-swiper-dot"></div>
+  </div>
+</div>
+
+<div class="weui-grid">
+  <div class="weui-grid-item">
+    <div class="weui-grid-item__icon" style="background:rgba(7,193,96,.12);">🏷️</div>
+    <span class="weui-grid-item__text">特惠</span>
+  </div>
+  <div class="weui-grid-item">
+    <div class="weui-grid-item__icon" style="background:rgba(250,81,81,.12);">🔥</div>
+    <span class="weui-grid-item__text">热销</span>
+  </div>
+  <div class="weui-grid-item">
+    <div class="weui-grid-item__icon" style="background:rgba(16,174,255,.12);">🆕</div>
+    <span class="weui-grid-item__text">新品</span>
+  </div>
+  <div class="weui-grid-item">
+    <div class="weui-grid-item__icon" style="background:rgba(100,103,240,.12);">🎁</div>
+    <span class="weui-grid-item__text">福利</span>
+  </div>
+  <div class="weui-grid-item">
+    <div class="weui-grid-item__icon" style="background:rgba(250,157,59,.12);">⚡</div>
+    <span class="weui-grid-item__text">秒杀</span>
+  </div>
+  <div class="weui-grid-item">
+    <div class="weui-grid-item__icon" style="background:rgba(145,211,0,.12);">🎯</div>
+    <span class="weui-grid-item__text">拼团</span>
+  </div>
+  <div class="weui-grid-item">
+    <div class="weui-grid-item__icon" style="background:rgba(7,193,96,.12);">💳</div>
+    <span class="weui-grid-item__text">会员</span>
+  </div>
+  <div class="weui-grid-item">
+    <div class="weui-grid-item__icon" style="background:rgba(250,81,81,.12);">📋</div>
+    <span class="weui-grid-item__text">全部</span>
+  </div>
+</div>
+
+<div style="padding:12px 12px 4px;display:flex;align-items:center;justify-content:space-between;">
+  <span style="font-size:16px;font-weight:600;color:var(--weui-fg-0);">为你推荐</span>
+  <span style="font-size:12px;color:var(--weui-fg-2);">查看更多 ›</span>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 12px;">
+  ${[
+    {name:'无线蓝牙耳机 降噪版', price:'¥199'},
+    {name:'智能手表 运动版', price:'¥599'},
+    {name:'便携充电宝 20000mAh', price:'¥89'},
+    {name:'机械键盘 87键 青轴', price:'¥329'},
+  ].map(g => `
+  <div class="mp-goods-card" onclick="location.hash='#/mp/detail'">
+    <div class="mp-goods-card__img">📦</div>
+    <div class="mp-goods-card__info">
+      <div class="mp-goods-card__title">${g.name}</div>
+      <div class="mp-goods-card__price">${g.price}</div>
+    </div>
+  </div>
+  `).join('')}
+</div>
+<div style="height:16px;"></div>
+`;
+}
+
+/* ============ 商品列表 ============ */
+function viewMPList() {
+  return `
+<div class="weui-search-bar">
+  <input class="weui-search-input" placeholder="搜索商品" />
+</div>
+
+<div style="display:flex;gap:0;background:var(--weui-bg-2);padding:8px 16px;border-bottom:1px solid var(--weui-separator);">
+  <span style="flex:1;text-align:center;font-size:14px;color:var(--weui-brand);font-weight:500;">综合</span>
+  <span style="flex:1;text-align:center;font-size:14px;color:var(--weui-fg-1);">销量</span>
+  <span style="flex:1;text-align:center;font-size:14px;color:var(--weui-fg-1);">价格 ↑</span>
+  <span style="flex:1;text-align:center;font-size:14px;color:var(--weui-fg-1);">筛选</span>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px;">
+  ${[
+    {name:'无线蓝牙耳机 主动降噪 超长续航', price:'¥199', tag:'热销'},
+    {name:'智能手表 AMOLED屏 运动健康监测', price:'¥599', tag:'新品'},
+    {name:'便携充电宝 大容量 快充', price:'¥89', tag:'特惠'},
+    {name:'机械键盘 RGB背光 青轴', price:'¥329', tag:''},
+    {name:'真无线耳机 Hi-Fi音质', price:'¥149', tag:'秒杀'},
+    {name:'智能音箱 语音助手', price:'¥249', tag:''},
+  ].map(g => `
+  <div class="mp-goods-card" onclick="location.hash='#/mp/detail'">
+    <div class="mp-goods-card__img" style="position:relative;">📦${g.tag ? `<span class="weui-tag weui-tag-red" style="position:absolute;top:8px;left:8px;">${g.tag}</span>` : ''}</div>
+    <div class="mp-goods-card__info">
+      <div class="mp-goods-card__title">${g.name}</div>
+      <div class="mp-goods-card__price">${g.price}</div>
+    </div>
+  </div>
+  `).join('')}
+</div>
+`;
+}
+
+/* ============ 商品详情 ============ */
+function viewMPDetail() {
+  return `
+<div style="aspect-ratio:1;background:linear-gradient(135deg,#f0f0f0,#e8e8e8);display:flex;align-items:center;justify-content:center;font-size:48px;">📦</div>
+
+<div style="padding:16px;background:var(--weui-bg-2);">
+  <div style="display:flex;align-items:baseline;gap:8px;">
+    <span style="font-size:24px;font-weight:700;color:var(--weui-red);">¥199</span>
+    <span style="font-size:14px;color:var(--weui-fg-2);text-decoration:line-through;">¥399</span>
+    <span class="weui-tag weui-tag-red">5折</span>
+  </div>
+  <h3 style="margin:12px 0 4px;font-size:16px;font-weight:600;color:var(--weui-fg-0);line-height:1.4;">无线蓝牙耳机 主动降噪 超长续航 蓝牙5.3</h3>
+  <p style="margin:0;font-size:13px;color:var(--weui-fg-2);">已售 2.3万件 · 好评率 98%</p>
+</div>
+
+<div class="weui-cells" style="margin-top:8px;">
+  <div class="weui-cell">
+    <div class="weui-cell__bd">规格</div>
+    <div class="weui-cell__ft">黑色 / 标准版</div>
+  </div>
+  <div class="weui-cell">
+    <div class="weui-cell__bd">配送</div>
+    <div class="weui-cell__ft">深圳 · 包邮</div>
+  </div>
+  <div class="weui-cell">
+    <div class="weui-cell__bd">服务</div>
+    <div class="weui-cell__ft">7天无理由 · 运费险</div>
+  </div>
+</div>
+
+<div class="weui-cells" style="margin-top:8px;">
+  <div class="weui-cell">
+    <div class="weui-cell__bd" style="font-weight:500;">用户评价 (1,280)</div>
+    <div class="weui-cell__ft">查看全部</div>
+  </div>
+</div>
+<div style="padding:12px 16px;background:var(--weui-bg-2);">
+  <div style="display:flex;align-items:flex-start;gap:10px;">
+    <div class="weui-avatar weui-avatar-sm" style="background:var(--weui-bg-0);"></div>
+    <div style="flex:1;">
+      <div style="font-size:12px;color:var(--weui-fg-2);margin-bottom:4px;">用户***8 · 3天前</div>
+      <div style="font-size:14px;color:var(--weui-fg-0);line-height:1.5;">音质很好，降噪效果出色，续航也很给力！</div>
+    </div>
+  </div>
+</div>
+
+<div style="height:60px;"></div>
+
+<div style="position:sticky;bottom:0;display:flex;background:var(--weui-bg-2);border-top:1px solid var(--weui-separator);padding:8px 12px;gap:8px;">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:48px;cursor:pointer;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--weui-fg-1)" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+    <span style="font-size:10px;color:var(--weui-fg-2);">收藏</span>
+  </div>
+  <button class="weui-btn weui-btn-default weui-btn-mini" style="flex:1;height:40px;font-size:14px;">加入购物车</button>
+  <button class="weui-btn weui-btn-primary weui-btn-mini" style="flex:1;height:40px;font-size:14px;">立即购买</button>
+</div>
+`;
+}
+
+/* ============ 个人中心 ============ */
+function viewMPMine() {
+  return `
+<div style="padding:32px 16px 20px;background:var(--weui-bg-2);display:flex;align-items:center;gap:16px;">
+  <div class="weui-avatar weui-avatar-lg" style="background:linear-gradient(135deg,var(--weui-brand),var(--weui-indigo));display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;font-weight:700;">A</div>
+  <div>
+    <div style="font-size:18px;font-weight:600;color:var(--weui-fg-0);">Alice</div>
+    <div style="font-size:13px;color:var(--weui-fg-2);margin-top:2px;">微信用户 · VIP会员</div>
+  </div>
+</div>
+
+<div style="display:flex;background:var(--weui-bg-2);padding:16px 0;border-top:1px solid var(--weui-separator);">
+  <div style="flex:1;text-align:center;">
+    <div style="font-size:18px;font-weight:600;color:var(--weui-fg-0);">12</div>
+    <div style="font-size:11px;color:var(--weui-fg-2);">待付款</div>
+  </div>
+  <div style="flex:1;text-align:center;">
+    <div style="font-size:18px;font-weight:600;color:var(--weui-fg-0);">3</div>
+    <div style="font-size:11px;color:var(--weui-fg-2);">待收货</div>
+  </div>
+  <div style="flex:1;text-align:center;">
+    <div style="font-size:18px;font-weight:600;color:var(--weui-fg-0);">28</div>
+    <div style="font-size:11px;color:var(--weui-fg-2);">已完成</div>
+  </div>
+  <div style="flex:1;text-align:center;">
+    <div style="font-size:18px;font-weight:600;color:var(--weui-fg-0);">2</div>
+    <div style="font-size:11px;color:var(--weui-fg-2);">售后</div>
+  </div>
+</div>
+
+<div class="weui-cells" style="margin-top:8px;">
+  <div class="weui-cell" onclick="location.hash='#/mp/order'">
+    <div class="weui-cell__hd"><svg class="weui-icon" viewBox="0 0 24 24" fill="none" stroke="var(--weui-brand)" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div>
+    <div class="weui-cell__bd">我的订单</div>
+    <div class="weui-cell__ft">全部订单</div>
+  </div>
+  <div class="weui-cell">
+    <div class="weui-cell__hd"><svg class="weui-icon" viewBox="0 0 24 24" fill="none" stroke="var(--weui-orange)" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+    <div class="weui-cell__bd">收货地址</div>
+    <div class="weui-cell__ft"></div>
+  </div>
+  <div class="weui-cell">
+    <div class="weui-cell__hd"><svg class="weui-icon" viewBox="0 0 24 24" fill="none" stroke="var(--weui-blue)" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></div>
+    <div class="weui-cell__bd">设置</div>
+    <div class="weui-cell__ft"></div>
+  </div>
+</div>
+
+<div class="weui-cells" style="margin-top:8px;">
+  <div class="weui-cell">
+    <div class="weui-cell__bd">优惠券</div>
+    <div class="weui-cell__ft">3张可用</div>
+  </div>
+  <div class="weui-cell">
+    <div class="weui-cell__bd">积分</div>
+    <div class="weui-cell__ft">1,280</div>
+  </div>
+  <div class="weui-cell">
+    <div class="weui-cell__bd">帮助中心</div>
+    <div class="weui-cell__ft"></div>
+  </div>
+</div>
+`;
+}
+
+/* ============ 搜索页 ============ */
+function viewMPSearch() {
+  return `
+<div class="weui-search-bar">
+  <input class="weui-search-input" placeholder="搜索商品" autofocus />
+  <button style="background:none;border:none;color:var(--weui-brand);font-size:14px;cursor:pointer;" onclick="location.hash='#/mp/home'">取消</button>
+</div>
+
+<div style="padding:16px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+    <span style="font-size:14px;font-weight:500;color:var(--weui-fg-0);">搜索历史</span>
+    <span style="font-size:12px;color:var(--weui-fg-2);cursor:pointer;">清空</span>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;">
+    ${['蓝牙耳机','充电宝','键盘','手表','音箱'].map(t => `
+      <span style="padding:6px 12px;background:var(--weui-bg-0);border-radius:16px;font-size:13px;color:var(--weui-fg-1);cursor:pointer;">${t}</span>
+    `).join('')}
+  </div>
+</div>
+
+<div style="padding:0 16px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+    <span style="font-size:14px;font-weight:500;color:var(--weui-fg-0);">热门搜索</span>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:0;">
+    ${['无线耳机','智能手表','充电宝 快充','机械键盘 cherry','降噪耳机'].map((t, i) => `
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--weui-separator);">
+        <span style="width:20px;text-align:center;font-size:14px;font-weight:600;color:${i < 3 ? 'var(--weui-red)' : 'var(--weui-fg-2)'};">${i+1}</span>
+        <span style="font-size:14px;color:var(--weui-fg-0);">${t}</span>
+        ${i === 0 ? '<span class="weui-tag weui-tag-red" style="margin-left:auto;">热</span>' : ''}
+      </div>
+    `).join('')}
+  </div>
+</div>
+`;
+}
+
+/* ============ 订单列表 ============ */
+function viewMPOrder() {
+  return `
+<div style="display:flex;background:var(--weui-bg-2);border-bottom:1px solid var(--weui-separator);">
+  ${['全部','待付款','待发货','待收货','已完成'].map((t, i) => `
+    <span style="flex:1;text-align:center;padding:12px 0;font-size:13px;${i===0 ? 'color:var(--weui-brand);font-weight:500;border-bottom:2px solid var(--weui-brand);' : 'color:var(--weui-fg-1);'}">${t}</span>
+  `).join('')}
+</div>
+
+${[
+  {id:'20260507001', status:'已完成', statusColor:'green', items:[{name:'无线蓝牙耳机 降噪版',spec:'黑色/标准版',price:'¥199',qty:1}]},
+  {id:'20260505003', status:'待收货', statusColor:'orange', items:[{name:'智能手表 运动版',spec:'银色/44mm',price:'¥599',qty:1},{name:'表带 硅胶',spec:'黑色',price:'¥39',qty:2}]},
+  {id:'20260501008', status:'待付款', statusColor:'red', items:[{name:'便携充电宝',spec:'白色/20000mAh',price:'¥89',qty:1}]},
+].map(order => `
+<div style="background:var(--weui-bg-2);margin-top:8px;padding:12px 16px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+    <span style="font-size:12px;color:var(--weui-fg-2);">订单号: ${order.id}</span>
+    <span class="weui-tag weui-tag-${order.statusColor}">${order.status}</span>
+  </div>
+  ${order.items.map(item => `
+  <div style="display:flex;gap:10px;margin-bottom:8px;">
+    <div style="width:64px;height:64px;background:var(--weui-bg-0);border-radius:6px;display:flex;align-items:center;justify-content:center;">📦</div>
+    <div style="flex:1;">
+      <div style="font-size:14px;color:var(--weui-fg-0);line-height:1.4;">${item.name}</div>
+      <div style="font-size:12px;color:var(--weui-fg-2);margin-top:2px;">${item.spec}</div>
+      <div style="display:flex;justify-content:space-between;margin-top:4px;">
+        <span style="font-size:14px;font-weight:600;color:var(--weui-fg-0);">${item.price}</span>
+        <span style="font-size:12px;color:var(--weui-fg-2);">×${item.qty}</span>
+      </div>
+    </div>
+  </div>
+  `).join('')}
+</div>
+`).join('')}
+`;
+}
+
+/* ============ 登录页 ============ */
+function viewMPLogin() {
+  return `
+<div style="padding:64px 24px 32px;text-align:center;">
+  <div style="width:72px;height:72px;margin:0 auto 20px;border-radius:16px;background:linear-gradient(135deg,var(--weui-brand),var(--weui-indigo));display:flex;align-items:center;justify-content:center;">
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+  </div>
+  <h2 style="margin:0 0 8px;font-size:20px;color:var(--weui-fg-0);">欢迎使用小程序</h2>
+  <p style="margin:0 0 32px;font-size:14px;color:var(--weui-fg-1);">登录后享受完整服务</p>
+
+  <button class="weui-btn weui-btn-primary" style="margin-bottom:12px;">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;"><path d="M15.05 5A5 5 0 0 1 19 8.95M15.05 1A9 9 0 0 1 23 8.94M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    微信一键登录
+  </button>
+  <button class="weui-btn weui-btn-default">手机号登录</button>
+
+  <p style="margin-top:24px;font-size:12px;color:var(--weui-fg-2);line-height:1.6;">
+    登录即同意
+    <a style="color:var(--weui-link);text-decoration:none;">《用户协议》</a>
+    和
+    <a style="color:var(--weui-link);text-decoration:none;">《隐私政策》</a>
+  </p>
+</div>
+`;
+}
+
+/* ============ 空态页 ============ */
+function viewMPEmpty() {
+  return `
+<div class="weui-msg">
+  <svg class="weui-msg__icon" viewBox="0 0 24 24" fill="none" stroke="var(--weui-fg-2)" stroke-width="1.5">
+    <rect x="4" y="6" width="16" height="14" rx="2"/><path d="M4 10h16"/>
+  </svg>
+  <div class="weui-msg__title">暂无数据</div>
+  <div class="weui-msg__desc">你还没有任何订单记录<br/>去逛逛发现好物吧</div>
+  <button class="weui-btn weui-btn-primary weui-btn-mini" style="width:140px;height:36px;" onclick="location.hash='#/mp/home'">去逛逛</button>
+</div>
+`;
+}
+
+/* ============ 错误页 ============ */
+function viewMPError() {
+  return `
+<div class="weui-msg">
+  <svg class="weui-msg__icon" viewBox="0 0 24 24" fill="none" stroke="var(--weui-red)" stroke-width="1.5">
+    <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+  </svg>
+  <div class="weui-msg__title">网络异常</div>
+  <div class="weui-msg__desc">当前网络不可用，请检查网络设置后重试</div>
+  <button class="weui-btn weui-btn-primary weui-btn-mini" style="width:120px;height:36px;" onclick="render(state.currentRoute)">重新加载</button>
+</div>
+`;
+}
+
+/* ============ 操作成功 ============ */
+function viewMPSuccess() {
+  return `
+<div class="weui-msg">
+  <svg class="weui-msg__icon" viewBox="0 0 24 24" fill="none" stroke="var(--weui-brand)" stroke-width="2">
+    <circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/>
+  </svg>
+  <div class="weui-msg__title">提交成功</div>
+  <div class="weui-msg__desc">你的订单已提交成功，商家将尽快处理</div>
+  <div style="display:flex;gap:12px;">
+    <button class="weui-btn weui-btn-primary weui-btn-mini" style="height:36px;" onclick="location.hash='#/mp/order'">查看订单</button>
+    <button class="weui-btn weui-btn-default weui-btn-mini" style="height:36px;" onclick="location.hash='#/mp/home'">返回首页</button>
+  </div>
+</div>
+`;
+}
+
+/* ==================== 状态切换 ==================== */
+document.getElementById('state-switch').addEventListener('click', e => {
+  const btn = e.target.closest('button[data-state]');
+  if (!btn) return;
+  document.querySelectorAll('#state-switch button').forEach(b => b.classList.toggle('on', b === btn));
+  document.getElementById('mp-content').dataset.state = btn.dataset.state;
+});
+
+/* ==================== 主题切换 ==================== */
+document.getElementById('theme-select').addEventListener('change', e => loadPreset(e.target.value));
+
+document.getElementById('btn-toggle-theme').addEventListener('click', () => {
+  const root = document.documentElement;
+  root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+  if (state.tokens) applyTokens(state.tokens);
+});
+
+document.getElementById('device-select').addEventListener('change', e => {
+  document.querySelector('.shell').dataset.device = e.target.value;
+});
+
+/* ==================== File input ==================== */
+document.getElementById('file-tokens').addEventListener('change', e => {
+  const f = e.target.files?.[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = () => { try { applyTokens(JSON.parse(r.result)); } catch (err) { alert('JSON 解析失败：' + err.message); } };
+  r.readAsText(f);
+});
+
+/* ==================== 初始化 ==================== */
+(function init() {
+  const url = new URL(location.href);
+  const t = url.searchParams.get('theme') || 'weui-light';
+  document.getElementById('theme-select').value = t;
+  loadPreset(t);
+
+  const initRoute = location.hash.replace(/^#/, '') || '/mp/home';
+  navigate(initRoute, false);
+})();
+</script>
+
+</body>
+</html>

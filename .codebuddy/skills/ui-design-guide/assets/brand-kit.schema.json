@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://codebuddy.local/skills/ui-design-guide/brand-kit.schema.json",
+  "title": "Brand Kit",
+  "description": "ui-design-guide Skill 的品牌资产契约。AI 生成文案、按钮文字、错误提示、placeholder 时必须遵循本契约中的 tone 与 voiceSamples。",
+  "type": "object",
+  "required": ["brandName", "tone"],
+  "additionalProperties": false,
+  "properties": {
+    "brandName": {
+      "type": "string",
+      "minLength": 1,
+      "description": "品牌名，用于页面标题、Logo 旁文案、欢迎语等"
+    },
+    "logoSvg": {
+      "type": "string",
+      "description": "内联 SVG 字符串，建议 ≤4KB；优先单色，使用 currentColor 以适配主题"
+    },
+    "tone": {
+      "enum": ["formal", "friendly", "geek", "playful", "luxury", "medical"],
+      "description": "品牌语调：formal 正式 / friendly 友好 / geek 极客 / playful 俏皮 / luxury 高奢 / medical 严谨"
+    },
+    "lockedColors": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+      "uniqueItems": true,
+      "description": "品牌锁定色清单（HEX）。这些颜色不会被 Vibe Mapping 或主题切换覆盖；configurator 将以小锁图标提示"
+    },
+    "voiceSamples": {
+      "type": "object",
+      "description": "文案口吻样例库。AI 在生成对应类型文案时优先复用或仿写本字段中的句式",
+      "additionalProperties": false,
+      "properties": {
+        "buttonCta":     { "type": "array", "items": { "type": "string" }, "description": "按钮 CTA 样例，如 立即开始 / 一键提交 / Let's go" },
+        "errorMessage":  { "type": "array", "items": { "type": "string" }, "description": "错误提示样例" },
+        "emptyState":    { "type": "array", "items": { "type": "string" }, "description": "空状态文案样例" },
+        "placeholder":   { "type": "array", "items": { "type": "string" }, "description": "输入框 placeholder 样例" },
+        "successToast":  { "type": "array", "items": { "type": "string" }, "description": "成功 toast 样例" }
+      }
+    },
+    "iconStyle": {
+      "enum": ["outline", "filled", "duotone"],
+      "description": "图标风格统一约束"
+    },
+    "fontPairing": {
+      "type": "object",
+      "description": "品牌字体偏好（可与 design-tokens.typography.fontFamily 取并集）",
+      "properties": {
+        "display": { "type": "string", "description": "标题/展示字体" },
+        "body":    { "type": "string", "description": "正文字体" }
+      }
+    },
+    "imagery": {
+      "type": "object",
+      "description": "图像风格倾向",
+      "properties": {
+        "style":     { "enum": ["photo-realistic", "illustration", "3d-render", "isometric", "abstract", "line-art"] },
+        "saturation": { "enum": ["muted", "natural", "vivid"] }
+      }
+    }
+  }
+}

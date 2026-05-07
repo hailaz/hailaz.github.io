@@ -1,0 +1,108 @@
+{
+  "meta": {
+    "name": "weui-light",
+    "version": "1.0.0",
+    "mode": "light",
+    "vibeTags": ["wechat", "minimal"],
+    "description": "微信小程序 WeUI 亮色主题：微信绿主色 + 标准小程序设计规范",
+    "platform": "wechat-miniprogram"
+  },
+  "color": {
+    "primary": {
+      "50":  "#edfcf3",
+      "100": "#d4f7e1",
+      "200": "#a8efc3",
+      "300": "#71e2a0",
+      "400": "#38cf78",
+      "500": "#07c160",
+      "600": "#06ad56",
+      "700": "#059a4c",
+      "800": "#047a3c",
+      "900": "#035a2c"
+    },
+    "neutral": {
+      "50":  "#fafafa",
+      "100": "#f7f7f7",
+      "200": "#ededed",
+      "300": "#d6d6d6",
+      "400": "#b0b0b0",
+      "500": "#888888",
+      "600": "#5c5c5c",
+      "700": "#3d3d3d",
+      "800": "#262626",
+      "900": "#111111"
+    },
+    "semantic": {
+      "success": { "50": "#edfcf3", "100": "#d4f7e1", "200": "#a8efc3", "300": "#71e2a0", "400": "#38cf78", "500": "#07c160", "600": "#06ad56", "700": "#059a4c", "800": "#047a3c", "900": "#035a2c" },
+      "warning": { "50": "#fffce5", "100": "#fff6b3", "200": "#fff080", "300": "#ffe84d", "400": "#ffdf1a", "500": "#ffc300", "600": "#d9a600", "700": "#b38900", "800": "#8c6c00", "900": "#665000" },
+      "danger":  { "50": "#fff1f1", "100": "#ffd9d9", "200": "#ffb3b3", "300": "#ff8c8c", "400": "#ff6666", "500": "#fa5151", "600": "#d94444", "700": "#b33737", "800": "#8c2b2b", "900": "#661f1f" },
+      "info":    { "50": "#e7f7ff", "100": "#c4ecff", "200": "#8fd9ff", "300": "#5ac6ff", "400": "#35b8ff", "500": "#10aeff", "600": "#0d8fd9", "700": "#0a71b3", "800": "#08538c", "900": "#053666" }
+    },
+    "modeOverrides": {
+      "dark": {
+        "neutral": {
+          "50":  "#111111",
+          "100": "#1a1a1a",
+          "200": "#2a2a2a",
+          "300": "#3d3d3d",
+          "400": "#5c5c5c",
+          "500": "#888888",
+          "600": "#b0b0b0",
+          "700": "#d6d6d6",
+          "800": "#ededed",
+          "900": "#fafafa"
+        }
+      }
+    }
+  },
+  "typography": {
+    "fontFamily": {
+      "sans": "-apple-system, BlinkMacSystemFont, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", system-ui, sans-serif",
+      "serif": "Georgia, \"Times New Roman\", serif",
+      "mono": "\"SF Mono\", Menlo, Consolas, monospace"
+    },
+    "fontSize": { "xs": 11, "sm": 13, "base": 15, "lg": 17, "xl": 20, "2xl": 24, "3xl": 30, "4xl": 36, "5xl": 48 },
+    "lineHeight": { "tight": 1.25, "normal": 1.5, "relaxed": 1.75 },
+    "fontWeight": { "regular": 400, "medium": 500, "semibold": 600, "bold": 700 }
+  },
+  "spacing": { "0": 0, "1": 4, "2": 8, "3": 12, "4": 16, "6": 24, "8": 32, "12": 48, "16": 64, "24": 96 },
+  "radius":  { "none": 0, "sm": 4, "md": 8, "lg": 12, "xl": 16, "full": 9999 },
+  "shadow": {
+    "none": "none",
+    "sm": "0 1px 2px 0 rgba(0,0,0,.04)",
+    "md": "0 2px 8px -2px rgba(0,0,0,.06)",
+    "lg": "0 8px 20px -4px rgba(0,0,0,.08)",
+    "xl": "0 16px 32px -8px rgba(0,0,0,.12)"
+  },
+  "breakpoint": {
+    "mobile": 0,
+    "tablet": 768,
+    "desktop": 1024,
+    "wide": 1440,
+    "designWidth": 375,
+    "tabbarHeight": 50,
+    "navbarHeight": 44,
+    "statusbarHeight": 44,
+    "safeAreaBottom": 34,
+    "scaling": {
+      "fontSize": {
+        "base": { "min": 13, "max": 15 },
+        "lg":   { "min": 15, "max": 17 },
+        "xl":   { "min": 17, "max": 20 }
+      },
+      "spacing":   { "mobile": 1.0, "tablet": 1.0, "desktop": 1.0, "wide": 1.125 },
+      "container": { "mobile": 0, "tablet": 720, "desktop": 960, "wide": 1280 }
+    }
+  },
+  "motion": {
+    "duration": { "instant": 0, "fast": 150, "base": 250, "slow": 350 },
+    "easing": {
+      "standard":   "cubic-bezier(.2,0,0,1)",
+      "emphasized": "cubic-bezier(.3,0,0,1)",
+      "decelerate": "cubic-bezier(0,0,.2,1)",
+      "accelerate": "cubic-bezier(.4,0,1,1)"
+    }
+  },
+  "zIndex": { "base": 0, "dropdown": 1000, "sticky": 1100, "modal": 1300, "popover": 1400, "toast": 1500 },
+  "icon": { "source": "weui-icon", "sizeBase": 24, "strokeWidth": 1.5 }
+}

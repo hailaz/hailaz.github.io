@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tokens → CSS 变量注入示例</title>
+<style>
+  body { margin: 0; padding: var(--space-6, 24px); font-family: var(--font-sans, system-ui); background: var(--color-neutral-50); color: var(--color-neutral-900); }
+  .card { padding: var(--space-4); border-radius: var(--radius-md); background: var(--color-neutral-100); box-shadow: var(--shadow-md); margin-bottom: var(--space-4); }
+  .btn  { padding: var(--space-2) var(--space-4); border-radius: var(--radius-md); background: var(--color-primary-500); color: #fff; border: 0; cursor: pointer; transition: transform var(--dur-fast) var(--ease-standard); }
+  .btn:hover { background: var(--color-primary-600); transform: translateY(-1px); }
+  :root[data-theme="dark"] body { background: #0a0a0a; color: #fafafa; }
+</style>
+</head>
+<body>
+
+<h1>Tokens 注入演示</h1>
+<p class="card">这个示例从 <code>../../assets/themes/default-light.json</code> 加载 tokens 并注入 <code>:root</code>，所有样式仅用 CSS 变量。</p>
+<button class="btn" onclick="toggleTheme()">切换明暗</button>
+
+<script>
+// ============ 核心：tokens JSON → CSS Variables ============
+
+/**
+ * 把嵌套 tokens 对象拍平成 CSS 变量名 → 值
+ * @example {color:{primary:{500:'#xx'}}} → {'--color-primary-500':'#xx'}
+ */
+function tokensToCssVars(tokens) {
+  const map = {};
+  // color
+  for (const [grp, scale] of Object.entries(tokens.color || {})) {
+    if (grp === 'modeOverrides' || grp === 'semantic') continue;
+    for (const [step, val] of Object.entries(scale)) map[`--color-${grp}-${step}`] = val;
+  }
+  for (const [name, scale] of Object.entries(tokens.color?.semantic || {})) {
+    for (const [step, val] of Object.entries(scale)) map[`--color-${name}-${step}`] = val;
+  }
+  // typography
+  for (const [k, v] of Object.entries(tokens.typography?.fontFamily || {})) map[`--font-${k}`] = v;
+  for (const [k, v] of Object.entries(tokens.typography?.fontSize   || {})) map[`--font-size-${k}`] = `${v}px`;
+  for (const [k, v] of Object.entries(tokens.typography?.lineHeight || {})) map[`--leading-${k}`] = String(v);
+  for (const [k, v] of Object.entries(tokens.typography?.fontWeight || {})) map[`--weight-${k}`] = String(v);
+  // spacing
+  for (const [k, v] of Object.entries(tokens.spacing || {})) map[`--space-${k}`] = `${v}px`;
+  // radius
+  for (const [k, v] of Object.entries(tokens.radius || {})) map[`--radius-${k}`] = typeof v === 'number' ? `${v}px` : v;
+  // shadow
+  for (const [k, v] of Object.entries(tokens.shadow || {})) map[`--shadow-${k}`] = v;
+  // breakpoint
+  for (const [k, v] of Object.entries(tokens.breakpoint || {})) {
+    if (typeof v === 'number') map[`--bp-${k}`] = `${v}px`;
+  }
+  // motion
+  for (const [k, v] of Object.entries(tokens.motion?.duration || {})) map[`--dur-${k}`] = `${v}ms`;
+  for (const [k, v] of Object.entries(tokens.motion?.easing   || {})) map[`--ease-${k}`] = v;
+  // zIndex
+  for (const [k, v] of Object.entries(tokens.zIndex || {})) map[`--z-${k}`] = String(v);
+  return map;
+}
+
+function applyTokens(tokens) {
+  const map = tokensToCssVars(tokens);
+  for (const [k, v] of Object.entries(map)) document.documentElement.style.setProperty(k, v);
+}
+
+function toggleTheme() {
+  const root = document.documentElement;
+  root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+}
+
+// 加载默认预设（双击打开时部分浏览器可能拦截 fetch；可改用 file input）
+fetch('../../assets/themes/default-light.json')
+  .then(r => r.json())
+  .then(applyTokens)
+  .catch(err => console.warn('fetch 失败，请用 python3 -m http.server 启动；或手动调用 applyTokens(tokens)', err));
+</script>
+
+</body>
+</html>

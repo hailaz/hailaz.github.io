@@ -1,0 +1,103 @@
+{
+  "meta": {
+    "name": "apple-style",
+    "version": "1.0.0",
+    "mode": "light",
+    "vibeTags": ["calm", "luxury", "minimal", "professional"],
+    "description": "Apple HIG 风格：克制冷蓝主色 + 大圆角 + 柔阴影 + SF 字阶，强调精致与可读性"
+  },
+  "color": {
+    "primary": {
+      "50":  "#f0f8ff",
+      "100": "#e1efff",
+      "200": "#bcdcff",
+      "300": "#7cbeff",
+      "400": "#3b9eff",
+      "500": "#0a84ff",
+      "600": "#0064d2",
+      "700": "#004ea8",
+      "800": "#003a82",
+      "900": "#00295c"
+    },
+    "neutral": {
+      "50":  "#ffffff",
+      "100": "#f5f5f7",
+      "200": "#e8e8ed",
+      "300": "#d2d2d7",
+      "400": "#a1a1a6",
+      "500": "#86868b",
+      "600": "#6e6e73",
+      "700": "#424245",
+      "800": "#1d1d1f",
+      "900": "#000000"
+    },
+    "semantic": {
+      "success": { "50": "#f0fdf4", "100": "#d1fadf", "200": "#a5f3c5", "300": "#6ee7a3", "400": "#34d472", "500": "#30d158", "600": "#1ea149", "700": "#177c39", "800": "#115d2c", "900": "#0c3f1f" },
+      "warning": { "50": "#fff8e6", "100": "#ffe9b3", "200": "#ffd680", "300": "#ffc04d", "400": "#ffae33", "500": "#ff9f0a", "600": "#cc7f08", "700": "#995f06", "800": "#664004", "900": "#332002" },
+      "danger":  { "50": "#fff1f0", "100": "#ffd9d6", "200": "#ffb3ad", "300": "#ff857c", "400": "#ff594d", "500": "#ff3b30", "600": "#cc2f26", "700": "#99231d", "800": "#661713", "900": "#330b0a" },
+      "info":    { "50": "#f0f8ff", "100": "#e1efff", "200": "#bcdcff", "300": "#7cbeff", "400": "#3b9eff", "500": "#0a84ff", "600": "#0064d2", "700": "#004ea8", "800": "#003a82", "900": "#00295c" }
+    },
+    "modeOverrides": {
+      "dark": {
+        "neutral": {
+          "50":  "#000000",
+          "100": "#1c1c1e",
+          "200": "#2c2c2e",
+          "300": "#3a3a3c",
+          "400": "#48484a",
+          "500": "#636366",
+          "600": "#8e8e93",
+          "700": "#aeaeb2",
+          "800": "#d1d1d6",
+          "900": "#f2f2f7"
+        }
+      }
+    }
+  },
+  "typography": {
+    "fontFamily": {
+      "sans": "-apple-system, BlinkMacSystemFont, \"SF Pro Display\", \"SF Pro Text\", \"PingFang SC\", system-ui, sans-serif",
+      "serif": "\"New York\", Georgia, serif",
+      "mono": "\"SF Mono\", Menlo, Consolas, monospace"
+    },
+    "fontSize": { "xs": 11, "sm": 13, "base": 15, "lg": 17, "xl": 20, "2xl": 24, "3xl": 28, "4xl": 34, "5xl": 48 },
+    "lineHeight": { "tight": 1.2, "normal": 1.45, "relaxed": 1.65 },
+    "fontWeight": { "regular": 400, "medium": 500, "semibold": 600, "bold": 700 }
+  },
+  "spacing": { "0": 0, "1": 4, "2": 8, "3": 12, "4": 16, "6": 24, "8": 32, "12": 48, "16": 64, "24": 96 },
+  "radius":  { "none": 0, "sm": 6, "md": 12, "lg": 18, "xl": 24, "full": 9999 },
+  "shadow": {
+    "none": "none",
+    "sm": "0 1px 3px rgba(0,0,0,.04)",
+    "md": "0 6px 16px rgba(0,0,0,.06)",
+    "lg": "0 12px 32px rgba(0,0,0,.08)",
+    "xl": "0 24px 64px rgba(0,0,0,.10)"
+  },
+  "breakpoint": {
+    "mobile": 0, "tablet": 768, "desktop": 1024, "wide": 1440,
+    "scaling": {
+      "fontSize": {
+        "base": { "min": 14, "max": 15 },
+        "lg":   { "min": 16, "max": 17 },
+        "xl":   { "min": 18, "max": 20 },
+        "2xl":  { "min": 20, "max": 24 },
+        "3xl":  { "min": 24, "max": 28 },
+        "4xl":  { "min": 28, "max": 34 },
+        "5xl":  { "min": 34, "max": 48 }
+      },
+      "spacing":   { "mobile": 0.875, "tablet": 1.0, "desktop": 1.0, "wide": 1.125 },
+      "container": { "mobile": 0,     "tablet": 692, "desktop": 980, "wide": 1280 }
+    }
+  },
+  "motion": {
+    "duration": { "instant": 0, "fast": 180, "base": 260, "slow": 360 },
+    "easing": {
+      "standard":   "cubic-bezier(.25,.1,.25,1)",
+      "emphasized": "cubic-bezier(.32,.72,0,1)",
+      "decelerate": "cubic-bezier(0,0,.2,1)",
+      "accelerate": "cubic-bezier(.4,0,1,1)"
+    }
+  },
+  "zIndex": { "base": 0, "dropdown": 1000, "sticky": 1100, "modal": 1300, "popover": 1400, "toast": 1500 },
+  "icon": { "source": "sf-symbols", "sizeBase": 20, "strokeWidth": 1.5 }
+}
