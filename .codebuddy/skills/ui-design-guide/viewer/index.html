@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>UI Design Guide · 预览</title>
+  <link rel="stylesheet" href="../configurator/style.css" />
+  <style>
+    html, body { overflow: auto; }
+    .viewer-wrap {
+      min-height: 100vh;
+      background: #f5f5f7;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .viewer-header {
+      background: #fff; padding: 12px 16px;
+      width: 100%; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .viewer-header .title { font-weight: 600; font-size: 14px; flex: 1; }
+    .viewer-header .edit-btn {
+      padding: 6px 12px; background: var(--shell-accent, #07C160);
+      color: #fff; border: 0; border-radius: 6px;
+      font-size: 12px; cursor: pointer; text-decoration: none;
+    }
+    .viewer-pages {
+      background: #fff; padding: 6px 12px;
+      width: 100%; overflow-x: auto; display: flex; gap: 6px;
+      border-bottom: 1px solid #eee;
+    }
+    .viewer-pages .tab {
+      padding: 6px 12px; font-size: 12px; background: #fff;
+      border: 1px solid #eee; border-radius: 4px; cursor: pointer;
+      white-space: nowrap;
+    }
+    .viewer-pages .tab.on { background: var(--shell-accent, #07C160); color: #fff; border-color: transparent; }
+    .viewer-canvas-wrap {
+      flex: 1; padding: 16px; display: flex;
+      align-items: flex-start; justify-content: center; width: 100%;
+    }
+    .viewer-canvas {
+      width: 375px; min-height: 667px;
+      background: #fff; border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    @media (max-width: 600px) {
+      .viewer-canvas { width: 100%; min-height: 100vh; border-radius: 0; }
+      .viewer-canvas-wrap { padding: 0; }
+    }
+    .viewer-empty {
+      padding: 80px 20px; text-align: center; color: #999;
+    }
+  </style>
+</head>
+<body>
+  <div class="viewer-wrap">
+    <div class="viewer-header">
+      <span class="title" id="viewer-title">UI Design Guide · 预览</span>
+      <a class="edit-btn" id="viewer-edit" href="#">✏️ 去编辑</a>
+    </div>
+    <div class="viewer-pages" id="viewer-pages"></div>
+    <div class="viewer-canvas-wrap">
+      <div class="viewer-canvas" id="viewer-canvas"></div>
+    </div>
+  </div>
+  <script type="module" src="./viewer.js"></script>
+</body>
+</html>
