@@ -191,6 +191,40 @@ body {
   position: absolute; inset: 0; pointer-events: none; z-index: 5;
 }
 
+/* ============ 组件预览区域（固定在组件库底部） ============ */
+.comp-preview-area {
+  border-top: 1px solid var(--shell-border);
+  background: var(--shell-side);
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+  max-height: 280px;
+}
+.comp-preview-header {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--shell-muted);
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--shell-border);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.comp-preview-body {
+  flex: 1;
+  overflow: auto;
+  padding: 8px;
+  background: #ffffff;
+}
+/* 预览视口：模拟小程序页面宽度 */
+.comp-preview-body .preview-viewport {
+  width: 375px;
+  min-height: 40px;
+  margin: 0 auto;
+  overflow-x: hidden;
+}
+
 /* ============ WeUI 组件样式（给画布中的组件用） ============ */
 .weui-cells { background: var(--weui-bg-2); }
 .weui-cell {
