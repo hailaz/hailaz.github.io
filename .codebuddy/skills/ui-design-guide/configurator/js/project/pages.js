@@ -44,10 +44,12 @@ function render() {
       if (name) cmdRenamePage(el.dataset.pageId, name);
     });
   });
-  rootEl.querySelector('.page-add')?.addEventListener('click', showAddMenu);
+  rootEl.querySelector('.page-add')?.addEventListener('click', (e) => showAddMenu(e));
 }
 
-function showAddMenu() {
+function showAddMenu(e) {
+  const btn = e.currentTarget;
+  const rect = btn.getBoundingClientRect();
   const menu = document.createElement('div');
   menu.className = 'page-add-menu';
   menu.innerHTML = `
@@ -59,7 +61,9 @@ function showAddMenu() {
     <div data-tpl="mine">👤 个人中心</div>
   `;
   Object.assign(menu.style, {
-    position: 'absolute', top: '40px', right: '12px',
+    position: 'fixed',
+    top: (rect.bottom + 4) + 'px',
+    left: rect.left + 'px',
     background: 'var(--shell-side)', border: '1px solid var(--shell-border)',
     borderRadius: '6px', padding: '4px', zIndex: '1000',
     boxShadow: '0 4px 12px rgba(0,0,0,.12)', minWidth: '160px',

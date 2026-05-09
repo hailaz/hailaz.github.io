@@ -142,14 +142,15 @@ function updateOverlay() {
 function drawBox(nodeId, kind) {
   const el = canvasRoot.querySelector(`[data-node-id="${nodeId}"]`);
   if (!el) return;
-  const containerRect = canvasRoot.getBoundingClientRect();
+  // 使用 overlay 的位置作为参考点（因为选中框是 overlay 的绝对定位子元素）
+  const overlayRect = overlay.getBoundingClientRect();
   const rect = el.getBoundingClientRect();
   const box = document.createElement('div');
   box.className = `canvas-box canvas-box-${kind}`;
   Object.assign(box.style, {
     position: 'absolute',
-    left: `${rect.left - containerRect.left + canvasRoot.scrollLeft}px`,
-    top:  `${rect.top  - containerRect.top  + canvasRoot.scrollTop}px`,
+    left:   `${rect.left   - overlayRect.left}px`,
+    top:    `${rect.top    - overlayRect.top}px`,
     width:  `${rect.width}px`,
     height: `${rect.height}px`,
     pointerEvents: 'none',
@@ -180,7 +181,8 @@ function drawBox(nodeId, kind) {
 function drawHandles(nodeId) {
   const el = canvasRoot.querySelector(`[data-node-id="${nodeId}"]`);
   if (!el) return;
-  const containerRect = canvasRoot.getBoundingClientRect();
+  // 使用 overlay 的位置作为参考点
+  const overlayRect = overlay.getBoundingClientRect();
   const rect = el.getBoundingClientRect();
   const positions = [
     { name: 'nw', x: 0,    y: 0    }, { name: 'n',  x: 0.5,  y: 0    }, { name: 'ne', x: 1,    y: 0    },
@@ -193,8 +195,8 @@ function drawHandles(nodeId) {
     h.dataset.direction = pos.name;
     Object.assign(h.style, {
       position: 'absolute',
-      left: `${rect.left - containerRect.left + canvasRoot.scrollLeft + rect.width * pos.x - 4}px`,
-      top:  `${rect.top  - containerRect.top  + canvasRoot.scrollTop  + rect.height * pos.y - 4}px`,
+      left: `${rect.left - overlayRect.left + rect.width * pos.x - 4}px`,
+      top:  `${rect.top  - overlayRect.top  + rect.height * pos.y - 4}px`,
       width: '8px', height: '8px',
       background: '#fff',
       border: '1.5px solid var(--shell-accent)',
@@ -299,7 +301,8 @@ function drawGuideLines(nodeId, hSnapped, vSnapped) {
   if (!hSnapped && !vSnapped) return;
   const el = canvasRoot.querySelector(`[data-node-id="${nodeId}"]`);
   if (!el) return;
-  const containerRect = canvasRoot.getBoundingClientRect();
+  // 使用 overlay 的位置作为参考点
+  const overlayRect = overlay.getBoundingClientRect();
   const rect = el.getBoundingClientRect();
   const mkLine = (direction) => {
     const line = document.createElement('div');
@@ -307,16 +310,16 @@ function drawGuideLines(nodeId, hSnapped, vSnapped) {
     if (direction === 'h') {
       Object.assign(line.style, {
         position: 'absolute', height: '1px',
-        left: `${rect.left - containerRect.left}px`, width: `${rect.width}px`,
-        top:  `${rect.top - containerRect.top + rect.height / 2}px`,
+        left: `${rect.left - overlayRect.left}px`, width: `${rect.width}px`,
+        top:  `${rect.top - overlayRect.top + rect.height / 2}px`,
         background: '#ff4c4c', boxShadow: '0 0 2px rgba(255,76,76,0.5)',
         zIndex: '20', pointerEvents: 'none',
       });
     } else {
       Object.assign(line.style, {
         position: 'absolute', width: '1px',
-        top: `${rect.top - containerRect.top}px`, height: `${rect.height}px`,
-        left: `${rect.left - containerRect.left + rect.width / 2}px`,
+        top: `${rect.top - overlayRect.top}px`, height: `${rect.height}px`,
+        left: `${rect.left - overlayRect.left + rect.width / 2}px`,
         background: '#ff4c4c', boxShadow: '0 0 2px rgba(255,76,76,0.5)',
         zIndex: '20', pointerEvents: 'none',
       });
